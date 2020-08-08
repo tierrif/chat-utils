@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.hotlava03.chatmacros.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "ReceiveMessageMixin",
+    "CopyToClipboardMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

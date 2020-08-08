@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "chat-macros",
+  "version": "1.2.0-stable",
+
+  "name": "Chat Macros Mod",
+  "description": "Copy chat messages to clipboard with ease.",
+  "authors": [
+    "HotLava03"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+
+  "license": "GPLv3",
+  "icon": "assets/modid/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.hotlava03.chatmacros.ChatMacrosMod"
+    ],
+    "modmenu": [
+      "io.github.hotlava03.chatmacros.ModMenuApiImpl"
+    ]
+  },
+  "mixins": [
+    "chat-macros.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
