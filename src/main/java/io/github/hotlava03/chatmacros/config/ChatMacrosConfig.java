@@ -7,6 +7,8 @@ import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
+import fi.dy.masa.malilib.config.options.ConfigDouble;
+import fi.dy.masa.malilib.config.options.ConfigInteger;
 import fi.dy.masa.malilib.config.options.ConfigString;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
@@ -21,6 +23,8 @@ public class ChatMacrosConfig implements IConfigHandler {
                 new ConfigString("copyToClipboardMessage", Value.COPY_TO_CLIPBOARD_MESSAGE.getAsString(), "Message in the tooltip."),
                 new ConfigBoolean("previewContent", Value.PREVIEW_CONTENT.getAsBoolean(), "Preview content in the tooltip."),
                 new ConfigBoolean("copyColorsIfAny", Value.COPY_COLORS.getAsBoolean(), "Copy color codes or not."),
+                new ConfigBoolean("antiSpam", Value.ANTI_SPAM.getAsBoolean(), "Collapse identical messages."),
+                new ConfigDouble("antiSpamPrejudice", Value.ANTI_SPAM_PREJUDICE.getAsDouble(), "Adjust the anti spam sensitivity."),
                 new ConfigBoolean("enabled", Value.ENABLED.getAsBoolean(), "Click to disable chatmacros for compatibility issues.")
         );
     }
@@ -71,6 +75,8 @@ public class ChatMacrosConfig implements IConfigHandler {
         COPY_TO_CLIPBOARD_MESSAGE("&9Click to copy to clipboard."),
         PREVIEW_CONTENT("true"),
         COPY_COLORS("true"),
+        ANTI_SPAM("true"),
+        ANTI_SPAM_PREJUDICE("0"),
         ENABLED("true");
 
         private final String value;
@@ -85,6 +91,10 @@ public class ChatMacrosConfig implements IConfigHandler {
 
         public boolean getAsBoolean() {
             return Boolean.parseBoolean(value);
+        }
+
+        public double getAsDouble() {
+            return Double.parseDouble(value);
         }
     }
 }
