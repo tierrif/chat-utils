@@ -36,7 +36,7 @@ public class ReceiveMessageMixin {
                 counter.spamCounter++;
                 ((MutableText) text).append(" \u00a78[\u00a7c" + counter.spamCounter + "x\u00a78]");
                 try {
-                    Field field = ChatHud.class.getDeclaredField("visibleMessages");
+                    Field field = ChatHud.class.getDeclaredField("field_2064"); // FIELD field_2064 visibleMessages Ljava/util/List;
                     field.setAccessible(true);
                     List<?> lines = (List<?>) field.get(MinecraftClient.getInstance().inGameHud.getChatHud());
                     lines.remove(0);
