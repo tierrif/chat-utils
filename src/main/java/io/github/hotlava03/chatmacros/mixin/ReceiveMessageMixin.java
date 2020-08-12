@@ -65,7 +65,7 @@ public class ReceiveMessageMixin {
         }
 
         Style style = text.getStyle()
-                .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                         new LiteralText(tooltip)))
                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/chatmacros " + toCopy));
         if (text.getStyle().getClickEvent() == null && ((ConfigBoolean) ChatMacrosConfig.OPTIONS.get(5)).getBooleanValue()) {
