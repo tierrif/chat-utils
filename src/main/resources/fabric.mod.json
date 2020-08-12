@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "chat-macros",
-  "version": "1.3.2-stable",
+  "version": "1.3.3-stable",
 
   "name": "Chat Macros Mod",
   "description": "Copy chat messages to clipboard with ease.",
