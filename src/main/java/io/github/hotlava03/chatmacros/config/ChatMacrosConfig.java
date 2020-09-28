@@ -72,7 +72,7 @@ public class ChatMacrosConfig implements IConfigHandler {
     public enum Value {
         COPY_TO_CLIPBOARD_MESSAGE("&9Click to copy to clipboard."),
         PREVIEW_CONTENT("true"),
-        COPY_COLORS("true"),
+        COPY_COLORS("false"),
         ANTI_SPAM("true"),
         TOOLTIP_ENABLED("true"),
         ENABLED("true");
