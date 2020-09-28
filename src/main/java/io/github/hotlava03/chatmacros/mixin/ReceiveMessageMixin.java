@@ -26,7 +26,7 @@ public class ReceiveMessageMixin {
     public void addMessage(Text text, int messageId, CallbackInfo info) {
         antiSpam:
         if (((ConfigBoolean) ChatMacrosConfig.OPTIONS.get(3)).getBooleanValue()) {
-            double prejudice = ((ConfigDouble) ChatMacrosConfig.OPTIONS.get(4)).getDoubleValue();
+            double prejudice = 0;
             if (counter.lastMessage == null) {
                 counter.lastMessage = text;
                 counter.spamCounter = 1;
