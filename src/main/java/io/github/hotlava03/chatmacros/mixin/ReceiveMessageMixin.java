@@ -57,7 +57,7 @@ public class ReceiveMessageMixin {
 
         if (((ConfigBoolean) ChatMacrosConfig.OPTIONS.get(1)).getBooleanValue()) {
             tooltip = ChatColor.translateAlternateColorCodes('&',
-                    ((ConfigString) ChatMacrosConfig.OPTIONS.get(0)).getStringValue() + "\n\n&9Preview:\n" +
+                    ((ConfigString) ChatMacrosConfig.OPTIONS.get(0)).getStringValue() + "\n\n&9Preview:\n&f" +
                             toCopy);
         } else {
             tooltip = ChatColor.translateAlternateColorCodes('&',
@@ -65,9 +65,12 @@ public class ReceiveMessageMixin {
         }
 
         Style style = text.getStyle()
-                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                        new LiteralText(tooltip)))
                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/chatmacros " + toCopy));
+        if (((ConfigBoolean) ChatMacrosConfig.OPTIONS.get(4)).getBooleanValue()) {
+            style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                    new LiteralText(tooltip)));
+        }
+
         if (text.getStyle().getClickEvent() == null && ((ConfigBoolean) ChatMacrosConfig.OPTIONS.get(5)).getBooleanValue()) {
             ((MutableText) text).setStyle(style);
         }

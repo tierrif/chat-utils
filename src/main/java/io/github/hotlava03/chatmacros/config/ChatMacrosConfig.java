@@ -22,6 +22,7 @@ public class ChatMacrosConfig implements IConfigHandler {
                 new ConfigBoolean("previewContent", Value.PREVIEW_CONTENT.getAsBoolean(), "Preview content in the tooltip."),
                 new ConfigBoolean("copyColorsIfAny", Value.COPY_COLORS.getAsBoolean(), "Copy color codes or not."),
                 new ConfigBoolean("antiSpam", Value.ANTI_SPAM.getAsBoolean(), "Collapse identical messages."),
+                new ConfigBoolean("tooltipEnabled", Value.TOOLTIP_ENABLED.getAsBoolean(), "Click to disable any sort of overlay when hovering a message."),
                 new ConfigBoolean("enabled", Value.ENABLED.getAsBoolean(), "Click to disable chatmacros for compatibility issues.")
         );
     }
@@ -73,6 +74,7 @@ public class ChatMacrosConfig implements IConfigHandler {
         PREVIEW_CONTENT("true"),
         COPY_COLORS("true"),
         ANTI_SPAM("true"),
+        TOOLTIP_ENABLED("true"),
         ENABLED("true");
 
         private final String value;
