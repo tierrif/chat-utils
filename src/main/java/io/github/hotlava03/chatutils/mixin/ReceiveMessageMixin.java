@@ -1,9 +1,9 @@
-package io.github.hotlava03.chatmacros.mixin;
+package io.github.hotlava03.chatutils.mixin;
 
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
-import fi.dy.masa.malilib.config.options.ConfigDouble;
 import fi.dy.masa.malilib.config.options.ConfigString;
-import io.github.hotlava03.chatmacros.config.ChatMacrosConfig;
+import io.github.hotlava03.chatutils.config.ChatUtilsConfig;
+import io.github.hotlava03.chatutils.util.Counter;
 import net.md_5.bungee.api.ChatColor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
@@ -20,12 +20,12 @@ import java.util.List;
 
 @Mixin(ChatHud.class)
 public class ReceiveMessageMixin {
-    private Counter counter = new Counter();
+    private final Counter counter = new Counter();
 
     @Inject(method = "addMessage(Lnet/minecraft/text/Text;I)V", at = @At("HEAD"))
     public void addMessage(Text text, int messageId, CallbackInfo info) {
         antiSpam:
-        if (((ConfigBoolean) ChatMacrosConfig.OPTIONS.get(3)).getBooleanValue()) {
+        if (((ConfigBoolean) ChatUtilsConfig.OPTIONS.get(3)).getBooleanValue()) {
             double prejudice = 0;
             if (counter.lastMessage == null) {
                 counter.lastMessage = text;
@@ -36,7 +36,8 @@ public class ReceiveMessageMixin {
                 counter.spamCounter++;
                 ((MutableText) text).append(" \u00a78[\u00a7c" + counter.spamCounter + "x\u00a78]");
                 try {
-                    Field field = ChatHud.class.getDeclaredField("field_2064"); // FIELD field_2064 visibleMessages Ljava/util/List;
+                    // FIELD field_2064 visibleMessages Ljava/util/List;
+                    Field field = ChatHud.class.getDeclaredField("field_2064");
                     field.setAccessible(true);
                     List<?> lines = (List<?>) field.get(MinecraftClient.getInstance().inGameHud.getChatHud());
                     lines.remove(0);
@@ -51,27 +52,27 @@ public class ReceiveMessageMixin {
         }
         String tooltip;
         String toCopy = text.getString();
-        if (!((ConfigBoolean) ChatMacrosConfig.OPTIONS.get(2)).getBooleanValue()) {
+        if (!((ConfigBoolean) ChatUtilsConfig.OPTIONS.get(2)).getBooleanValue()) {
             toCopy = ChatColor.stripColor(toCopy);
         }
 
-        if (((ConfigBoolean) ChatMacrosConfig.OPTIONS.get(1)).getBooleanValue()) {
+        if (((ConfigBoolean) ChatUtilsConfig.OPTIONS.get(1)).getBooleanValue()) {
             tooltip = ChatColor.translateAlternateColorCodes('&',
-                    ((ConfigString) ChatMacrosConfig.OPTIONS.get(0)).getStringValue() + "\n\n&9Preview:\n&f" +
+                    ((ConfigString) ChatUtilsConfig.OPTIONS.get(0)).getStringValue() + "\n\n&9Preview:\n&f" +
                             toCopy);
         } else {
             tooltip = ChatColor.translateAlternateColorCodes('&',
-                    ((ConfigString) ChatMacrosConfig.OPTIONS.get(0)).getStringValue());
+                    ((ConfigString) ChatUtilsConfig.OPTIONS.get(0)).getStringValue());
         }
 
         Style style = text.getStyle()
                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/chatmacros " + toCopy));
-        if (((ConfigBoolean) ChatMacrosConfig.OPTIONS.get(4)).getBooleanValue()) {
+        if (((ConfigBoolean) ChatUtilsConfig.OPTIONS.get(4)).getBooleanValue()) {
             style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                     new LiteralText(tooltip)));
         }
 
-        if (text.getStyle().getClickEvent() == null && ((ConfigBoolean) ChatMacrosConfig.OPTIONS.get(5)).getBooleanValue()) {
+        if (text.getStyle().getClickEvent() == null && ((ConfigBoolean) ChatUtilsConfig.OPTIONS.get(5)).getBooleanValue()) {
             ((MutableText) text).setStyle(style);
         }
     }
@@ -87,10 +88,5 @@ public class ReceiveMessageMixin {
             return 0;
         }
         return StringUtils.getLevenshteinDistance(s1.toLowerCase(), s2.toLowerCase()) / avgLen;
-    }
-
-    private class Counter {
-        private Text lastMessage;
-        private int spamCounter = 1;
     }
 }

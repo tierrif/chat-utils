@@ -1,4 +1,4 @@
-package io.github.hotlava03.chatmacros.mixin;
+package io.github.hotlava03.chatutils.mixin;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -22,6 +22,6 @@ public class CopyToClipboardMixin {
                                 message.replaceFirst("/chatmacros ", "")
                                         .replace("§", "&")),
                         null);
-        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(new LiteralText("\u00a79ChatMacros \u00a78\u00BB \u00a77Copied to clipboard."));
+        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(new LiteralText("\u00a79ChatUtils \u00a78\u00BB \u00a77Copied to clipboard."));
     }
 }

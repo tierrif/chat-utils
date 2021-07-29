@@ -1,6 +1,6 @@
-package io.github.hotlava03.chatmacros;
+package io.github.hotlava03.chatutils;
 
-import io.github.hotlava03.chatmacros.gui.ConfigGui;
+import io.github.hotlava03.chatutils.gui.ConfigGui;
 import io.github.prospector.modmenu.api.ConfigScreenFactory;
 import io.github.prospector.modmenu.api.ModMenuApi;
 
