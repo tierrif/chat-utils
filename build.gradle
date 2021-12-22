@@ -13,6 +13,7 @@ group = project.maven_group
 repositories {
 	mavenCentral()
 	maven { url 'https://masa.dy.fi/maven' }
+	maven { url 'https://maven.terraformersmc.com/releases/' }
 }
 
 dependencies {
@@ -22,10 +23,10 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	// modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modCompileOnly "fi.dy.masa.malilib:malilib-fabric-1.17.1:0.10.0-dev.24"
-	modCompileOnly "io.github.prospector:modmenu:2.0.0-beta.1+build.2"
+	modCompileOnly "fi.dy.masa.malilib:malilib-fabric-1.18.0:0.10.0-dev.26"
+	modCompileOnly "com.terraformersmc:modmenu:3.0.1"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
