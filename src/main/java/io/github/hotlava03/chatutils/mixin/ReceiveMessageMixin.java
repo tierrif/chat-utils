@@ -7,7 +7,13 @@ import io.github.hotlava03.chatutils.util.Counter;
 import net.md_5.bungee.api.ChatColor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
+import net.minecraft.client.gui.hud.ChatHudLine;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.util.ChatMessages;
+import net.minecraft.network.MessageType;
+import net.minecraft.network.packet.s2c.play.GameMessageS2CPacket;
 import net.minecraft.text.*;
+import net.minecraft.util.math.MathHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,40 +24,46 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 
-@Mixin(ChatHud.class)
+@Mixin(ClientPlayNetworkHandler.class)
 public class ReceiveMessageMixin {
     private final Counter counter = new Counter();
+    private static boolean firstRun = false;
 
-    @Inject(method = "addMessage(Lnet/minecraft/text/Text;I)V", at = @At("HEAD"))
-    public void addMessage(Text text, int messageId, CallbackInfo info) {
+    @Inject(method = "onGameMessage(Lnet/minecraft/network/packet/s2c/play/GameMessageS2CPacket;)V", at = @At("HEAD"))
+    public void addMessage(GameMessageS2CPacket packet, CallbackInfo info) {
+        if (packet.getType() != MessageType.SYSTEM) return;
+        firstRun = !firstRun;
+        if (!firstRun) return;
         antiSpam:
         if (((ConfigBoolean) ChatUtilsConfig.OPTIONS.get(3)).getBooleanValue()) {
-            double prejudice = 0;
             if (counter.lastMessage == null) {
-                counter.lastMessage = text;
+                counter.lastMessage = packet.getMessage();
                 counter.spamCounter = 1;
                 break antiSpam;
             }
-            if (getDifference(text.getString(), counter.lastMessage.getString()) <= prejudice) {
+
+            List<ChatHudLine<OrderedText>> visibleMessages = getVisibleChatLines();
+            System.out.println("First: " + packet.getMessage().getString());
+            System.out.println("Second: " + counter.lastMessage.getString());
+            if (packet.getMessage().getString().equalsIgnoreCase(counter.lastMessage.getString())) {
                 counter.spamCounter++;
-                ((MutableText) text).append(" \u00a78[\u00a7c" + counter.spamCounter + "x\u00a78]");
-                try {
-                    // FIELD field_2064 visibleMessages Ljava/util/List;
-                    Field field = ChatHud.class.getDeclaredField("field_2064");
-                    field.setAccessible(true);
-                    List<?> lines = (List<?>) field.get(MinecraftClient.getInstance().inGameHud.getChatHud());
-                    lines.remove(0);
-                } catch (NoSuchFieldException | IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-                ++messageId;
+                ((MutableText) packet.getMessage()).append(" \u00a78[\u00a7c" + counter.spamCounter + "x\u00a78]");
+
+                ChatHud hud = MinecraftClient.getInstance().inGameHud.getChatHud();
+                int width = MathHelper.floor((double) hud.getWidth() / hud.getChatScale());
+                int size = ChatMessages.breakRenderedChatMessageLines(
+                        packet.getMessage(), width, MinecraftClient.getInstance().textRenderer).size();
+
+                System.out.println(size);
+                visibleMessages.subList(0, size).clear();
             } else {
-                counter.lastMessage = text;
+                counter.lastMessage = packet.getMessage();
                 counter.spamCounter = 1;
             }
         }
+
         String tooltip;
-        String toCopy = text.getString();
+        String toCopy = packet.getMessage().getString();
         if (!((ConfigBoolean) ChatUtilsConfig.OPTIONS.get(2)).getBooleanValue()) {
             toCopy = ChatColor.stripColor(toCopy);
         }
@@ -65,15 +77,15 @@ public class ReceiveMessageMixin {
                     ((ConfigString) ChatUtilsConfig.OPTIONS.get(0)).getStringValue());
         }
 
-        Style style = text.getStyle()
+        Style style = packet.getMessage().getStyle()
                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/chatmacros " + toCopy));
         if (((ConfigBoolean) ChatUtilsConfig.OPTIONS.get(4)).getBooleanValue()) {
             style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                     new LiteralText(tooltip)));
         }
 
-        if (text.getStyle().getClickEvent() == null && ((ConfigBoolean) ChatUtilsConfig.OPTIONS.get(5)).getBooleanValue()) {
-            ((MutableText) text).setStyle(style);
+        if (packet.getMessage().getStyle().getClickEvent() == null && ((ConfigBoolean) ChatUtilsConfig.OPTIONS.get(5)).getBooleanValue()) {
+            ((MutableText) packet.getMessage()).setStyle(style);
         }
     }
 
@@ -88,5 +100,35 @@ public class ReceiveMessageMixin {
             return 0;
         }
         return StringUtils.getLevenshteinDistance(s1.toLowerCase(), s2.toLowerCase()) / avgLen;
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<ChatHudLine<Text>> getCurrentChatLines() {
+        List<ChatHudLine<Text>> lines = null;
+        try {
+            // FIELD field_2061 messages Ljava/util/List;
+            Field field = ChatHud.class.getDeclaredField("field_2061");
+            field.setAccessible(true);
+            lines = (List<ChatHudLine<Text>>) field.get(MinecraftClient.getInstance().inGameHud.getChatHud());
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return lines;
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<ChatHudLine<OrderedText>> getVisibleChatLines() {
+        List<ChatHudLine<OrderedText>> lines = null;
+        try {
+            // FIELD field_2064 visibleMessages Ljava/util/List;
+            Field field = ChatHud.class.getDeclaredField("field_2064");
+            field.setAccessible(true);
+            lines = (List<ChatHudLine<OrderedText>>) field.get(MinecraftClient.getInstance().inGameHud.getChatHud());
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return lines;
     }
 }
