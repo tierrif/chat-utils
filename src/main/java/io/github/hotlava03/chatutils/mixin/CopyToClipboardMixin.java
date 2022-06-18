@@ -3,7 +3,7 @@ package io.github.hotlava03.chatutils.mixin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.toast.SystemToast;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,8 +26,8 @@ public class CopyToClipboardMixin {
         // MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(new LiteralText("\u00a79ChatUtils \u00a78\u00BB \u00a77Copied to clipboard."));
         SystemToast.show(MinecraftClient.getInstance().getToastManager(),
                 SystemToast.Type.WORLD_GEN_SETTINGS_TRANSFER,
-                new LiteralText("ChatUtils"),
-                new LiteralText("Text copied.")
+                Text.literal("ChatUtils"),
+                Text.literal("Text copied.")
         );
     }
 }

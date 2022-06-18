@@ -69,7 +69,7 @@ public class ReceiveMessageMixin {
                 .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/chatmacros " + toCopy));
         if (((ConfigBoolean) ChatUtilsConfig.OPTIONS.get(4)).getBooleanValue()) {
             style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                    new LiteralText(tooltip)));
+                    Text.literal(tooltip)));
         }
 
         if (text.getStyle().getClickEvent() == null && ((ConfigBoolean) ChatUtilsConfig.OPTIONS.get(5)).getBooleanValue()) {
