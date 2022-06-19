@@ -2,7 +2,6 @@ package io.github.hotlava03.chatutils.mixin;
 
 import io.github.hotlava03.chatutils.config.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.util.Counter;
-import net.md_5.bungee.api.ChatColor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.text.*;
@@ -14,10 +13,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Mixin(ChatHud.class)
 public class ReceiveMessageMixin {
     private final Counter counter = new Counter();
+    // Taken from https://github.com/SpigotMC/BungeeCord
+    private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)§[0-9A-FK-OR]");
+
+    private static String translateAlternateColorCodes(String textToTranslate) {
+        char[] b = textToTranslate.toCharArray();
+        for (int i = 0; i < b.length - 1; ++i) {
+            if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > -1) {
+                b[i] = '§';
+                b[i + 1] = Character.toLowerCase(b[i + 1]);
+            }
+        }
+        return new String(b);
+    }
 
     @Inject(method = "addMessage(Lnet/minecraft/text/Text;I)V", at = @At("HEAD"))
     public void addMessage(Text text, int messageId, CallbackInfo info) {
@@ -54,15 +67,14 @@ public class ReceiveMessageMixin {
         String tooltip;
         String toCopy = text.getString();
         if (!ChatUtilsConfig.COPY_COLORS.value()) {
-            toCopy = ChatColor.stripColor(toCopy);
+            toCopy = STRIP_COLOR_PATTERN.matcher(toCopy).replaceAll("");
         }
 
         if (ChatUtilsConfig.PREVIEW_CONTENT.value()) {
-            tooltip = ChatColor.translateAlternateColorCodes('&',
+            tooltip = translateAlternateColorCodes(
                     ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE.value() + "\n\n&9Preview:\n&f" + toCopy);
         } else {
-            tooltip = ChatColor.translateAlternateColorCodes('&',
-                    ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE.value());
+            tooltip = translateAlternateColorCodes(ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE.value());
         }
 
         Style style = text.getStyle()
