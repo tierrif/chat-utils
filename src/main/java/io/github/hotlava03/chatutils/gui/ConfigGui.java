@@ -9,31 +9,29 @@ import org.apache.logging.log4j.LogManager;
 
 public class ConfigGui {
     public static ConfigBuilder getConfigScreen(Screen parent) {
-        // TODO: use translatable? lang/en_us.json
         ConfigBuilder builder = ConfigBuilder.create()
                 .setParentScreen(parent)
-                .setTitle(Text.literal("Chat Utils Configuration"))
+                .setTitle(Text.translatable("chat-utils.config_title"))
                 .setSavingRunnable(() -> {
                     ChatUtilsConfig.saveToFile();
                     ChatUtilsConfig.loadFromFile();
-                    LogManager.getLogger().info("[chat-utils] Saved settings.");
                 });
-        ConfigCategory general = builder.getOrCreateCategory(Text.literal("Chat Utils Configuration"));
+        ConfigCategory general = builder.getOrCreateCategory(Text.translatable("chat-utils.config_title"));
+        addBooleanEntry(general, builder, ChatUtilsConfig.ANTI_SPAM);
+        addBooleanEntry(general, builder, ChatUtilsConfig.ENABLED);
+        addBooleanEntry(general, builder, ChatUtilsConfig.TOOLTIP_ENABLED);
         addStringEntry(general, builder, ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE);
         addBooleanEntry(general, builder, ChatUtilsConfig.PREVIEW_CONTENT);
         addBooleanEntry(general, builder, ChatUtilsConfig.COPY_COLORS);
-        addBooleanEntry(general, builder, ChatUtilsConfig.ANTI_SPAM);
-        addBooleanEntry(general, builder, ChatUtilsConfig.TOOLTIP_ENABLED);
-        addBooleanEntry(general, builder, ChatUtilsConfig.ENABLED);
         return builder;
     }
 
     private static void addStringEntry(ConfigCategory category, ConfigBuilder builder,
                                        ChatUtilsConfig.Value<String> value) {
         category.addEntry(builder.entryBuilder()
-                .startStrField(Text.literal(value.name()), value.value())
+                .startStrField(Text.translatable("chat-utils.configs." + value.name() + ".label"), value.value())
                 .setDefaultValue(value.defaultValue())
-                .setTooltip(Text.literal(value.description()))
+                .setTooltip(Text.translatable("chat-utils.configs." + value.name() + ".description"))
                 .setSaveConsumer(value::setValue)
                 .build());
     }
@@ -41,9 +39,9 @@ public class ConfigGui {
     private static void addBooleanEntry(ConfigCategory category, ConfigBuilder builder,
                                         ChatUtilsConfig.Value<Boolean> value) {
         category.addEntry(builder.entryBuilder()
-                .startBooleanToggle(Text.literal(value.name()), value.value())
+                .startBooleanToggle(Text.translatable("chat-utils.configs." + value.name() + ".label"), value.value())
                 .setDefaultValue(value.defaultValue())
-                .setTooltip(Text.literal(value.description()))
+                .setTooltip(Text.translatable("chat-utils.configs." + value.name() + ".description"))
                 .setSaveConsumer(value::setValue)
                 .build());
     }
