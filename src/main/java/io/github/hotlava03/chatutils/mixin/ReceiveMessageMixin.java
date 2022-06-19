@@ -33,10 +33,14 @@ public class ReceiveMessageMixin {
                 counter.spamCounter++;
                 ((MutableText) text).append(" \u00a78[\u00a7c" + counter.spamCounter + "x\u00a78]");
                 try {
-                    // FIELD field_2064 visibleMessages Ljava/util/List;
-                    Field field = ChatHud.class.getDeclaredField("field_2064"); // TODO: sus
+                    Field field;
+                    try { // FIELD field_2064 visibleMessages Ljava/util/List;
+                        field = ChatHud.class.getDeclaredField("field_2064");
+                    } catch (NoSuchFieldException e) { // For some reason, in development Intermediary isn't used lol
+                        field = ChatHud.class.getDeclaredField("visibleMessages");
+                    }
                     field.setAccessible(true);
-                    List<?> lines = (List<?>) field.get(MinecraftClient.getInstance().inGameHud.getChatHud().getMessageHistory());
+                    List<?> lines = (List<?>) field.get(MinecraftClient.getInstance().inGameHud.getChatHud());
                     lines.remove(0);
                 } catch (NoSuchFieldException | IllegalAccessException e) {
                     e.printStackTrace();
