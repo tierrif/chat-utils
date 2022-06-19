@@ -8,10 +8,10 @@ Only the latest MC versions are supported. This means that whenever an update is
 
 ## How to add it to your client
 - Go to the releases page for this repository and choose the latest stable release.
-- If you didn't yet, install Fabric Loader 1.17.1. Get it from [here](https://fabricmc.net/use/).
-- If you didn't have Fabric installed yet, you'll also need the Fabric API. Download the 1.16.3 version from [here](https://www.curseforge.com/minecraft/mc-mods/fabric-api).
-- Download [MaLiLib](https://www.curseforge.com/minecraft/mc-mods/malilib) and [Fabric Mod Menu](https://www.curseforge.com/minecraft/mc-mods/modmenu).
-- Put Fabric API, MaLiLib, Fabric Mod Menu and ChatMacros' files in the mods folder (by default, %appdata%\\.minecraft\\mods), or if you're in Linux, ~/.minecraft/mods.
+- If you didn't yet, install Fabric Loader 1.19. Get it from [here](https://fabricmc.net/use/).
+- If you didn't have Fabric installed yet, you'll also need the Fabric API. Download the 1.19 version from [here](https://www.curseforge.com/minecraft/mc-mods/fabric-api).
+- Download [Cloth API](https://www.curseforge.com/minecraft/mc-mods/cloth-api) and [Fabric Mod Menu](https://www.curseforge.com/minecraft/mc-mods/modmenu).
+- Put Fabric API, Cloth, Fabric Mod Menu and ChatMacros' files in the mods folder (by default, %appdata%\\.minecraft\\mods), or if you're in Linux, ~/.minecraft/mods.
 - Start Minecraft. You should see a button called "Mods" with the amount. Click on it and see if everything loaded fine.
 
 ## How to use it
