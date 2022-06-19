@@ -92,10 +92,12 @@ public class ChatUtilsConfig {
     public static class Value<T> {
         private final String name;
         private T value;
+        private final T defaultValue;
         private final String description;
         public Value(String name, T value, String description) {
             this.name = name;
             this.value = value;
+            this.defaultValue = value;
             this.description = description;
         }
 
@@ -105,6 +107,10 @@ public class ChatUtilsConfig {
 
         public T value() {
             return value;
+        }
+
+        public T defaultValue() {
+            return defaultValue;
         }
 
         public String description() {
