@@ -1,0 +1,15 @@
+{
+  "chat-utils.config_title": "Chat Utils Configuration Screen",
+  "chat-utils.configs.copyToClipboardMessage.label": "Copy To Clipboard Tooltip Message",
+  "chat-utils.configs.copyToClipboardMessage.description": "Message shown in the tooltip when copying messages.",
+  "chat-utils.configs.previewContent.label": "Preview Content",
+  "chat-utils.configs.previewContent.description": "Whether or not to preview content in the copy message tooltip.",
+  "chat-utils.configs.copyColorsIfAny.label": "Copy Color Codes",
+  "chat-utils.configs.copyColorsIfAny.description": "Whether or not to copy color codes.",
+  "chat-utils.configs.antiSpam.label": "Anti-Spam",
+  "chat-utils.configs.antiSpam.description": "Collapse identical messages.",
+  "chat-utils.configs.tooltipEnabled.label": "Enable Copy To Clipboard Tooltip",
+  "chat-utils.configs.tooltipEnabled.description": "Click to disable any sort of tooltip when hovering over a message.",
+  "chat-utils.configs.enabled.label": "Enable Copy To Clipboard",
+  "chat-utils.configs.enabled.description": "Click to disable chat-utils for compatibility issues."
+}
