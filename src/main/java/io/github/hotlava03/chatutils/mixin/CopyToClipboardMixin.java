@@ -23,7 +23,7 @@ public class CopyToClipboardMixin {
                                 message.replaceFirst("/chatmacros ", "")
                                         .replace("§", "&")),
                         null);
-        // MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(new LiteralText("\u00a79ChatUtils \u00a78\u00BB \u00a77Copied to clipboard."));
+        // MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(Text.literal("\u00a79ChatUtils \u00a78\u00BB \u00a77Copied to clipboard."));
         SystemToast.show(MinecraftClient.getInstance().getToastManager(),
                 SystemToast.Type.WORLD_GEN_SETTINGS_TRANSFER,
                 Text.literal("ChatUtils"),
