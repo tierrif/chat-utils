@@ -6,8 +6,9 @@
   "mixins": [
   ],
   "client": [
+    "CopyToClipboardMixin",
     "ReceiveMessageMixin",
-    "CopyToClipboardMixin"
+    "ReceiveMessageMixin$ChatHudAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
