@@ -4,32 +4,25 @@ import io.github.hotlava03.chatutils.config.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.util.Counter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
+import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.text.*;
 import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.regex.Pattern;
 
 @Mixin(ChatHud.class)
 public class ReceiveMessageMixin {
     private final Counter counter = new Counter();
-    // Taken from https://github.com/SpigotMC/BungeeCord
-    private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)§[0-9A-FK-OR]");
 
-    private static String translateAlternateColorCodes(String textToTranslate) {
-        char[] b = textToTranslate.toCharArray();
-        for (int i = 0; i < b.length - 1; ++i) {
-            if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > -1) {
-                b[i] = '§';
-                b[i + 1] = Character.toLowerCase(b[i + 1]);
-            }
-        }
-        return new String(b);
+    @Mixin(ChatHud.class)
+    public interface ChatHudAccessor {
+        @Accessor List<ChatHudLine<OrderedText>> getVisibleMessages();
     }
 
     @Inject(method = "addMessage(Lnet/minecraft/text/Text;I)V", at = @At("HEAD"))
@@ -45,19 +38,9 @@ public class ReceiveMessageMixin {
             if (getDifference(text.getString(), counter.lastMessage.getString()) <= prejudice) {
                 counter.spamCounter++;
                 ((MutableText) text).append(" \u00a78[\u00a7c" + counter.spamCounter + "x\u00a78]");
-                try {
-                    Field field;
-                    try { // FIELD field_2064 visibleMessages Ljava/util/List;
-                        field = ChatHud.class.getDeclaredField("field_2064");
-                    } catch (NoSuchFieldException e) { // For some reason, in development Intermediary isn't used lol
-                        field = ChatHud.class.getDeclaredField("visibleMessages");
-                    }
-                    field.setAccessible(true);
-                    List<?> lines = (List<?>) field.get(MinecraftClient.getInstance().inGameHud.getChatHud());
-                    lines.remove(0);
-                } catch (NoSuchFieldException | IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+                var lines = ((ChatHudAccessor) MinecraftClient.getInstance().inGameHud.getChatHud())
+                        .getVisibleMessages();
+                lines.remove(0);
                 ++messageId;
             } else {
                 counter.lastMessage = text;
@@ -100,5 +83,19 @@ public class ReceiveMessageMixin {
             return 0;
         }
         return StringUtils.getLevenshteinDistance(s1.toLowerCase(), s2.toLowerCase()) / avgLen;
+    }
+
+    // Taken from https://github.com/SpigotMC/BungeeCord
+    private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)§[0-9A-FK-OR]");
+
+    private static String translateAlternateColorCodes(String textToTranslate) {
+        char[] b = textToTranslate.toCharArray();
+        for (int i = 0; i < b.length - 1; ++i) {
+            if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > -1) {
+                b[i] = '§';
+                b[i + 1] = Character.toLowerCase(b[i + 1]);
+            }
+        }
+        return new String(b);
     }
 }
