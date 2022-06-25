@@ -68,7 +68,7 @@ public class ReceiveMessageMixin {
         String tooltip;
         String toCopy = packet.getMessage().getString();
         if (!ChatUtilsConfig.COPY_COLORS.value()) {
-            toCopy = ChatColor.stripColor(toCopy);
+            toCopy = STRIP_COLOR_PATTERN.matcher(toCopy).replaceAll("");
         }
 
         if (ChatUtilsConfig.PREVIEW_CONTENT.value()) {
