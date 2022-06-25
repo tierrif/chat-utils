@@ -1,0 +1,15 @@
+{
+  "chat-utils.config_title": "Definições do Chat Utils",
+  "chat-utils.configs.copyToClipboardMessage.label": "Rótulo do Texto de Cópia.",
+  "chat-utils.configs.copyToClipboardMessage.description": "Texto mostrado no rótulo ao copiar mensagens.",
+  "chat-utils.configs.previewContent.label": "Vista Prévia do Conteúdo",
+  "chat-utils.configs.previewContent.description": "Mostrar vista prévia do conteúdo no rótulo de cada mensagem.",
+  "chat-utils.configs.copyColorsIfAny.label": "Copiar Códigos de Cor",
+  "chat-utils.configs.copyColorsIfAny.description": "Copiar códigos de cor juntamente com a mensagem.",
+  "chat-utils.configs.antiSpam.label": "Anti-Spam",
+  "chat-utils.configs.antiSpam.description": "Colapsar mensagens idênticas.",
+  "chat-utils.configs.tooltipEnabled.label": "Mostrar Rótulo de Cópia",
+  "chat-utils.configs.tooltipEnabled.description": "Mostrar qualquer tipo de rótulo ao passar o rato em cima de cada mensagem.",
+  "chat-utils.configs.enabled.label": "Cópia Ativada",
+  "chat-utils.configs.enabled.description": "Clique para desativar cópia ao clicar numa mensagem."
+}

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "chat-utils",
-  "version": "1.4.0",
+  "version": "${version}",
 
   "name": "Chat Utils Mod",
   "description": "Chat message copy utility along anti-spam.",
@@ -31,10 +31,7 @@
 
   "depends": {
     "fabricloader": ">=0.7.4",
-    "fabric": "*",
-    "minecraft": "1.18.x"
-  },
-  "suggests": {
-    "flamingo": "*"
+    "cloth-config": ">=7.0.0",
+    "minecraft": "1.19.x"
   }
 }
