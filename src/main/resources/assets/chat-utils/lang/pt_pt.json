@@ -11,5 +11,6 @@
   "chat-utils.configs.tooltipEnabled.label": "Mostrar Rótulo de Cópia",
   "chat-utils.configs.tooltipEnabled.description": "Mostrar qualquer tipo de rótulo ao passar o rato em cima de cada mensagem.",
   "chat-utils.configs.enabled.label": "Cópia Ativada",
-  "chat-utils.configs.enabled.description": "Clique para desativar cópia ao clicar numa mensagem."
+  "chat-utils.configs.enabled.description": "Clique para desativar cópia ao clicar numa mensagem.",
+  "chat-utils.stored_messages": "[CHAT UTILS] &7Logs mais recentes de %s"
 }

@@ -1,6 +1,6 @@
 package io.github.hotlava03.chatutils.util;
 
-import io.github.hotlava03.chatutils.config.ChatUtilsConfig;
+import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import net.kyori.adventure.platform.fabric.FabricClientAudiences;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minecraft.text.Text;
@@ -17,6 +17,10 @@ public class StringUtils {
             }
         }
         return new String(b);
+    }
+
+    public static String formatAndTranslate(String key, Object... vars) {
+        return translateAlternateColorCodes(String.format(Text.translatable(key).getString(), vars));
     }
 
     /*

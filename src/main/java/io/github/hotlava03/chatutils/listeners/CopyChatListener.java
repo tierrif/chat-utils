@@ -1,6 +1,6 @@
 package io.github.hotlava03.chatutils.listeners;
 
-import io.github.hotlava03.chatutils.config.ChatUtilsConfig;
+import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.events.MessageReceiveEvent;
 import net.minecraft.text.*;
 
