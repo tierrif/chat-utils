@@ -1,5 +1,7 @@
 package io.github.hotlava03.chatutils.util;
 
+import static org.apache.commons.lang3.StringUtils.getLevenshteinDistance;
+
 public class StringUtils {
     public static String translateAlternateColorCodes(String textToTranslate) {
         char[] b = textToTranslate.toCharArray();
@@ -22,6 +24,6 @@ public class StringUtils {
         if (avgLen == 0) {
             return 0;
         }
-        return org.apache.commons.lang3.StringUtils.getLevenshteinDistance(s1.toLowerCase(), s2.toLowerCase()) / avgLen;
+        return getLevenshteinDistance(s1.toLowerCase(), s2.toLowerCase()) / avgLen;
     }
 }
