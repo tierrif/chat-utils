@@ -1,5 +1,9 @@
 package io.github.hotlava03.chatutils.util;
 
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.minecraft.text.Text;
+
 import static org.apache.commons.lang3.StringUtils.getLevenshteinDistance;
 
 public class StringUtils {
@@ -25,5 +29,11 @@ public class StringUtils {
             return 0;
         }
         return getLevenshteinDistance(s1.toLowerCase(), s2.toLowerCase()) / avgLen;
+    }
+
+    public static String textToLegacy(Text text) {
+        var json = Text.Serializer.toJsonTree(text);
+        var component = GsonComponentSerializer.gson().deserializeFromTree(json);
+        return LegacyComponentSerializer.legacySection().serialize(component);
     }
 }

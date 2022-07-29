@@ -8,6 +8,7 @@ import net.minecraft.text.*;
 
 import java.util.regex.Pattern;
 
+import static io.github.hotlava03.chatutils.util.StringUtils.textToLegacy;
 import static io.github.hotlava03.chatutils.util.StringUtils.translateAlternateColorCodes;
 
 public class CopyChatListener extends MessageReceiveListener {
@@ -17,9 +18,12 @@ public class CopyChatListener extends MessageReceiveListener {
     @Override
     public void onMessageReceive(MessageReceiveEvent e) {
         String tooltip;
-        String toCopy = e.getText().getString();
+        String toCopy = textToLegacy(e.getText());
         if (!ChatUtilsConfig.COPY_COLORS.value()) {
             toCopy = STRIP_COLOR_PATTERN.matcher(toCopy).replaceAll("");
+        } else {
+            toCopy = STRIP_COLOR_PATTERN.matcher(toCopy).replaceAll(matchResult ->
+                    matchResult.group().replace("§", "&"));
         }
 
         if (ChatUtilsConfig.PREVIEW_CONTENT.value()) {

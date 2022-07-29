@@ -20,9 +20,9 @@ public class CopyToClipboardListener extends SendCommandListener {
 
         if (e.getCommand().startsWith("chatmacros ")) {
             e.getCallbackInfo().cancel();
-            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
-                    new StringSelection(e.getCommand().replaceFirst("chatmacros ", "").replace("§", "&")),
-                    null);
+            String toCopy = e.getCommand().replaceFirst("chatmacros ", "");
+            Toolkit.getDefaultToolkit().getSystemClipboard()
+                    .setContents(new StringSelection(toCopy), null);
             SystemToast.show(client.getToastManager(),
                     SystemToast.Type.PERIODIC_NOTIFICATION,
                     Text.literal("Chat Utils"),
