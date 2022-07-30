@@ -1,7 +1,6 @@
 package io.github.hotlava03.chatutils.mixin;
 
-import io.github.hotlava03.chatutils.events.EventHandler;
-import io.github.hotlava03.chatutils.events.types.SendCommandEvent;
+import io.github.hotlava03.chatutils.events.SendCommandEvent;
 import net.minecraft.client.network.ClientPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,7 +13,6 @@ public class CopyToClipboardMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void onSendCommand(String command, CallbackInfoReturnable<Boolean> cir) {
-        var event = new SendCommandEvent(cir, command);
-        EventHandler.getInstance().fire(EventHandler.EventType.SEND_COMMAND, event);
+        SendCommandEvent.LISTENERS.fire(new SendCommandEvent(cir, command));
     }
 }

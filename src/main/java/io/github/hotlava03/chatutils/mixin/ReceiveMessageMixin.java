@@ -1,7 +1,6 @@
 package io.github.hotlava03.chatutils.mixin;
 
-import io.github.hotlava03.chatutils.events.EventHandler;
-import io.github.hotlava03.chatutils.events.types.MessageReceiveEvent;
+import io.github.hotlava03.chatutils.events.MessageReceiveEvent;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
@@ -30,7 +29,6 @@ public class ReceiveMessageMixin {
         var lines = ((ChatHudAccessor) MinecraftClient.getInstance().inGameHud.getChatHud())
                 .getVisibleMessages();
 
-        var event = new MessageReceiveEvent(ci, message, lines);
-        EventHandler.getInstance().fire(EventHandler.EventType.MESSAGE_RECEIVE, event);
+        MessageReceiveEvent.LISTENERS.fire(new MessageReceiveEvent(ci, message, lines));
     }
 }

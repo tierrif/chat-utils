@@ -1,6 +1,5 @@
-package io.github.hotlava03.chatutils.events.types;
+package io.github.hotlava03.chatutils.events;
 
-import io.github.hotlava03.chatutils.events.ChatUtilsEvent;
 import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -8,7 +7,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-public class MessageReceiveEvent extends ChatUtilsEvent {
+public class MessageReceiveEvent extends Event {
+    public static ListenerManager<MessageReceiveEvent> LISTENERS = new ListenerManager<>();
+
     private final Text text;
     private final List<ChatHudLine.Visible> lines;
 

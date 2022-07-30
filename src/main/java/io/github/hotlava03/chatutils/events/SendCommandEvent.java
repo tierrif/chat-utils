@@ -1,9 +1,10 @@
-package io.github.hotlava03.chatutils.events.types;
+package io.github.hotlava03.chatutils.events;
 
-import io.github.hotlava03.chatutils.events.ChatUtilsEvent;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-public class SendCommandEvent extends ChatUtilsEvent {
+public class SendCommandEvent extends Event {
+    public static ListenerManager<SendCommandEvent> LISTENERS = new ListenerManager<>();
+
     private final String command;
 
     public SendCommandEvent(CallbackInfoReturnable<Boolean> callbackInfo, String command) {
