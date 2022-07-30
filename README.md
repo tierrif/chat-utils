@@ -26,3 +26,5 @@ Please report any issues you find in the issues section. Thank you for using Cha
 ## License
 This mod is licensed under the GNU General Public License v3. For more information, please
 read the LICENSE file in the root of this project.
+
+Credits to Lexply#2725 for the mod's logo.
