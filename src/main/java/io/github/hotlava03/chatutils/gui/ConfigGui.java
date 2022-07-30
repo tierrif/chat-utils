@@ -23,6 +23,7 @@ public class ConfigGui {
         addStringEntry(general, builder, ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE);
         addBooleanEntry(general, builder, ChatUtilsConfig.PREVIEW_CONTENT);
         addBooleanEntry(general, builder, ChatUtilsConfig.COPY_COLORS);
+        addBooleanEntry(general, builder, ChatUtilsConfig.COPY_HEX_COLORS);
         return builder;
     }
 

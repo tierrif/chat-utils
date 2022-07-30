@@ -11,6 +11,11 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
+	maven { // for 1.19.1 snapshot builds of adventure
+		name = "sonatype-oss-snapshots1"
+		url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+		mavenContent { snapshotsOnly() }
+	}
 	mavenCentral()
 	maven { url "https://maven.terraformersmc.com/releases/" }
 	maven { url "https://maven.shedaniel.me/" }
@@ -26,6 +31,8 @@ dependencies {
 	// modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	modCompileOnly "com.terraformersmc:modmenu:4.0.0"
+	modImplementation include("net.kyori:adventure-text-serializer-legacy:4.11.0")
+	modImplementation include("net.kyori:adventure-platform-fabric:5.5.0-SNAPSHOT") // for Minecraft 1.19.1
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
