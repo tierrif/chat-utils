@@ -1,6 +1,6 @@
 package io.github.hotlava03.chatutils.util;
 
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.platform.fabric.FabricClientAudiences;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minecraft.text.Text;
 
@@ -32,8 +32,10 @@ public class StringUtils {
     }
 
     public static String textToLegacy(Text text) {
-        var json = Text.Serializer.toJsonTree(text);
-        var component = GsonComponentSerializer.gson().deserializeFromTree(json);
-        return LegacyComponentSerializer.legacySection().serialize(component);
+        return LegacyComponentSerializer.builder()
+                .character(LegacyComponentSerializer.SECTION_CHAR)
+                .flattener(FabricClientAudiences.of().flattener())
+                .build()
+                .serialize(text.asComponent());
     }
 }
