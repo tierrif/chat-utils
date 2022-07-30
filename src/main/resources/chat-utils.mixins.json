@@ -8,7 +8,7 @@
   "client": [
     "CopyToClipboardMixin",
     "ReceiveMessageMixin",
-    "ReceiveMessageMixin$ChatHudAccessor"
+    "JoinServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

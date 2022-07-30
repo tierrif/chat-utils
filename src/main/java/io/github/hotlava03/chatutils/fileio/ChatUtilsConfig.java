@@ -1,9 +1,9 @@
-package io.github.hotlava03.chatutils.config;
+package io.github.hotlava03.chatutils.fileio;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.client.MinecraftClient;
+import io.github.hotlava03.chatutils.util.IoUtils;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
@@ -19,22 +19,10 @@ public class ChatUtilsConfig {
     public static final Value<Boolean> ANTI_SPAM = new Value<>("antiSpam", true);
     public static final Value<Boolean> TOOLTIP_ENABLED = new Value<>("tooltipEnabled", true);
     public static final Value<Boolean> ENABLED = new Value<>("enabled", true);
-
-    private static File getConfigDirectory() {
-        File configDir = new File(MinecraftClient.getInstance().runDirectory, "config");
-        if (!configDir.isDirectory() && configDir.exists())
-            LogManager.getLogger().warn("[chat-utils] A file was found in place of the config folder!");
-        else if (!configDir.isDirectory()) {
-            boolean created = configDir.mkdir();
-            if (!created) {
-                LogManager.getLogger().warn("[chat-utils] Failed to create config folder! This may cause errors!");
-            }
-        }
-        return configDir;
-    }
+    public static final Value<Boolean> ENABLE_CHAT_PERSIST = new Value<>("enableChatPersist", true);
 
     public static void loadFromFile() {
-        File configFile = new File(getConfigDirectory(), "chatutils.json");
+        File configFile = new File(IoUtils.getConfigDirectory(), "chatutils.json");
         try (FileReader fileReader = new FileReader(configFile)) {
             JsonElement element = gson.fromJson(fileReader, JsonElement.class);
 
@@ -49,6 +37,7 @@ public class ChatUtilsConfig {
                     ANTI_SPAM.read(root.get("antiSpam"), JsonElement::getAsBoolean);
                     TOOLTIP_ENABLED.read(root.get("tooltipEnabled"), JsonElement::getAsBoolean);
                     ENABLED.read(root.get("enabled"), JsonElement::getAsBoolean);
+                    ENABLE_CHAT_PERSIST.read(root.get("enableChatPersist"), JsonElement::getAsBoolean);
                 }
             }
         } catch (IOException exception) {
@@ -59,7 +48,7 @@ public class ChatUtilsConfig {
     }
 
     public static void saveToFile() {
-        File dir = getConfigDirectory();
+        File dir = IoUtils.getConfigDirectory();
 
         if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
             try (FileWriter fileWriter = new FileWriter(new File(dir, "chatutils.json"))) {
@@ -72,6 +61,7 @@ public class ChatUtilsConfig {
                 chatUtils.addProperty(ANTI_SPAM.name(), ANTI_SPAM.value());
                 chatUtils.addProperty(TOOLTIP_ENABLED.name(), TOOLTIP_ENABLED.value());
                 chatUtils.addProperty(ENABLED.name(), ENABLED.value());
+                chatUtils.addProperty(ENABLE_CHAT_PERSIST.name(), ENABLE_CHAT_PERSIST.value());
                 root.add("ChatUtils", chatUtils);
                 gson.toJson(root, fileWriter);
                 LogManager.getLogger().info("[chat-utils] Saved settings.");

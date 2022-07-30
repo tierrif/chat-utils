@@ -1,11 +1,10 @@
 package io.github.hotlava03.chatutils.gui;
 
-import io.github.hotlava03.chatutils.config.ChatUtilsConfig;
+import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
-import org.apache.logging.log4j.LogManager;
 
 public class ConfigGui {
     public static ConfigBuilder getConfigScreen(Screen parent) {
@@ -24,6 +23,7 @@ public class ConfigGui {
         addBooleanEntry(general, builder, ChatUtilsConfig.PREVIEW_CONTENT);
         addBooleanEntry(general, builder, ChatUtilsConfig.COPY_COLORS);
         addBooleanEntry(general, builder, ChatUtilsConfig.COPY_HEX_COLORS);
+        addBooleanEntry(general, builder, ChatUtilsConfig.ENABLE_CHAT_PERSIST);
         return builder;
     }
 

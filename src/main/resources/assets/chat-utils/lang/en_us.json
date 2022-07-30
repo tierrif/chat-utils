@@ -13,5 +13,8 @@
   "chat-utils.configs.tooltipEnabled.label": "Enable Copy To Clipboard Tooltip",
   "chat-utils.configs.tooltipEnabled.description": "Click to disable any sort of tooltip when hovering over a message.",
   "chat-utils.configs.enabled.label": "Enable Copy To Clipboard",
-  "chat-utils.configs.enabled.description": "Click to disable chat-utils for compatibility issues."
+  "chat-utils.configs.enabled.description": "Click to disable chat-utils for compatibility issues.",
+  "chat-utils.configs.enableChatPersist.label": "Enable Chat Persist",
+  "chat-utils.configs.enableChatPersist.description": "Saves chat from previous server sessions when logging back in later.",
+  "chat-utils.stored_messages": "[CHAT UTILS] &7Latest chat logs from &f%s"
 }

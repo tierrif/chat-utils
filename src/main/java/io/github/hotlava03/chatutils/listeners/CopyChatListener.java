@@ -1,6 +1,6 @@
 package io.github.hotlava03.chatutils.listeners;
 
-import io.github.hotlava03.chatutils.config.ChatUtilsConfig;
+import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.events.MessageReceiveEvent;
 import net.minecraft.text.*;
 
@@ -17,7 +17,7 @@ public class CopyChatListener implements Consumer<MessageReceiveEvent> {
     @Override
     public void accept(MessageReceiveEvent e) {
         String tooltip;
-        String toCopy = textToLegacy(e.getText());
+        String toCopy = textToLegacy(e.getText(), ChatUtilsConfig.COPY_HEX_COLORS.value());
         if (!ChatUtilsConfig.COPY_COLORS.value()) {
             toCopy = STRIP_COLOR_PATTERN.matcher(toCopy).replaceAll("");
         } else {
