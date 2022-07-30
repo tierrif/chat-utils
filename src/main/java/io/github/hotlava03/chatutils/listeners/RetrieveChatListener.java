@@ -26,7 +26,6 @@ public class RetrieveChatListener implements Consumer<JoinServerEvent> {
                 return;
             }
             var date = new Date(storage.getTimestamp(address));
-            System.out.println("Server join event");
 
             lines.forEach((line) -> client.inGameHud.getChatHud().addMessage(Text.Serializer.fromJson(line)));
             client.inGameHud.getChatHud().addMessage(Text.literal(
