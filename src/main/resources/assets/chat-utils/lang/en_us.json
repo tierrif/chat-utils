@@ -14,5 +14,5 @@
   "chat-utils.configs.tooltipEnabled.description": "Click to disable any sort of tooltip when hovering over a message.",
   "chat-utils.configs.enabled.label": "Enable Copy To Clipboard",
   "chat-utils.configs.enabled.description": "Click to disable chat-utils for compatibility issues.",
-  "chat-utils.stored_messages": "[CHAT UTILS] &7Latest chat logs from %s"
+  "chat-utils.stored_messages": "[CHAT UTILS] &7Latest chat logs from "
 }

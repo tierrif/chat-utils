@@ -4,6 +4,7 @@ import io.github.hotlava03.chatutils.events.MessageReceiveEvent;
 import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import io.github.hotlava03.chatutils.util.StringUtils;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
@@ -32,7 +33,7 @@ public class ChatPersistListener implements Consumer<MessageReceiveEvent> {
             }
         }
 
-        storage.push(message, address);
+        storage.push(Text.Serializer.toJson(e.getText()), address);
         storage.saveAsync();
     }
 

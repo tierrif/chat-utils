@@ -1,9 +1,6 @@
 package io.github.hotlava03.chatutils.fileio;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import io.github.hotlava03.chatutils.util.IoUtils;
 import org.apache.logging.log4j.LogManager;
 
@@ -34,6 +31,8 @@ public class ChatStorage {
         if (!object.has(server)) object.add(server, new JsonArray());
         var serverArr = object.getAsJsonArray(server);
         serverArr.add(chatLine);
+
+        object.add("timestamp." + server, new JsonPrimitive(System.currentTimeMillis()));
 
         if (serverArr.size() > MAX_ENTRIES) serverArr.remove(0);
     }
@@ -82,6 +81,10 @@ public class ChatStorage {
                 }
             }
         }).start();
+    }
+
+    public long getTimestamp(String server) {
+        return object.get("timestamp." + server).getAsLong();
     }
 
     public boolean isLockingChatEvents() {

@@ -1,6 +1,5 @@
 package io.github.hotlava03.chatutils.listeners;
 
-import com.ibm.icu.util.Calendar;
 import io.github.hotlava03.chatutils.events.JoinServerEvent;
 import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import io.github.hotlava03.chatutils.util.StringUtils;
@@ -8,6 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.function.Consumer;
 
 public class RetrieveChatListener implements Consumer<JoinServerEvent> {
@@ -25,11 +25,13 @@ public class RetrieveChatListener implements Consumer<JoinServerEvent> {
                 storage.setLockingChatEvents(false);
                 return;
             }
-            var date = Calendar.getInstance().getTime();
-            lines.add(StringUtils.formatAndTranslate("chat-utils.stored_messages", date.toString()));
+            var date = new Date(storage.getTimestamp(address));
             System.out.println("Server join event");
 
-            lines.forEach((line) -> client.inGameHud.getChatHud().addMessage(Text.literal(line)));
+            lines.forEach((line) -> client.inGameHud.getChatHud().addMessage(Text.Serializer.fromJson(line)));
+            client.inGameHud.getChatHud().addMessage(Text.literal(
+                    StringUtils.translateAlternateColorCodes(Text.translatable("chat-utils.stored_messages").getString() + date)
+            ));
             storage.setLockingChatEvents(false);
         } catch (Throwable t) {
             t.printStackTrace();

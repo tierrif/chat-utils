@@ -18,10 +18,6 @@ public class StringUtils {
         return new String(b);
     }
 
-    public static String formatAndTranslate(String key, Object... vars) {
-        return translateAlternateColorCodes(String.format(Text.translatable(key).getString(), vars));
-    }
-
     /*
      * This method does not belong to me.
      * Original source:
