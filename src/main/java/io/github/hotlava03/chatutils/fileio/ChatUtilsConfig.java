@@ -19,7 +19,7 @@ public class ChatUtilsConfig {
     public static final Value<Boolean> ANTI_SPAM = new Value<>("antiSpam", true);
     public static final Value<Boolean> TOOLTIP_ENABLED = new Value<>("tooltipEnabled", true);
     public static final Value<Boolean> ENABLED = new Value<>("enabled", true);
-    public static final Value<Boolean> USE_CHAT_PERSIST = new Value<>("useChatPersist", true);
+    public static final Value<Boolean> ENABLE_CHAT_PERSIST = new Value<>("enableChatPersist", true);
 
     public static void loadFromFile() {
         File configFile = new File(IoUtils.getConfigDirectory(), "chatutils.json");
@@ -37,7 +37,7 @@ public class ChatUtilsConfig {
                     ANTI_SPAM.read(root.get("antiSpam"), JsonElement::getAsBoolean);
                     TOOLTIP_ENABLED.read(root.get("tooltipEnabled"), JsonElement::getAsBoolean);
                     ENABLED.read(root.get("enabled"), JsonElement::getAsBoolean);
-                    USE_CHAT_PERSIST.read(root.get("useChatPersist"), JsonElement::getAsBoolean);
+                    ENABLE_CHAT_PERSIST.read(root.get("enableChatPersist"), JsonElement::getAsBoolean);
                 }
             }
         } catch (IOException exception) {
@@ -61,7 +61,7 @@ public class ChatUtilsConfig {
                 chatUtils.addProperty(ANTI_SPAM.name(), ANTI_SPAM.value());
                 chatUtils.addProperty(TOOLTIP_ENABLED.name(), TOOLTIP_ENABLED.value());
                 chatUtils.addProperty(ENABLED.name(), ENABLED.value());
-                chatUtils.addProperty(USE_CHAT_PERSIST.name(), USE_CHAT_PERSIST.value());
+                chatUtils.addProperty(ENABLE_CHAT_PERSIST.name(), ENABLE_CHAT_PERSIST.value());
                 root.add("ChatUtils", chatUtils);
                 gson.toJson(root, fileWriter);
                 LogManager.getLogger().info("[chat-utils] Saved settings.");

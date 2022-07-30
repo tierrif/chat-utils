@@ -14,7 +14,7 @@ public class AntiSpamListener implements Consumer<MessageReceiveEvent> {
 
     @Override
     public void accept(MessageReceiveEvent e) {
-        if (ChatStorage.getInstance().isLockingChatEvents()) return;
+        if (ChatStorage.getInstance().isBlockingChatEvents()) return;
         if (ChatUtilsConfig.ANTI_SPAM.value()) {
             if (this.lastMessage == null) {
                 this.lastMessage = e.getText();

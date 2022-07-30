@@ -15,7 +15,7 @@ public class ChatStorage {
     private static ChatStorage instance;
     private final Gson gson = new Gson();
     private JsonObject object = new JsonObject();
-    private boolean lockingChatEvents = true;
+    private boolean blockingChatEvents = true;
 
     private ChatStorage() {
     }
@@ -26,7 +26,7 @@ public class ChatStorage {
     }
 
     public void push(String chatLine, String server) {
-        if (chatLine.startsWith("[CHAT UTILS] ") || this.lockingChatEvents) return;
+        if (chatLine.startsWith("[CHAT UTILS] ") || this.blockingChatEvents) return;
 
         if (!object.has(server)) object.add(server, new JsonArray());
         var serverArr = object.getAsJsonArray(server);
@@ -54,7 +54,7 @@ public class ChatStorage {
     }
 
     public void load() {
-        var configFile = new File(IoUtils.getConfigDirectory(), "chatutils-chat.json");
+        var configFile = new File(IoUtils.getConfigDirectory(), "chatutils-history.json");
         try (var fileReader = new FileReader(configFile)) {
             var element = gson.fromJson(fileReader, JsonElement.class);
 
@@ -74,7 +74,7 @@ public class ChatStorage {
         var dir = IoUtils.getConfigDirectory();
         new Thread(() -> {
             if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
-                try (FileWriter fileWriter = new FileWriter(new File(dir, "chatutils-chat.json"))) {
+                try (FileWriter fileWriter = new FileWriter(new File(dir, "chatutils-history.json"))) {
                     gson.toJson(root, fileWriter);
                 } catch (IOException e) {
                     LogManager.getLogger().error("[chat-utils] Failed to save chat line!", e);
@@ -87,11 +87,11 @@ public class ChatStorage {
         return object.get("timestamp." + server).getAsLong();
     }
 
-    public boolean isLockingChatEvents() {
-        return lockingChatEvents;
+    public boolean isBlockingChatEvents() {
+        return blockingChatEvents;
     }
 
-    public void setLockingChatEvents(boolean locking) {
-        this.lockingChatEvents = locking;
+    public void setBlockingChatEvents(boolean locking) {
+        this.blockingChatEvents = locking;
     }
 }

@@ -23,7 +23,7 @@ public class ConfigGui {
         addBooleanEntry(general, builder, ChatUtilsConfig.PREVIEW_CONTENT);
         addBooleanEntry(general, builder, ChatUtilsConfig.COPY_COLORS);
         addBooleanEntry(general, builder, ChatUtilsConfig.COPY_HEX_COLORS);
-        addBooleanEntry(general, builder, ChatUtilsConfig.USE_CHAT_PERSIST);
+        addBooleanEntry(general, builder, ChatUtilsConfig.ENABLE_CHAT_PERSIST);
         return builder;
     }
 

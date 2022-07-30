@@ -18,20 +18,20 @@ public class RetrieveChatListener implements Consumer<JoinServerEvent> {
             var serverInfo = client.getCurrentServerEntry();
             var address = serverInfo != null ? serverInfo.address : ChatStorage.SINGLEPLAYER_ADDRESS;
             var storage = ChatStorage.getInstance();
-            storage.setLockingChatEvents(true);
+            storage.setBlockingChatEvents(true);
 
             var lines = new ArrayList<>(storage.getStoredLines(address));
             if (lines.isEmpty()) {
-                storage.setLockingChatEvents(false);
+                storage.setBlockingChatEvents(false);
                 return;
             }
             var date = new Date(storage.getTimestamp(address));
 
             lines.forEach((line) -> client.inGameHud.getChatHud().addMessage(Text.Serializer.fromJson(line)));
             client.inGameHud.getChatHud().addMessage(Text.literal(
-                    StringUtils.translateAlternateColorCodes(Text.translatable("chat-utils.stored_messages").getString() + date)
+                    StringUtils.translateAlternateColorCodes(Text.translatable("chat-utils.stored_messages", date).getString())
             ));
-            storage.setLockingChatEvents(false);
+            storage.setBlockingChatEvents(false);
         } catch (Throwable t) {
             t.printStackTrace();
         }

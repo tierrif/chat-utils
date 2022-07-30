@@ -23,7 +23,7 @@ public class ChatPersistListener implements Consumer<MessageReceiveEvent> {
         var storage = ChatStorage.getInstance();
         var lines = storage.getStoredLines(address);
 
-        if (!lines.isEmpty() && !storage.isLockingChatEvents()) {
+        if (!lines.isEmpty() && !storage.isBlockingChatEvents()) {
             var last = lines.get(lines.size() - 1);
             if (message.matches(".+" + ANTI_SPAM_REGEX)) {
                 var lastLine = this.removeAntiSpamIndicator(last);
