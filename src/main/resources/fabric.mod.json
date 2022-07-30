@@ -4,13 +4,14 @@
   "version": "${version}",
 
   "name": "Chat Utils Mod",
-  "description": "Chat message copy utility along anti-spam.",
+  "description": "A few utilities for your client's chat.",
   "authors": [
-    "HotLava03"
+    "HotLava03",
+    "retrixe"
   ],
   "contact": {
-    "homepage": "https://github.com/HotLava03/chat-utils",
-    "sources": "https://github.com/HotLava03/chat-utils"
+    "homepage": "https://github.com/tierrif/chat-utils",
+    "sources": "https://github.com/tierrif/chat-utils"
   },
 
   "license": "GPLv3",
