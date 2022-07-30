@@ -6,6 +6,8 @@
   "chat-utils.configs.previewContent.description": "Whether or not to preview content in the copy message tooltip.",
   "chat-utils.configs.copyColorsIfAny.label": "Copy Color Codes",
   "chat-utils.configs.copyColorsIfAny.description": "Whether or not to copy color codes.",
+  "chat-utils.configs.copyHexColors.label": "Copy HEX Color Codes",
+  "chat-utils.configs.copyHexColors.description": "If disabled, copied colors will be downsampled to the closest legacy color code. Only works if \"copyColorsIfAny\" is enabled.",
   "chat-utils.configs.antiSpam.label": "Anti-Spam",
   "chat-utils.configs.antiSpam.description": "Collapse identical messages.",
   "chat-utils.configs.tooltipEnabled.label": "Enable Copy To Clipboard Tooltip",

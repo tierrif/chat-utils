@@ -15,6 +15,7 @@ public class ChatUtilsConfig {
             "&9Click to copy to clipboard.");
     public static final Value<Boolean> PREVIEW_CONTENT = new Value<>("previewContent", true);
     public static final Value<Boolean> COPY_COLORS = new Value<>("copyColorsIfAny", false);
+    public static final Value<Boolean> COPY_HEX_COLORS = new Value<>("copyHexColors", true);
     public static final Value<Boolean> ANTI_SPAM = new Value<>("antiSpam", true);
     public static final Value<Boolean> TOOLTIP_ENABLED = new Value<>("tooltipEnabled", true);
     public static final Value<Boolean> ENABLED = new Value<>("enabled", true);
@@ -44,6 +45,7 @@ public class ChatUtilsConfig {
                     COPY_TO_CLIPBOARD_MESSAGE.read(root.get("copyToClipboardMessage"), JsonElement::getAsString);
                     PREVIEW_CONTENT.read(root.get("previewContent"), JsonElement::getAsBoolean);
                     COPY_COLORS.read(root.get("copyColorsIfAny"), JsonElement::getAsBoolean);
+                    COPY_HEX_COLORS.read(root.get("copyHexColors"), JsonElement::getAsBoolean);
                     ANTI_SPAM.read(root.get("antiSpam"), JsonElement::getAsBoolean);
                     TOOLTIP_ENABLED.read(root.get("tooltipEnabled"), JsonElement::getAsBoolean);
                     ENABLED.read(root.get("enabled"), JsonElement::getAsBoolean);
@@ -66,6 +68,7 @@ public class ChatUtilsConfig {
                 chatUtils.addProperty(COPY_TO_CLIPBOARD_MESSAGE.name(), COPY_TO_CLIPBOARD_MESSAGE.value());
                 chatUtils.addProperty(PREVIEW_CONTENT.name(), PREVIEW_CONTENT.value());
                 chatUtils.addProperty(COPY_COLORS.name(), COPY_COLORS.value());
+                chatUtils.addProperty(COPY_HEX_COLORS.name, COPY_HEX_COLORS.value());
                 chatUtils.addProperty(ANTI_SPAM.name(), ANTI_SPAM.value());
                 chatUtils.addProperty(TOOLTIP_ENABLED.name(), TOOLTIP_ENABLED.value());
                 chatUtils.addProperty(ENABLED.name(), ENABLED.value());
