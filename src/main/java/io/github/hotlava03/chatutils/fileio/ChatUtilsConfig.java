@@ -22,7 +22,7 @@ public class ChatUtilsConfig {
     public static final Value<Boolean> ENABLE_CHAT_PERSIST = new Value<>("enableChatPersist", true);
 
     public static void loadFromFile() {
-        File configFile = new File(IoUtils.getConfigDirectory(), "chatutils.json");
+        File configFile = new File(IoUtils.getConfigDirectory(), "config.json");
         try (FileReader fileReader = new FileReader(configFile)) {
             JsonElement element = gson.fromJson(fileReader, JsonElement.class);
 
@@ -51,7 +51,7 @@ public class ChatUtilsConfig {
         File dir = IoUtils.getConfigDirectory();
 
         if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
-            try (FileWriter fileWriter = new FileWriter(new File(dir, "chatutils.json"))) {
+            try (FileWriter fileWriter = new FileWriter(new File(dir, "config.json"))) {
                 JsonObject root = new JsonObject();
                 JsonObject chatUtils = new JsonObject();
                 chatUtils.addProperty(COPY_TO_CLIPBOARD_MESSAGE.name(), COPY_TO_CLIPBOARD_MESSAGE.value());

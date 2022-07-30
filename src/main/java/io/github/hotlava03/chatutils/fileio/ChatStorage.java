@@ -54,7 +54,7 @@ public class ChatStorage {
     }
 
     public void load() {
-        var configFile = new File(IoUtils.getConfigDirectory(), "chatutils-history.json");
+        var configFile = new File(IoUtils.getConfigDirectory(), "history.json");
         try (var fileReader = new FileReader(configFile)) {
             var element = gson.fromJson(fileReader, JsonElement.class);
 
@@ -74,7 +74,7 @@ public class ChatStorage {
         var dir = IoUtils.getConfigDirectory();
         new Thread(() -> {
             if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
-                try (FileWriter fileWriter = new FileWriter(new File(dir, "chatutils-history.json"))) {
+                try (FileWriter fileWriter = new FileWriter(new File(dir, "history.json"))) {
                     gson.toJson(root, fileWriter);
                 } catch (IOException e) {
                     LogManager.getLogger().error("[chat-utils] Failed to save chat line!", e);
