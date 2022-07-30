@@ -17,7 +17,7 @@ public class CopyChatListener implements Consumer<MessageReceiveEvent> {
     @Override
     public void accept(MessageReceiveEvent e) {
         String tooltip;
-        String toCopy = textToLegacy(e.getText());
+        String toCopy = textToLegacy(e.getText(), ChatUtilsConfig.COPY_HEX_COLORS.value());
         if (!ChatUtilsConfig.COPY_COLORS.value()) {
             toCopy = STRIP_COLOR_PATTERN.matcher(toCopy).replaceAll("");
         } else {

@@ -17,20 +17,16 @@ public class ChatPersistListener implements Consumer<MessageReceiveEvent> {
         var client = MinecraftClient.getInstance();
         var serverInfo = client.getCurrentServerEntry();
         var address = serverInfo != null ? serverInfo.address : ChatStorage.SINGLEPLAYER_ADDRESS;
-        var message = e.getText().getString();
+        var message = StringUtils.textToLegacy(e.getText(), false);
 
         var storage = ChatStorage.getInstance();
         var lines = storage.getStoredLines(address);
 
         if (!lines.isEmpty() && !storage.isLockingChatEvents()) {
             var last = lines.get(lines.size() - 1);
-            System.out.println(last);
             if (message.matches(".+" + ANTI_SPAM_REGEX)) {
-                System.out.println("This is an anti-spam message.");
                 var lastLine = this.removeAntiSpamIndicator(last);
-                System.out.println(message + " --- " + lastLine);
                 if (StringUtils.getDifference(this.removeAntiSpamIndicator(message), lastLine) <= 0) {
-                    System.out.println("Removing line...");
                     storage.remove(address, lines.size() - 1);
                 }
             }
