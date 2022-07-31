@@ -30,7 +30,7 @@ public class ChatPersistListener implements Consumer<ReceiveMessageEvent> {
             if (message.matches(".+" + ANTI_SPAM_REGEX)) {
                 var lastLine = this.removeAntiSpamIndicator(last);
                 if (StringUtils.getDifference(this.removeAntiSpamIndicator(message), lastLine) <= 0) {
-                    storage.remove(address, lines.size() - 1);
+                    storage.removeChat(address, lines.size() - 1);
                 }
             }
         }
