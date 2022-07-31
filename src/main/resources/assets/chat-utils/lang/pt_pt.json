@@ -14,9 +14,9 @@
   "chat-utils.configs.tooltipEnabled.description": "Mostrar qualquer tipo de rótulo ao passar o rato em cima de cada mensagem.",
   "chat-utils.configs.enabled.label": "Cópia Ativada",
   "chat-utils.configs.enabled.description": "Clique para desativar cópia ao clicar numa mensagem.",
-  "chat-utils.configs.enableChatPersist.label": "Persistência de chat",
+  "chat-utils.configs.enableChatPersist.label": "Persistência do histórico de chat",
   "chat-utils.configs.enableChatPersist.description": "Guarda chat de sessões anteriores em servidores ao entrar nos mesmos novamente.",
-  "chat-utils.configs.enableCommandPersist.label": "Persistência de comandos",
+  "chat-utils.configs.enableCommandPersist.label": "Persistência do histórico de comandos",
   "chat-utils.configs.enableCommandPersist.description": "Guarda comandos/chat enviado(s) de sessões anteriores em servidores ao entrar nos mesmos novamente.",
   "chat-utils.stored_messages": "[CHAT UTILS] &7Logs de chat mais recentes de &f%s"
 }
