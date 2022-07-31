@@ -5,6 +5,7 @@ import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import io.github.hotlava03.chatutils.util.StringUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
@@ -17,11 +18,13 @@ public class ChatPersistListener implements Consumer<MessageReceiveEvent> {
     public void accept(MessageReceiveEvent e) {
         var client = MinecraftClient.getInstance();
         var serverInfo = client.getCurrentServerEntry();
-        var address = serverInfo != null ? serverInfo.address : ChatStorage.SINGLEPLAYER_ADDRESS;
-        var message = StringUtils.textToLegacy(e.getText(), false);
+        var address = serverInfo != null ? serverInfo.address : null;
+        if (address == null) return; // Don't store if it's singleplayer.
+
+        var message = e.getText().getString();
 
         var storage = ChatStorage.getInstance();
-        var lines = storage.getStoredLines(address);
+        var lines = storage.getStoredChatLines(address);
 
         if (!lines.isEmpty() && !storage.isBlockingChatEvents()) {
             var last = lines.get(lines.size() - 1);
@@ -33,7 +36,7 @@ public class ChatPersistListener implements Consumer<MessageReceiveEvent> {
             }
         }
 
-        storage.push(Text.Serializer.toJson(e.getText()), address);
+        storage.pushChat(Text.Serializer.toJson(e.getText()), address);
         storage.saveAsync();
     }
 

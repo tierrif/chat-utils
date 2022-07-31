@@ -1,6 +1,6 @@
 package io.github.hotlava03.chatutils.listeners;
 
-import io.github.hotlava03.chatutils.events.SendCommandEvent;
+import io.github.hotlava03.chatutils.events.CommandSendEvent;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.sound.SoundEvents;
@@ -10,11 +10,11 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.util.function.Consumer;
 
-public class CopyToClipboardListener implements Consumer<SendCommandEvent> {
+public class CopyToClipboardListener implements Consumer<CommandSendEvent> {
     private long timestamp = -1L;
 
     @Override
-    public void accept(SendCommandEvent e) {
+    public void accept(CommandSendEvent e) {
         var client = MinecraftClient.getInstance();
 
         if (e.getCommand().startsWith("chatmacros ")) {

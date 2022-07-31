@@ -11,7 +11,6 @@ import java.util.stream.StreamSupport;
 
 public class ChatStorage {
     public static final int MAX_ENTRIES = 100;
-    public static final String SINGLEPLAYER_ADDRESS = "minecraft.singleplayer";
     private static ChatStorage instance;
     private final Gson gson = new Gson();
     private JsonObject object = new JsonObject();
@@ -25,32 +24,28 @@ public class ChatStorage {
         return instance;
     }
 
-    public void push(String chatLine, String server) {
+    public void pushChat(String chatLine, String server) {
         if (chatLine.startsWith("[CHAT UTILS] ") || this.blockingChatEvents) return;
-
-        if (!object.has(server)) object.add(server, new JsonArray());
-        var serverArr = object.getAsJsonArray(server);
-        serverArr.add(chatLine);
-
+        this.push("chat.", chatLine, server);
         object.add("timestamp." + server, new JsonPrimitive(System.currentTimeMillis()));
-
-        if (serverArr.size() > MAX_ENTRIES) serverArr.remove(0);
     }
 
-    public List<String> getStoredLines(String server) {
-        if (!object.has(server)) return Collections.emptyList();
+    public void pushCmd(String cmd, String server) {
+        this.push("cmd.", cmd, server);
+    }
 
-        var arr = object.getAsJsonArray(server);
+    public List<String> getStoredChatLines(String server) {
+        return this.getLines("chat.", server);
+    }
 
-        return StreamSupport.stream(arr.spliterator(), true)
-                .map(JsonElement::getAsString)
-                .toList();
+    public List<String> getStoredCmdLines(String server) {
+        return this.getLines("cmd.", server);
     }
 
     public void remove(String server, int index) {
-        if (!object.has(server)) return;
+        if (!object.has("chat." + server)) return;
 
-        object.getAsJsonArray(server).remove(index);
+        object.getAsJsonArray("chat." + server).remove(index);
     }
 
     public void load() {
@@ -93,5 +88,23 @@ public class ChatStorage {
 
     public void setBlockingChatEvents(boolean locking) {
         this.blockingChatEvents = locking;
+    }
+
+    private void push(String prefix, String toPush, String server) {
+        if (!object.has(prefix + server)) object.add(prefix + server, new JsonArray());
+        var serverArr = object.getAsJsonArray(prefix + server);
+        serverArr.add(toPush);
+
+        if (serverArr.size() > MAX_ENTRIES) serverArr.remove(0);
+    }
+
+    private List<String> getLines(String prefix, String server) {
+        if (!object.has(prefix + server)) return Collections.emptyList();
+
+        var arr = object.getAsJsonArray(prefix + server);
+
+        return StreamSupport.stream(arr.spliterator(), true)
+                .map(JsonElement::getAsString)
+                .toList();
     }
 }
