@@ -2,6 +2,7 @@ package io.github.hotlava03.chatutils.listeners;
 
 import io.github.hotlava03.chatutils.events.MessageReceiveEvent;
 import io.github.hotlava03.chatutils.fileio.ChatStorage;
+import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.util.StringUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;

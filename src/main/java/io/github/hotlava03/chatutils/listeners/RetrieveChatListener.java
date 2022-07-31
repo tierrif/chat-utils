@@ -2,6 +2,7 @@ package io.github.hotlava03.chatutils.listeners;
 
 import io.github.hotlava03.chatutils.events.JoinServerEvent;
 import io.github.hotlava03.chatutils.fileio.ChatStorage;
+import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.util.StringUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
@@ -9,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class RetrieveChatListener implements Consumer<JoinServerEvent> {
@@ -29,7 +31,19 @@ public class RetrieveChatListener implements Consumer<JoinServerEvent> {
         storage.setBlockingChatEvents(true);
 
         // Chat Persist.
+        if (ChatUtilsConfig.ENABLE_CHAT_PERSIST.value()) {
+            handleChatPersist(storage, address, client);
+        }
 
+        // Command Persist.
+        if (ChatUtilsConfig.ENABLE_COMMAND_PERSIST.value()) {
+            handleCommandPersist(storage, address, e.getMessageHistory());
+        }
+
+        storage.setBlockingChatEvents(false);
+    }
+
+    private void handleChatPersist(ChatStorage storage, String address, MinecraftClient client) {
         var chatLines = new ArrayList<>(storage.getStoredChatLines(address));
         if (chatLines.isEmpty()) {
             storage.setBlockingChatEvents(false);
@@ -41,17 +55,15 @@ public class RetrieveChatListener implements Consumer<JoinServerEvent> {
         client.inGameHud.getChatHud().addMessage(Text.literal(
                 StringUtils.translateAlternateColorCodes(Text.translatable("chat-utils.stored_messages", date).getString())
         ));
+    }
 
-        // Command Persist.
-
+    private void handleCommandPersist(ChatStorage storage, String address, List<String> messageHistory) {
         var cmdLines = new ArrayList<>(storage.getStoredCmdLines(address));
         if (cmdLines.isEmpty()) {
             storage.setBlockingChatEvents(false);
             return;
         }
 
-        cmdLines.forEach((line) -> e.getMessageHistory().add(line));
-
-        storage.setBlockingChatEvents(false);
+        messageHistory.addAll(cmdLines);
     }
 }

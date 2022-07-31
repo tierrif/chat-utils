@@ -16,5 +16,7 @@
   "chat-utils.configs.enabled.description": "Click to disable chat-utils for compatibility issues.",
   "chat-utils.configs.enableChatPersist.label": "Enable Chat Persist",
   "chat-utils.configs.enableChatPersist.description": "Saves chat from previous server sessions when logging back in later.",
+  "chat-utils.configs.enableCommandPersist.label": "Enable Command Persist",
+  "chat-utils.configs.enableCommandPersist.description": "Saves commands/sent chat from previous server sessions when logging back in later.",
   "chat-utils.stored_messages": "[CHAT UTILS] &7Latest chat logs from &f%s"
 }
