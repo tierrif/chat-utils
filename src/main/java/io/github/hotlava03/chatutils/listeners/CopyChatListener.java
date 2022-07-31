@@ -1,7 +1,7 @@
 package io.github.hotlava03.chatutils.listeners;
 
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
-import io.github.hotlava03.chatutils.events.MessageReceiveEvent;
+import io.github.hotlava03.chatutils.events.ReceiveMessageEvent;
 import net.minecraft.text.*;
 
 import java.util.function.Consumer;
@@ -10,12 +10,12 @@ import java.util.regex.Pattern;
 import static io.github.hotlava03.chatutils.util.StringUtils.textToLegacy;
 import static io.github.hotlava03.chatutils.util.StringUtils.translateAlternateColorCodes;
 
-public class CopyChatListener implements Consumer<MessageReceiveEvent> {
+public class CopyChatListener implements Consumer<ReceiveMessageEvent> {
     // Taken from https://github.com/SpigotMC/BungeeCord
     private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)§([0-9A-FK-OR]|#[a-f0-9]{6})");
 
     @Override
-    public void accept(MessageReceiveEvent e) {
+    public void accept(ReceiveMessageEvent e) {
         String tooltip;
         String toCopy = textToLegacy(e.getText(), ChatUtilsConfig.COPY_HEX_COLORS.value());
         if (!ChatUtilsConfig.COPY_COLORS.value()) {

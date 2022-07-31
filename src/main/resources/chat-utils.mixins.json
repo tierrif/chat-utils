@@ -7,8 +7,10 @@
   ],
   "client": [
     "CopyToClipboardMixin",
+    "JoinServerMixin",
+    "MessageHistoryAccessor",
     "ReceiveMessageMixin",
-    "JoinServerMixin"
+    "SendMessageMixin"
   ],
   "injectors": {
     "defaultRequire": 1
