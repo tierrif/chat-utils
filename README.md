@@ -24,7 +24,7 @@ To change ChatUtils' settings, press ESC if you're in game and click in the mods
 Please report any issues you find in the issues section. Thank you for using ChatUtils.
 
 ## License
-This mod is licensed under the GNU General Public License v3. For more information, please
+This mod is licensed under the GNU Lesser General Public License v3. For more information, please
 read the LICENSE file in the root of this project.
 
 Credits to Lexply#2725 for the mod's logo.
