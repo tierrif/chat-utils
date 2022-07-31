@@ -107,7 +107,9 @@ public class ChatStorage {
             return Collections.emptyList();
         }
 
-        var arr = object.getAsJsonObject(server).getAsJsonArray(type);
+        var serverObj = object.getAsJsonObject(server);
+        if (!(serverObj.has(type) && serverObj.get(type).isJsonArray())) serverObj.add(type, new JsonArray());
+        var arr = serverObj.getAsJsonArray(type);
 
         return StreamSupport.stream(arr.spliterator(), true)
                 .map(JsonElement::getAsString)
