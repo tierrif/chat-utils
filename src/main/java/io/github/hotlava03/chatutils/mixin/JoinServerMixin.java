@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ConnectScreen.class)
 public class JoinServerMixin {
-
     @Inject(at = @At("RETURN"), method = "connect(Lnet/minecraft/client/MinecraftClient;Lnet/minecraft/client/network/ServerAddress;)V")
     public void onServerJoin(CallbackInfo info) {
         JoinServerEvent.LISTENERS.fire(new JoinServerEvent(info));
