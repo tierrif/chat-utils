@@ -98,10 +98,10 @@ public class ChatStorage {
         if (serverArr.size() > MAX_ENTRIES) serverArr.remove(0);
     }
 
-    private List<String> getLines(String prefix, String server) {
-        if (!object.has(prefix + server)) return Collections.emptyList();
+    private List<String> getLines(String type, String server) {
+        if (!object.has(server)) return Collections.emptyList();
 
-        var arr = object.getAsJsonArray(prefix + server);
+        var arr = object.getAsJsonArray(type + server);
 
         return StreamSupport.stream(arr.spliterator(), true)
                 .map(JsonElement::getAsString)

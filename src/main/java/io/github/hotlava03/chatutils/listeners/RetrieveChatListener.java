@@ -3,6 +3,7 @@ package io.github.hotlava03.chatutils.listeners;
 import io.github.hotlava03.chatutils.events.JoinServerEvent;
 import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
+import io.github.hotlava03.chatutils.mixin.MessageHistoryAccessor;
 import io.github.hotlava03.chatutils.util.StringUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class RetrieveChatListener implements Consumer<JoinServerEvent> {
+
     @Override
     public void accept(JoinServerEvent e) {
         var client = MinecraftClient.getInstance();
@@ -37,7 +39,7 @@ public class RetrieveChatListener implements Consumer<JoinServerEvent> {
 
         // Command Persist.
         if (ChatUtilsConfig.ENABLE_COMMAND_PERSIST.value()) {
-            handleCommandPersist(storage, address, e.getMessageHistory());
+            handleCommandPersist(storage, address, ((MessageHistoryAccessor) client.inGameHud.getChatHud()).getMessageHistory());
         }
 
         storage.setBlockingChatEvents(false);
