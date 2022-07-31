@@ -1,22 +1,20 @@
 package io.github.hotlava03.chatutils.listeners;
 
-import io.github.hotlava03.chatutils.events.MessageReceiveEvent;
+import io.github.hotlava03.chatutils.events.ReceiveMessageEvent;
 import io.github.hotlava03.chatutils.fileio.ChatStorage;
-import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.util.StringUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
-import org.apache.logging.log4j.LogManager;
 
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
-public class ChatPersistListener implements Consumer<MessageReceiveEvent> {
+public class ChatPersistListener implements Consumer<ReceiveMessageEvent> {
     private static final String ANTI_SPAM_REGEX = " §8\\[§c\\dx§8]$";
     private static final Pattern ANTI_SPAM_PATTERN = Pattern.compile(ANTI_SPAM_REGEX);
 
     @Override
-    public void accept(MessageReceiveEvent e) {
+    public void accept(ReceiveMessageEvent e) {
         var client = MinecraftClient.getInstance();
         var serverInfo = client.getCurrentServerEntry();
         var address = serverInfo != null ? serverInfo.address : null;

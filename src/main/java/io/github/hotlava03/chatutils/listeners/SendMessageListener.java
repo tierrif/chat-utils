@@ -1,14 +1,14 @@
 package io.github.hotlava03.chatutils.listeners;
 
-import io.github.hotlava03.chatutils.events.MessageSendEvent;
+import io.github.hotlava03.chatutils.events.SendMessageEvent;
 import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import net.minecraft.client.MinecraftClient;
 
 import java.util.function.Consumer;
 
-public class MessageSendListener implements Consumer<MessageSendEvent> {
+public class SendMessageListener implements Consumer<SendMessageEvent> {
     @Override
-    public void accept(MessageSendEvent e) {
+    public void accept(SendMessageEvent e) {
         var client = MinecraftClient.getInstance();
         var serverInfo = client.getCurrentServerEntry();
         var address = serverInfo != null ? serverInfo.address : null;

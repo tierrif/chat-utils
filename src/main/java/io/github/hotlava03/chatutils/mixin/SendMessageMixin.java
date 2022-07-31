@@ -1,6 +1,6 @@
 package io.github.hotlava03.chatutils.mixin;
 
-import io.github.hotlava03.chatutils.events.MessageSendEvent;
+import io.github.hotlava03.chatutils.events.SendMessageEvent;
 import net.minecraft.client.gui.hud.ChatHud;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,6 +18,6 @@ public abstract class SendMessageMixin {
     public void addToMessageHistory(String message, CallbackInfo info) {
         var size = getMessageHistory().size();
         if (size == 0) return;
-        MessageSendEvent.LISTENERS.fire(new MessageSendEvent(info, getMessageHistory().get(size - 1)));
+        SendMessageEvent.LISTENERS.fire(new SendMessageEvent(info, getMessageHistory().get(size - 1)));
     }
 }

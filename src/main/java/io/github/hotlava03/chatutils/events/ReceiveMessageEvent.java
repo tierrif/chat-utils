@@ -7,13 +7,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-public class MessageReceiveEvent extends Event {
-    public static ListenerManager<MessageReceiveEvent> LISTENERS = new ListenerManager<>();
+public class ReceiveMessageEvent extends Event {
+    public static ListenerManager<ReceiveMessageEvent> LISTENERS = new ListenerManager<>();
 
     private final Text text;
     private final List<ChatHudLine.Visible> lines;
 
-    public MessageReceiveEvent(CallbackInfo callbackInfo, Text text, List<ChatHudLine.Visible> lines) {
+    public ReceiveMessageEvent(CallbackInfo callbackInfo, Text text, List<ChatHudLine.Visible> lines) {
         super(callbackInfo);
         this.text = text;
         this.lines = lines;
