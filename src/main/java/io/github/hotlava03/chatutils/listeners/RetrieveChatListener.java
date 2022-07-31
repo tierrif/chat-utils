@@ -30,7 +30,6 @@ public class RetrieveChatListener implements Consumer<JoinServerEvent> {
         }
 
         var storage = ChatStorage.getInstance();
-        storage.setBlockingChatEvents(true);
 
         // Chat Persist.
         if (ChatUtilsConfig.ENABLE_CHAT_PERSIST.value()) {
@@ -41,11 +40,10 @@ public class RetrieveChatListener implements Consumer<JoinServerEvent> {
         if (ChatUtilsConfig.ENABLE_COMMAND_PERSIST.value()) {
             handleCommandPersist(storage, address, ((MessageHistoryAccessor) client.inGameHud.getChatHud()).getMessageHistory());
         }
-
-        storage.setBlockingChatEvents(false);
     }
 
     private void handleChatPersist(ChatStorage storage, String address, MinecraftClient client) {
+        storage.setBlockingChatEvents(true);
         var chatLines = new ArrayList<>(storage.getStoredChatLines(address));
         if (chatLines.isEmpty()) {
             storage.setBlockingChatEvents(false);
@@ -57,15 +55,10 @@ public class RetrieveChatListener implements Consumer<JoinServerEvent> {
         client.inGameHud.getChatHud().addMessage(Text.literal(
                 StringUtils.translateAlternateColorCodes(Text.translatable("chat-utils.stored_messages", date).getString())
         ));
+        storage.setBlockingChatEvents(false);
     }
 
     private void handleCommandPersist(ChatStorage storage, String address, List<String> messageHistory) {
-        var cmdLines = new ArrayList<>(storage.getStoredCmdLines(address));
-        if (cmdLines.isEmpty()) {
-            storage.setBlockingChatEvents(false);
-            return;
-        }
-
-        messageHistory.addAll(cmdLines);
+        messageHistory.addAll(new ArrayList<>(storage.getStoredCmdLines(address)));
     }
 }
