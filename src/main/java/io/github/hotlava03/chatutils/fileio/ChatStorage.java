@@ -97,7 +97,7 @@ public class ChatStorage {
         var arr = serverObj.getAsJsonArray(type);
         arr.add(toPush);
 
-        if (serverObj.size() > MAX_ENTRIES) arr.remove(0);
+        if (arr.size() > MAX_ENTRIES) arr.remove(0);
     }
 
     private List<String> getLines(String type, String server) {
