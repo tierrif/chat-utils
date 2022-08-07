@@ -58,11 +58,11 @@ public class AntiSpamListener implements Consumer<ReceiveMessageEvent> {
                     if (appended.startsWith(" [x") && appended.endsWith("]")) {
                         var previousCounter = appended.substring(3, appended.length() - 1);
 
-                        if (isNumeric(previousCounter)) {
+                        try {
                             spamCounter += Integer.parseInt(previousCounter);
                             lineMatchCount++;
                             continue;
-                        }
+                        } catch (NumberFormatException ignored) {}
                     }
                 }
 
