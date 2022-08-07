@@ -75,12 +75,12 @@ public class AntiSpamListener implements Consumer<ReceiveMessageEvent> {
                     }
 
                     var previousCounter = appended.substring(3, appended.length() - 1);
-                    if (!isNumeric(previousCounter)) {
+                    try {
+                        spamCounter += Integer.parseInt(previousCounter);
+                    } catch (NumberFormatException e) {
                         lineMatchCount = 0;
                         continue;
                     }
-
-                    spamCounter += Integer.parseInt(previousCounter);
                 }
             }
 
