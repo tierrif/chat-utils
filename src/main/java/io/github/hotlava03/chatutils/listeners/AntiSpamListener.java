@@ -86,13 +86,6 @@ public class AntiSpamListener implements Consumer<ReceiveMessageEvent> {
 
             if (i + lineMatchCount >= i) {
                 history.subList(i, i + lineMatchCount + 1).clear();
-                /*if (address != null) {
-                    var storage = ChatStorage.getInstance();
-                    for (int j = i; j <= i + lineMatchCount; j++) {
-                        storage.removeChat(address, j);
-                    }
-                    storage.saveAsync();
-                }*/
             }
             lineMatchCount = 0;
         }
