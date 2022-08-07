@@ -10,6 +10,8 @@
   "chat-utils.configs.copyHexColors.description": "Se desativado, cores copiadas serão transformadas na cor \"legacy\" mais aproximada. Apenas funciona se \"copyColorsIfAny\" estiver ativado.",
   "chat-utils.configs.antiSpam.label": "Anti-Spam",
   "chat-utils.configs.antiSpam.description": "Colapsar mensagens idênticas.",
+  "chat-utils.configs.antiSpamRange.label": "Alcance do Anti-Spam",
+  "chat-utils.configs.antiSpamRange.description": "O sistema Anti-Spam apenas é chamado quando mensagens estão neste alcance da mensagem mais recente.",
   "chat-utils.configs.tooltipEnabled.label": "Mostrar Rótulo de Cópia",
   "chat-utils.configs.tooltipEnabled.description": "Mostrar qualquer tipo de rótulo ao passar o rato em cima de cada mensagem.",
   "chat-utils.configs.enabled.label": "Cópia Ativada",

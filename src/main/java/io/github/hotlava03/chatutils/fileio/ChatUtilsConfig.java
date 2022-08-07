@@ -17,6 +17,7 @@ public class ChatUtilsConfig {
     public static final Value<Boolean> COPY_COLORS = new Value<>("copyColorsIfAny", false);
     public static final Value<Boolean> COPY_HEX_COLORS = new Value<>("copyHexColors", true);
     public static final Value<Boolean> ANTI_SPAM = new Value<>("antiSpam", true);
+    public static final Value<Integer> ANTI_SPAM_RANGE = new Value<>("antiSpamRange", 3);
     public static final Value<Boolean> TOOLTIP_ENABLED = new Value<>("tooltipEnabled", true);
     public static final Value<Boolean> ENABLED = new Value<>("enabled", true);
     public static final Value<Boolean> ENABLE_CHAT_PERSIST = new Value<>("enableChatPersist", true);
@@ -36,6 +37,7 @@ public class ChatUtilsConfig {
                     COPY_COLORS.read(root.get("copyColorsIfAny"), JsonElement::getAsBoolean);
                     COPY_HEX_COLORS.read(root.get("copyHexColors"), JsonElement::getAsBoolean);
                     ANTI_SPAM.read(root.get("antiSpam"), JsonElement::getAsBoolean);
+                    ANTI_SPAM_RANGE.read(root.get("antiSpamRange"), JsonElement::getAsInt);
                     TOOLTIP_ENABLED.read(root.get("tooltipEnabled"), JsonElement::getAsBoolean);
                     ENABLED.read(root.get("enabled"), JsonElement::getAsBoolean);
                     ENABLE_CHAT_PERSIST.read(root.get("enableChatPersist"), JsonElement::getAsBoolean);
@@ -61,6 +63,7 @@ public class ChatUtilsConfig {
                 chatUtils.addProperty(COPY_COLORS.name(), COPY_COLORS.value());
                 chatUtils.addProperty(COPY_HEX_COLORS.name, COPY_HEX_COLORS.value());
                 chatUtils.addProperty(ANTI_SPAM.name(), ANTI_SPAM.value());
+                chatUtils.addProperty(ANTI_SPAM_RANGE.name(), ANTI_SPAM_RANGE.value());
                 chatUtils.addProperty(TOOLTIP_ENABLED.name(), TOOLTIP_ENABLED.value());
                 chatUtils.addProperty(ENABLED.name(), ENABLED.value());
                 chatUtils.addProperty(ENABLE_CHAT_PERSIST.name(), ENABLE_CHAT_PERSIST.value());

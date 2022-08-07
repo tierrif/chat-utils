@@ -14,7 +14,7 @@ public class ChatStorage {
     private static ChatStorage instance;
     private final Gson gson = new Gson();
     private JsonObject object = new JsonObject();
-    private boolean blockingChatEvents = true;
+    private boolean blockingChatEvents = false;
 
     private ChatStorage() {
     }
