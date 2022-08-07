@@ -1,6 +1,7 @@
 package io.github.hotlava03.chatutils.listeners;
 
 import io.github.hotlava03.chatutils.events.ReceiveMessageEvent;
+import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.mixin.MessageHistoryAccessor;
 import net.minecraft.client.MinecraftClient;
@@ -16,6 +17,7 @@ import static io.github.hotlava03.chatutils.util.StringUtils.isNumeric;
 public class AntiSpamListener implements Consumer<ReceiveMessageEvent> {
     @Override
     public void accept(ReceiveMessageEvent e) {
+        if (ChatStorage.getInstance().isBlockingChatEvents()) return;
         var client = MinecraftClient.getInstance();
         var chat = client.inGameHud.getChatHud();
         var accessor = (MessageHistoryAccessor) chat;
