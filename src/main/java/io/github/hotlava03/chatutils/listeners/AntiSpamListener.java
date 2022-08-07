@@ -19,6 +19,8 @@ public class AntiSpamListener implements Consumer<ReceiveMessageEvent> {
         if (ChatStorage.getInstance().isBlockingChatEvents()) return;
         var client = MinecraftClient.getInstance();
         var chat = client.inGameHud.getChatHud();
+        var serverInfo = client.getCurrentServerEntry();
+        var address = serverInfo != null ? serverInfo.address : null;
         var fullHistory = e.getLines();
         var range = ChatUtilsConfig.ANTI_SPAM_RANGE.value();
         var history = fullHistory.size() >= range ? fullHistory.subList(0, range) : fullHistory;
@@ -82,7 +84,16 @@ public class AntiSpamListener implements Consumer<ReceiveMessageEvent> {
                 }
             }
 
-            if (i + lineMatchCount >= i) history.subList(i, i + lineMatchCount + 1).clear();
+            if (i + lineMatchCount >= i) {
+                history.subList(i, i + lineMatchCount + 1).clear();
+                /*if (address != null) {
+                    var storage = ChatStorage.getInstance();
+                    for (int j = i; j <= i + lineMatchCount; j++) {
+                        storage.removeChat(address, j);
+                    }
+                    storage.saveAsync();
+                }*/
+            }
             lineMatchCount = 0;
         }
 

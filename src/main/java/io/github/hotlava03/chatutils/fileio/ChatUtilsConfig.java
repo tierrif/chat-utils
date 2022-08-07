@@ -17,7 +17,7 @@ public class ChatUtilsConfig {
     public static final Value<Boolean> COPY_COLORS = new Value<>("copyColorsIfAny", false);
     public static final Value<Boolean> COPY_HEX_COLORS = new Value<>("copyHexColors", true);
     public static final Value<Boolean> ANTI_SPAM = new Value<>("antiSpam", true);
-    public static final Value<Integer> ANTI_SPAM_RANGE = new Value<>("antiSpamRange", 3);
+    public static final Value<Integer> ANTI_SPAM_RANGE = new Value<>("antiSpamRange", 16);
     public static final Value<Boolean> TOOLTIP_ENABLED = new Value<>("tooltipEnabled", true);
     public static final Value<Boolean> ENABLED = new Value<>("enabled", true);
     public static final Value<Boolean> ENABLE_CHAT_PERSIST = new Value<>("enableChatPersist", true);
