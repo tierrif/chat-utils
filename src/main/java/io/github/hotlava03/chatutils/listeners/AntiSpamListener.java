@@ -26,12 +26,12 @@ public class AntiSpamListener implements Consumer<ReceiveMessageEvent> {
         var history = fullHistory.size() >= range ? fullHistory.subList(0, range) : fullHistory;
         if (history.isEmpty()) return;
 
-        int maxTextLength = MathHelper.floor(chat.getWidth() / chat.getChatScale());
+        var maxTextLength = MathHelper.floor(chat.getWidth() / chat.getChatScale());
         var splitLines = ChatMessages.breakRenderedChatMessageLines(
                 e.getText(), maxTextLength, client.textRenderer);
 
-        int spamCounter = 1;
-        int lineMatchCount = 0;
+        var spamCounter = 1;
+        var lineMatchCount = 0;
 
         for (int i = history.size() - 1; i >= 0; i--) {
             var previous = orderedTextToString(history.get(i).content());
