@@ -17,6 +17,8 @@ public class SendMessageListener implements Consumer<SendMessageEvent> {
         if (e.getLine().startsWith("/chatmacros ")) return;
 
         var storage = ChatStorage.getInstance();
+        var cmds = storage.getStoredCmdLines(address);
+        if (cmds.get(cmds.size() - 1).equals(e.getLine())) return;
         storage.pushCmd(e.getLine(), address);
         storage.saveAsync();
     }

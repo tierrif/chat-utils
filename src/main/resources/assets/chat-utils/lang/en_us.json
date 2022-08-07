@@ -10,6 +10,8 @@
   "chat-utils.configs.copyHexColors.description": "If disabled, copied colors will be downsampled to the closest legacy color code. Only works if \"copyColorsIfAny\" is enabled.",
   "chat-utils.configs.antiSpam.label": "Anti-Spam",
   "chat-utils.configs.antiSpam.description": "Collapse identical messages.",
+  "chat-utils.configs.antiSpamRange.label": "Anti-Spam Range",
+  "chat-utils.configs.antiSpamRange.description": "Chat Anti-Spam only triggers when messages are within this range from the latest message.",
   "chat-utils.configs.tooltipEnabled.label": "Enable Copy To Clipboard Tooltip",
   "chat-utils.configs.tooltipEnabled.description": "Click to disable any sort of tooltip when hovering over a message.",
   "chat-utils.configs.enabled.label": "Enable Copy To Clipboard",
@@ -18,5 +20,5 @@
   "chat-utils.configs.enableChatPersist.description": "Saves chat from previous server sessions when logging back in later.",
   "chat-utils.configs.enableCommandPersist.label": "Enable Command History Persistence",
   "chat-utils.configs.enableCommandPersist.description": "Saves commands/sent chat from previous server sessions when logging back in later.",
-  "chat-utils.stored_messages": "[CHAT UTILS] &7Latest chat logs from &f%s"
+  "chat-utils.stored_messages": "[CHAT UTILS] &7Restored chat from &f%s"
 }

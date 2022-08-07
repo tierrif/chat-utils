@@ -38,4 +38,13 @@ public class StringUtils {
         if (useHexCodes) builder.hexColors();
         return builder.build().serialize(text.asComponent());
     }
+
+    public static boolean isNumeric(String str) {
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 }

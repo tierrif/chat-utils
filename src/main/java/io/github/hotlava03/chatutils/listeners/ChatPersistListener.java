@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 public class ChatPersistListener implements Consumer<ReceiveMessageEvent> {
-    private static final String ANTI_SPAM_REGEX = " §8\\[§c\\dx§8]$";
+    private static final String ANTI_SPAM_REGEX = " §8\\[§cx\\d§8]$";
     private static final Pattern ANTI_SPAM_PATTERN = Pattern.compile(ANTI_SPAM_REGEX);
 
     @Override
@@ -26,7 +26,7 @@ public class ChatPersistListener implements Consumer<ReceiveMessageEvent> {
         var lines = storage.getStoredChatLines(address);
 
         if (!lines.isEmpty() && !storage.isBlockingChatEvents()) {
-            var last = lines.get(lines.size() - 1);
+            var last = Text.Serializer.fromJson(lines.get(lines.size() - 1)).getString();
             if (message.matches(".+" + ANTI_SPAM_REGEX)) {
                 var lastLine = this.removeAntiSpamIndicator(last);
                 if (StringUtils.getDifference(this.removeAntiSpamIndicator(message), lastLine) <= 0) {
