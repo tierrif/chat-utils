@@ -77,7 +77,7 @@ public class AntiSpamListener implements Consumer<ReceiveMessageEvent> {
                     var previousCounter = appended.substring(3, appended.length() - 1);
                     try {
                         spamCounter += Integer.parseInt(previousCounter);
-                    } catch (NumberFormatException e) {
+                    } catch (NumberFormatException ei) {
                         lineMatchCount = 0;
                         continue;
                     }
