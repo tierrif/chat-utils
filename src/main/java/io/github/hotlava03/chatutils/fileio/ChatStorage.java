@@ -56,7 +56,7 @@ public class ChatStorage {
             this.object = element != null && element.isJsonObject()
                     ? element.getAsJsonObject()
                     : new JsonObject();
-        } catch (IOException exception) {
+        } catch (Exception exception) {
             this.object = new JsonObject();
             if (!(exception instanceof FileNotFoundException)) {
                 LogManager.getLogger().error("Failed to read chat storage!", exception);
