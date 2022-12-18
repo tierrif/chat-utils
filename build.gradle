@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.12-SNAPSHOT'
+	id 'fabric-loom' version '1.0-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -30,13 +30,13 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	// modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modCompileOnly "com.terraformersmc:modmenu:4.0.0"
-	modImplementation include("net.kyori:adventure-text-serializer-legacy:4.11.0")
-	modImplementation include("net.kyori:adventure-platform-fabric:5.5.0-SNAPSHOT") // for Minecraft 1.19.1
+	modCompileOnly "com.terraformersmc:modmenu:4.1.2"
+	modImplementation include("net.kyori:adventure-text-serializer-legacy:4.12.0")
+	modImplementation include("net.kyori:adventure-platform-fabric:5.5.1")
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
-	modApi("me.shedaniel.cloth:cloth-config-fabric:7.0.69") {
+	modApi("me.shedaniel.cloth:cloth-config-fabric:8.2.88") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 }
@@ -77,18 +77,15 @@ jar {
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			// add all the jars that should be included when publishing to maven
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
+			from components.java
 		}
 	}
 
-	// select the repositories you want to publish to
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
 	repositories {
-
+		// Add repositories to publish to here.
+		// Notice: This block does NOT have the same function as the block in the top level.
+		// The repositories here will be used for publishing your artifact, not for
+		// retrieving dependencies.
 	}
 }
