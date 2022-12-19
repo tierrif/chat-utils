@@ -5,6 +5,8 @@ import io.github.hotlava03.chatutils.util.IoUtils;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.StreamSupport;
@@ -69,8 +71,18 @@ public class ChatStorage {
         var dir = IoUtils.getConfigDirectory();
         new Thread(() -> {
             if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
-                try (FileWriter fileWriter = new FileWriter(new File(dir, "history.json"))) {
-                    gson.toJson(root, fileWriter);
+                try {
+                    // Write to a temporary file.
+                    try (FileWriter fileWriter = new FileWriter(new File(dir, "history.json~"))) {
+                        gson.toJson(root, fileWriter);
+                    }
+                    // Overwrite proper file atomically with temporary file after write has finished.
+                    Files.move(
+                            dir.toPath().resolve("history.json~"),
+                            dir.toPath().resolve("history.json"),
+                            StandardCopyOption.ATOMIC_MOVE,
+                            StandardCopyOption.REPLACE_EXISTING
+                    );
                 } catch (IOException e) {
                     LogManager.getLogger().error("[chat-utils] Failed to save chat line!", e);
                 }
