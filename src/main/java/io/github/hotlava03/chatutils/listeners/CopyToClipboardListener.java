@@ -31,7 +31,7 @@ public class CopyToClipboardListener implements Consumer<SendCommandEvent> {
                 timestamp = System.currentTimeMillis();
                 return;
             }
-            client.player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_PLING, 2f, 1.5f);
+            client.player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_PLING.value(), 2f, 1.5f);
             timestamp = System.currentTimeMillis();
         }
     }

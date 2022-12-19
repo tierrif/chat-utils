@@ -19,7 +19,7 @@ public class RetrieveChatListener implements Consumer<JoinServerEvent> {
     @Override
     public void accept(JoinServerEvent e) {
         var client = MinecraftClient.getInstance();
-        var serverInfo = client.getCurrentServerEntry();
+        var serverInfo = e.getInfo();
         var address = serverInfo != null ? serverInfo.address : null;
         if (address == null) {
             LogManager.getLogger().error("Unexpected missing server info for joined server.");
