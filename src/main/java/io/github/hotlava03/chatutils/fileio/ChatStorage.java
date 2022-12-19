@@ -5,8 +5,6 @@ import io.github.hotlava03.chatutils.util.IoUtils;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.StreamSupport;
@@ -67,27 +65,16 @@ public class ChatStorage {
     }
 
     public void saveAsync() {
-        var root = this.object.deepCopy();
-        var dir = IoUtils.getConfigDirectory();
-        new Thread(() -> {
-            if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
-                try {
-                    // Write to a temporary file.
-                    try (FileWriter fileWriter = new FileWriter(new File(dir, "history.json~"))) {
-                        gson.toJson(root, fileWriter);
-                    }
-                    // Overwrite proper file atomically with temporary file after write has finished.
-                    Files.move(
-                            dir.toPath().resolve("history.json~"),
-                            dir.toPath().resolve("history.json"),
-                            StandardCopyOption.ATOMIC_MOVE,
-                            StandardCopyOption.REPLACE_EXISTING
-                    );
-                } catch (IOException e) {
-                    LogManager.getLogger().error("[chat-utils] Failed to save chat line!", e);
-                }
-            }
-        }).start();
+        new Thread(() -> saveHistoryFile(object.deepCopy())).start();
+    }
+
+    private synchronized void saveHistoryFile(JsonObject data) {
+        // Synchronising this prevents data races between multiple rapidly started threads.
+        try {
+            IoUtils.writeJsonToFile("history.json", data, gson);
+        } catch (IOException e) {
+            LogManager.getLogger().error("[chat-utils] Failed to save chat line!", e);
+        }
     }
 
     public long getTimestamp(String server) {

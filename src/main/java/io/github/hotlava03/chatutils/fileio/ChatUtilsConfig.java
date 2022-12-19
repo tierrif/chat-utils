@@ -52,28 +52,27 @@ public class ChatUtilsConfig {
     }
 
     public static void saveToFile() {
-        File dir = IoUtils.getConfigDirectory();
+        try {
+            // Create JSON object.
+            JsonObject root = new JsonObject();
+            JsonObject chatUtils = new JsonObject();
+            chatUtils.addProperty(COPY_TO_CLIPBOARD_MESSAGE.name(), COPY_TO_CLIPBOARD_MESSAGE.value());
+            chatUtils.addProperty(PREVIEW_CONTENT.name(), PREVIEW_CONTENT.value());
+            chatUtils.addProperty(COPY_COLORS.name(), COPY_COLORS.value());
+            chatUtils.addProperty(COPY_HEX_COLORS.name, COPY_HEX_COLORS.value());
+            chatUtils.addProperty(ANTI_SPAM.name(), ANTI_SPAM.value());
+            chatUtils.addProperty(ANTI_SPAM_RANGE.name(), ANTI_SPAM_RANGE.value());
+            chatUtils.addProperty(TOOLTIP_ENABLED.name(), TOOLTIP_ENABLED.value());
+            chatUtils.addProperty(ENABLED.name(), ENABLED.value());
+            chatUtils.addProperty(ENABLE_CHAT_PERSIST.name(), ENABLE_CHAT_PERSIST.value());
+            chatUtils.addProperty(ENABLE_COMMAND_PERSIST.name(), ENABLE_COMMAND_PERSIST.value());
+            root.add("ChatUtils", chatUtils);
 
-        if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
-            try (FileWriter fileWriter = new FileWriter(new File(dir, "config.json"))) {
-                JsonObject root = new JsonObject();
-                JsonObject chatUtils = new JsonObject();
-                chatUtils.addProperty(COPY_TO_CLIPBOARD_MESSAGE.name(), COPY_TO_CLIPBOARD_MESSAGE.value());
-                chatUtils.addProperty(PREVIEW_CONTENT.name(), PREVIEW_CONTENT.value());
-                chatUtils.addProperty(COPY_COLORS.name(), COPY_COLORS.value());
-                chatUtils.addProperty(COPY_HEX_COLORS.name, COPY_HEX_COLORS.value());
-                chatUtils.addProperty(ANTI_SPAM.name(), ANTI_SPAM.value());
-                chatUtils.addProperty(ANTI_SPAM_RANGE.name(), ANTI_SPAM_RANGE.value());
-                chatUtils.addProperty(TOOLTIP_ENABLED.name(), TOOLTIP_ENABLED.value());
-                chatUtils.addProperty(ENABLED.name(), ENABLED.value());
-                chatUtils.addProperty(ENABLE_CHAT_PERSIST.name(), ENABLE_CHAT_PERSIST.value());
-                chatUtils.addProperty(ENABLE_COMMAND_PERSIST.name(), ENABLE_COMMAND_PERSIST.value());
-                root.add("ChatUtils", chatUtils);
-                gson.toJson(root, fileWriter);
-                LogManager.getLogger().info("[chat-utils] Saved settings.");
-            } catch (IOException e) {
-                LogManager.getLogger().error("[chat-utils] Failed to save settings!", e);
-            }
+            // Write to file.
+            IoUtils.writeJsonToFile("config.json", root, gson);
+            LogManager.getLogger().info("[chat-utils] Saved settings.");
+        } catch (IOException e) {
+            LogManager.getLogger().error("[chat-utils] Failed to save settings!", e);
         }
     }
 
