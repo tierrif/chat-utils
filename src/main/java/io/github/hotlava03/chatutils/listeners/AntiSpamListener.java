@@ -1,34 +1,35 @@
 package io.github.hotlava03.chatutils.listeners;
 
-import io.github.hotlava03.chatutils.events.ReceiveMessageEvent;
+import io.github.hotlava03.chatutils.events.ReceiveMessageCallback;
 import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.util.ChatMessages;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.function.Consumer;
+import java.util.List;
 
 import static io.github.hotlava03.chatutils.util.OrderedTextAdapter.orderedTextToString;
 import static io.github.hotlava03.chatutils.util.StringUtils.getDifference;
-import static io.github.hotlava03.chatutils.util.StringUtils.isNumeric;
 
-public class AntiSpamListener implements Consumer<ReceiveMessageEvent> {
+public class AntiSpamListener implements ReceiveMessageCallback {
     @Override
-    public void accept(ReceiveMessageEvent e) {
+    public void accept(Text text, List<ChatHudLine.Visible> lines) {
         if (ChatStorage.getInstance().isBlockingChatEvents()) return;
         var client = MinecraftClient.getInstance();
         var chat = client.inGameHud.getChatHud();
         var serverInfo = client.getCurrentServerEntry();
         var address = serverInfo != null ? serverInfo.address : null;
-        var fullHistory = e.getLines();
         var range = ChatUtilsConfig.ANTI_SPAM_RANGE.value();
-        var history = fullHistory.size() >= range ? fullHistory.subList(0, range) : fullHistory;
+        var history = lines.size() >= range ? lines.subList(0, range) : lines;
         if (history.isEmpty()) return;
 
         var maxTextLength = MathHelper.floor(chat.getWidth() / chat.getChatScale());
         var splitLines = ChatMessages.breakRenderedChatMessageLines(
-                e.getText(), maxTextLength, client.textRenderer);
+                text, maxTextLength, client.textRenderer);
 
         var spamCounter = 1;
         var lineMatchCount = 0;
@@ -90,6 +91,6 @@ public class AntiSpamListener implements Consumer<ReceiveMessageEvent> {
             lineMatchCount = 0;
         }
 
-        if (spamCounter > 1) e.getTextAsMutable().append(" §8[§cx" + spamCounter + "§8]");
+        if (spamCounter > 1) ((MutableText) text).append(" §8[§cx" + spamCounter + "§8]");
     }
 }

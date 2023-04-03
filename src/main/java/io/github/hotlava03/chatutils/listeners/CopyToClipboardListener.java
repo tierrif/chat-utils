@@ -1,25 +1,25 @@
 package io.github.hotlava03.chatutils.listeners;
 
-import io.github.hotlava03.chatutils.events.SendCommandEvent;
+import io.github.hotlava03.chatutils.events.SendCommandCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
-import java.util.function.Consumer;
 
-public class CopyToClipboardListener implements Consumer<SendCommandEvent> {
+public class CopyToClipboardListener implements SendCommandCallback {
     private long timestamp = -1L;
 
     @Override
-    public void accept(SendCommandEvent e) {
+    public void accept(CallbackInfo callbackInfo, String command) {
         var client = MinecraftClient.getInstance();
 
-        if (e.getCommand().startsWith("chatmacros ")) {
-            e.getCallbackInfo().cancel();
-            String toCopy = e.getCommand().replaceFirst("chatmacros ", "");
+        if (command.startsWith("chatmacros ")) {
+            callbackInfo.cancel();
+            String toCopy = command.replaceFirst("chatmacros ", "");
             Toolkit.getDefaultToolkit().getSystemClipboard()
                     .setContents(new StringSelection(toCopy), null);
             SystemToast.show(client.getToastManager(),

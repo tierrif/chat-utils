@@ -1,26 +1,27 @@
 package io.github.hotlava03.chatutils.listeners;
 
-import io.github.hotlava03.chatutils.events.ReceiveMessageEvent;
+import io.github.hotlava03.chatutils.events.ReceiveMessageCallback;
 import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import io.github.hotlava03.chatutils.util.StringUtils;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.text.Text;
 
-import java.util.function.Consumer;
+import java.util.List;
 import java.util.regex.Pattern;
 
-public class ChatPersistListener implements Consumer<ReceiveMessageEvent> {
+public class ChatPersistListener implements ReceiveMessageCallback {
     private static final String ANTI_SPAM_REGEX = " §8\\[§cx\\d§8]$";
     private static final Pattern ANTI_SPAM_PATTERN = Pattern.compile(ANTI_SPAM_REGEX);
 
     @Override
-    public void accept(ReceiveMessageEvent e) {
+    public void accept(Text text, List<ChatHudLine.Visible> visibleLines) {
         var client = MinecraftClient.getInstance();
         var serverInfo = client.getCurrentServerEntry();
         var address = serverInfo != null ? serverInfo.address : null;
         if (address == null) return; // Don't store if it's singleplayer.
 
-        var message = e.getText().getString();
+        var message = text.getString();
 
         var storage = ChatStorage.getInstance();
         var lines = storage.getStoredChatLines(address);
@@ -35,7 +36,7 @@ public class ChatPersistListener implements Consumer<ReceiveMessageEvent> {
             }
         }
 
-        storage.pushChat(Text.Serializer.toJson(e.getText()), address);
+        storage.pushChat(Text.Serializer.toJson(text), address);
         storage.saveAsync();
     }
 

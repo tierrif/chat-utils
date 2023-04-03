@@ -1,6 +1,6 @@
 package io.github.hotlava03.chatutils.mixin;
 
-import io.github.hotlava03.chatutils.events.ReceiveMessageEvent;
+import io.github.hotlava03.chatutils.events.ReceiveMessageCallback;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.gui.hud.MessageIndicator;
@@ -21,6 +21,6 @@ public class ReceiveMessageMixin {
 
     @Inject(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At("HEAD"), cancellable = true)
     public void addMessage(Text message, MessageSignatureData signature, MessageIndicator indicator, CallbackInfo ci) {
-        ReceiveMessageEvent.LISTENERS.fire(new ReceiveMessageEvent(ci, message, visibleMessages));
+        ReceiveMessageCallback.EVENT.invoker().accept(message, visibleMessages);
     }
 }
