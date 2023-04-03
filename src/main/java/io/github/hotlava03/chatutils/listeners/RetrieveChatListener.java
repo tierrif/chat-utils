@@ -1,25 +1,24 @@
 package io.github.hotlava03.chatutils.listeners;
 
-import io.github.hotlava03.chatutils.events.JoinServerEvent;
 import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.mixin.MessageHistoryAccessor;
 import io.github.hotlava03.chatutils.util.StringUtils;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Consumer;
 
-public class RetrieveChatListener implements Consumer<JoinServerEvent> {
+public class RetrieveChatListener implements ClientPlayConnectionEvents.Init {
 
     @Override
-    public void accept(JoinServerEvent e) {
-        var client = MinecraftClient.getInstance();
-        var serverInfo = e.getInfo();
+    public void onPlayInit(ClientPlayNetworkHandler handler, MinecraftClient client) {
+        var serverInfo = handler.getServerInfo();
         var address = serverInfo != null ? serverInfo.address : null;
         if (address == null) {
             LogManager.getLogger().error("Unexpected missing server info for joined server.");
