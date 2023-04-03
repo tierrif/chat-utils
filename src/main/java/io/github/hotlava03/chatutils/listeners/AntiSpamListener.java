@@ -21,8 +21,6 @@ public class AntiSpamListener implements ReceiveMessageCallback {
         if (ChatStorage.getInstance().isBlockingChatEvents()) return;
         var client = MinecraftClient.getInstance();
         var chat = client.inGameHud.getChatHud();
-        var serverInfo = client.getCurrentServerEntry();
-        var address = serverInfo != null ? serverInfo.address : null;
         var range = ChatUtilsConfig.ANTI_SPAM_RANGE.value();
         var history = lines.size() >= range ? lines.subList(0, range) : lines;
         if (history.isEmpty()) return;

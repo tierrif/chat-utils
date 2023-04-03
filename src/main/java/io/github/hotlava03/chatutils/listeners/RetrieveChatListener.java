@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.text.Text;
-import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,13 +19,7 @@ public class RetrieveChatListener implements ClientPlayConnectionEvents.Init {
     public void onPlayInit(ClientPlayNetworkHandler handler, MinecraftClient client) {
         var serverInfo = handler.getServerInfo();
         var address = serverInfo != null ? serverInfo.address : null;
-        if (address == null) {
-            LogManager.getLogger().error("Unexpected missing server info for joined server.");
-            client.inGameHud.getChatHud().addMessage(Text.literal(
-                    StringUtils.translateAlternateColorCodes("&c[CHAT UTILS] &4Unexpected: Missing server/world info upon server/world join.")
-            ));
-            return;
-        }
+        if (address == null) return; // Singleplayer not yet supported
 
         var storage = ChatStorage.getInstance();
 

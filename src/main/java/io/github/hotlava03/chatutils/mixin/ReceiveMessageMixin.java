@@ -19,7 +19,9 @@ import java.util.List;
 public class ReceiveMessageMixin {
     @Shadow @Final private List<ChatHudLine.Visible> visibleMessages;
 
-    @Inject(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V",
+            at = @At("HEAD"))
     public void addMessage(Text message, MessageSignatureData signature, MessageIndicator indicator, CallbackInfo ci) {
         ReceiveMessageCallback.EVENT.invoker().accept(message, visibleMessages);
     }
