@@ -1,12 +1,12 @@
 package io.github.hotlava03.chatutils;
 
-import io.github.hotlava03.chatutils.events.SendMessageEvent;
 import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.events.ReceiveMessageEvent;
 import io.github.hotlava03.chatutils.events.SendCommandEvent;
 import io.github.hotlava03.chatutils.listeners.*;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import org.apache.logging.log4j.LogManager;
 
@@ -20,13 +20,15 @@ public class ChatUtilsMod implements ModInitializer {
 
         // Register Fabric API events.
         ClientPlayConnectionEvents.INIT.register(new RetrieveChatListener());
+        var sendMessageListener = new SendMessageListener();
+        ClientSendMessageEvents.CHAT.register(sendMessageListener);
+        ClientSendMessageEvents.COMMAND.register(sendMessageListener);
 
         // Register custom events.
         ReceiveMessageEvent.LISTENERS.register(new AntiSpamListener());
-        ReceiveMessageEvent.LISTENERS.register(new CopyChatListener());
+        ReceiveMessageEvent.LISTENERS.register(new InjectCopyChatListener());
         ReceiveMessageEvent.LISTENERS.register(new ChatPersistListener());
         SendCommandEvent.LISTENERS.register(new CopyToClipboardListener());
-        SendMessageEvent.LISTENERS.register(new SendMessageListener());
 
         LogManager.getLogger().info("Started!");
     }

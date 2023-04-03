@@ -8,8 +8,7 @@
   "client": [
     "CopyToClipboardMixin",
     "MessageHistoryAccessor",
-    "ReceiveMessageMixin",
-    "SendMessageMixin"
+    "ReceiveMessageMixin"
   ],
   "injectors": {
     "defaultRequire": 1
