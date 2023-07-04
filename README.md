@@ -1,5 +1,7 @@
 # ChatUtils - Copy messages with a click + anti spam
 
+[Get it on Modrinth](https://modrinth.com/mod/chatutils)
+
 This extremely simple mod is meant to be used as a utility for server staff or even normal players to be able to copy chat messages.
 
 With a new feature, chat spamming is now controlled thanks to ChatUtils' anti spam, based on TabbyChat 2, which is unfortunately only Forge for now.
