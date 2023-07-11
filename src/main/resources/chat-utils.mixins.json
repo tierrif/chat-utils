@@ -6,8 +6,9 @@
   "mixins": [
   ],
   "client": [
+    "ChatClickMixin",
     "CopyToClipboardMixin",
-    "MessageHistoryAccessor",
+    "ChatHudAccessor",
     "ReceiveMessageMixin"
   ],
   "injectors": {

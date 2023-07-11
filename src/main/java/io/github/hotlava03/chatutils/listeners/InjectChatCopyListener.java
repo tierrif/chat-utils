@@ -33,8 +33,7 @@ public class InjectChatCopyListener implements ReceiveMessageCallback {
             tooltip = translateAlternateColorCodes(ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE.value());
         }
 
-        Style style = text.getStyle()
-                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/chatmacros " + toCopy));
+        Style style = text.getStyle();
         if (ChatUtilsConfig.TOOLTIP_ENABLED.value()) {
             style = style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                     Text.literal(tooltip)));

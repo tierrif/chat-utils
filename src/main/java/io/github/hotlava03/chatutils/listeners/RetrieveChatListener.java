@@ -2,7 +2,7 @@ package io.github.hotlava03.chatutils.listeners;
 
 import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
-import io.github.hotlava03.chatutils.mixin.MessageHistoryAccessor;
+import io.github.hotlava03.chatutils.mixin.ChatHudAccessor;
 import io.github.hotlava03.chatutils.util.StringUtils;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
@@ -30,7 +30,7 @@ public class RetrieveChatListener implements ClientPlayConnectionEvents.Init {
 
         // Command Persist.
         if (ChatUtilsConfig.ENABLE_COMMAND_PERSIST.value()) {
-            handleCommandPersist(storage, address, ((MessageHistoryAccessor) client.inGameHud.getChatHud()).getMessageHistory());
+            handleCommandPersist(storage, address, ((ChatHudAccessor) client.inGameHud.getChatHud()).getMessageHistory());
         }
     }
 

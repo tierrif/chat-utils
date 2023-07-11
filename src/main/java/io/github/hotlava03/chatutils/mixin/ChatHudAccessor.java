@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import java.util.List;
 
 @Mixin(ChatHud.class)
-public interface MessageHistoryAccessor {
+public interface ChatHudAccessor {
     @Accessor
     List<String> getMessageHistory();
 
