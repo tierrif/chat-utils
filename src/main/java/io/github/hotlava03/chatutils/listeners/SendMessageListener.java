@@ -23,9 +23,6 @@ public class SendMessageListener implements
         var address = serverInfo != null ? serverInfo.address : null;
         if (address == null) return; // Don't store if it's singleplayer.
 
-        // Not needed anymore, these events don't get called with run command click events.
-        // if (message.startsWith("/chatmacros ")) return;
-
         var storage = ChatStorage.getInstance();
         var cmds = storage.getStoredCmdLines(address);
         if (!cmds.isEmpty() && cmds.get(cmds.size() - 1).equals(message)) return;

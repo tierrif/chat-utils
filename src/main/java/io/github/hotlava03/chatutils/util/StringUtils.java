@@ -4,9 +4,14 @@ import net.kyori.adventure.platform.fabric.FabricClientAudiences;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minecraft.text.Text;
 
+import java.util.regex.Pattern;
+
 import static org.apache.commons.lang3.StringUtils.getLevenshteinDistance;
 
 public class StringUtils {
+
+    // Taken from https://github.com/SpigotMC/BungeeCord
+    public static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)§([0-9A-FK-OR]|#[a-f0-9]{6})");
     public static String translateAlternateColorCodes(String textToTranslate) {
         char[] b = textToTranslate.toCharArray();
         for (int i = 0; i < b.length - 1; ++i) {

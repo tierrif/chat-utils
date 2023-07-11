@@ -8,13 +8,9 @@ import net.minecraft.text.*;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static io.github.hotlava03.chatutils.util.StringUtils.textToLegacy;
-import static io.github.hotlava03.chatutils.util.StringUtils.translateAlternateColorCodes;
+import static io.github.hotlava03.chatutils.util.StringUtils.*;
 
 public class InjectChatCopyListener implements ReceiveMessageCallback {
-    // Taken from https://github.com/SpigotMC/BungeeCord
-    private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)§([0-9A-FK-OR]|#[a-f0-9]{6})");
-
     @Override
     public void accept(Text text, List<ChatHudLine.Visible> lines) {
         String tooltip;

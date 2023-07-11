@@ -7,7 +7,6 @@
   ],
   "client": [
     "ChatClickMixin",
-    "CopyToClipboardMixin",
     "ChatHudAccessor",
     "ReceiveMessageMixin"
   ],
