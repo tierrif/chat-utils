@@ -3,8 +3,9 @@ package io.github.hotlava03.chatutils.listeners;
 import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.mixin.ChatHudAccessor;
-import io.github.hotlava03.chatutils.util.StringUtils;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.kyori.adventure.platform.fabric.FabricClientAudiences;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.text.Text;
@@ -44,8 +45,9 @@ public class RetrieveChatListener implements ClientPlayConnectionEvents.Init {
         var date = new Date(storage.getTimestamp(address));
 
         chatLines.forEach((line) -> client.inGameHud.getChatHud().addMessage(Text.Serializer.fromJson(line)));
-        client.inGameHud.getChatHud().addMessage(Text.literal(
-                StringUtils.translateAlternateColorCodes(Text.translatable("chat-utils.stored_messages", date).getString())
+        String msg = Text.translatable("chat-utils.stored_messages", date).getString();
+        client.inGameHud.getChatHud().addMessage(FabricClientAudiences.of().toNative(
+                LegacyComponentSerializer.legacyAmpersand().deserialize(msg)
         ));
         storage.setBlockingChatEvents(false);
     }

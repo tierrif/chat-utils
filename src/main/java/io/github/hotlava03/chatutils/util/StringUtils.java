@@ -1,27 +1,13 @@
 package io.github.hotlava03.chatutils.util;
 
 import net.kyori.adventure.platform.fabric.FabricClientAudiences;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.minecraft.text.Text;
-
-import java.util.regex.Pattern;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 import static org.apache.commons.lang3.StringUtils.getLevenshteinDistance;
 
 public class StringUtils {
-
-    // Taken from https://github.com/SpigotMC/BungeeCord
-    public static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)§([0-9A-FK-OR]|#[a-f0-9]{6})");
-    public static String translateAlternateColorCodes(String textToTranslate) {
-        char[] b = textToTranslate.toCharArray();
-        for (int i = 0; i < b.length - 1; ++i) {
-            if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > -1) {
-                b[i] = '§';
-                b[i + 1] = Character.toLowerCase(b[i + 1]);
-            }
-        }
-        return new String(b);
-    }
 
     /*
      * This method does not belong to me.
@@ -36,20 +22,18 @@ public class StringUtils {
         return getLevenshteinDistance(s1.toLowerCase(), s2.toLowerCase()) / avgLen;
     }
 
-    public static String textToLegacy(Text text, boolean useHexCodes) {
+    public static String componentToLegacy(Component component, boolean useHexCodes) {
         var builder = LegacyComponentSerializer.builder()
-                .character(LegacyComponentSerializer.SECTION_CHAR)
+                .character(LegacyComponentSerializer.AMPERSAND_CHAR)
                 .flattener(FabricClientAudiences.of().flattener());
         if (useHexCodes) builder.hexColors();
-        return builder.build().serialize(text.asComponent());
+        return builder.build().serialize(component);
     }
 
-    public static boolean isNumeric(String str) {
-        try {
-            Integer.parseInt(str);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
+    public static String componentToPlainText(Component component) {
+        return PlainTextComponentSerializer.builder()
+                .flattener(FabricClientAudiences.of().flattener())
+                .build()
+                .serialize(component);
     }
 }
