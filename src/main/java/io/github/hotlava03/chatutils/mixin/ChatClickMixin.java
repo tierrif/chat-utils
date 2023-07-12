@@ -8,34 +8,40 @@ import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.OrderedText;
 import net.minecraft.text.TextContent;
+import org.apache.logging.log4j.LogManager;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static io.github.hotlava03.chatutils.util.StringUtils.textToLegacy;
+import java.util.stream.IntStream;
 
 @Mixin(ChatHud.class)
 public abstract class ChatClickMixin {
-    @Shadow @Final
+
+    @Shadow
+    @Final
     protected abstract int getMessageLineIndex(double chatLineX, double chatLineY);
 
-    @Shadow @Final
+    @Shadow
+    @Final
     protected abstract double toChatLineX(double x);
 
-    @Shadow @Final
+    @Shadow
+    @Final
     protected abstract double toChatLineY(double y);
 
-    @Shadow @Final
+    @Shadow
+    @Final
     private List<ChatHudLine.Visible> visibleMessages;
+
+    @Shadow
+    @Final
+    private List<ChatHudLine> messages;
 
     @Inject(method = "mouseClicked",
             at = @At("HEAD"))
@@ -43,54 +49,41 @@ public abstract class ChatClickMixin {
         MinecraftClient client = MinecraftClient.getInstance();
         if (!(client.currentScreen instanceof ChatScreen)) return;
 
-        int index = findIndex(mouseX, mouseY);
-        if (index == -1) {
-            return;
+        int lineSelected = getMessageLineIndex(toChatLineX(mouseX), toChatLineY(mouseY));
+
+        // User clicked in the middle of nowhere
+        if (lineSelected == -1) return;
+
+        // This is a list containing all endOfEntry lines' indices
+        var indexesOfEntryEnds = IntStream.range(0, visibleMessages.size())
+                .filter(index -> visibleMessages.get(index).endOfEntry())
+                .boxed()
+                .toList();
+
+        // Get the index of the final entry belonging to the message of this line
+        int indexOfMessageEntryEnd = indexesOfEntryEnds
+                .stream()
+                .filter(index -> index <= lineSelected)
+                .reduce((a, b) -> b) // Improvised findLast()
+                .orElse(-1);
+
+        if (indexOfMessageEntryEnd == -1) {
+            LogManager.getLogger().warn("Something cursed happened (indexOfMessageEntryEnd == -1)");
         }
 
-        MutableText text = MutableText.of(TextContent.EMPTY);
-        for (OrderedText t : walkEntry(index)) {
-            if (ChatUtilsConfig.COPY_COLORS.value()) {
-                text.append(OrderedTextAdapter.orderedTextToMutableText(t));
-            } else {
-                text.append(OrderedTextAdapter.orderedTextToString(t));
-            }
+        // This is where we transform the index of the visibleMessage into an index we can use against message
+        // We have the entry end index, a list containing ONLY entry ends, and `messages` only contains whole entries
+        int indexOfMessage = indexesOfEntryEnds.indexOf(indexOfMessageEntryEnd);
+        var message = messages.get(indexOfMessage).content().asOrderedText();
+
+        var newText = MutableText.of(TextContent.EMPTY);
+
+        if (ChatUtilsConfig.COPY_COLORS.value()) {
+            newText.append(OrderedTextAdapter.orderedTextToMutableText(message));
+        } else {
+            newText.append(OrderedTextAdapter.orderedTextToString(message));
         }
 
-        CopyToClipboardCallback.EVENT.invoker().accept(text);
-    }
-
-    @Unique
-    private int findIndex(double x, double y) {
-        int line = getMessageLineIndex(toChatLineX(x), toChatLineY(y));
-        if (line == -1) return -1;
-
-        int chatSize = visibleMessages.size();
-
-        int i = line;
-        while (i < chatSize) {
-            if (i != line && visibleMessages.get(i).endOfEntry()) {
-                return i - 1;
-            }
-            i++;
-        }
-
-        return i - 1;
-    }
-
-    @Unique
-    private List<OrderedText> walkEntry(int index) {
-        List<OrderedText> text = new ArrayList<>();
-        int i = index;
-        while (i >= 0) {
-            ChatHudLine.Visible visible = visibleMessages.get(i);
-            text.add(visible.content());
-            if (visible.endOfEntry()) {
-                break;
-            }
-            i--;
-        }
-
-        return text;
+        CopyToClipboardCallback.EVENT.invoker().accept(newText);
     }
 }
