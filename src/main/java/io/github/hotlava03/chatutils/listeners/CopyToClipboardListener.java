@@ -2,23 +2,26 @@ package io.github.hotlava03.chatutils.listeners;
 
 import io.github.hotlava03.chatutils.events.CopyToClipboardCallback;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
+import net.kyori.adventure.platform.fabric.FabricClientAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 
-import static io.github.hotlava03.chatutils.util.StringUtils.STRIP_COLOR_PATTERN;
-import static io.github.hotlava03.chatutils.util.StringUtils.textToLegacy;
-
 public class CopyToClipboardListener implements CopyToClipboardCallback {
     private long timestamp = -1L;
 
     @Override
-    public void accept(Text textToCopy) {
+    public void accept(Component component) {
         var client = MinecraftClient.getInstance();
-        String toCopy = STRIP_COLOR_PATTERN.matcher(textToLegacy(textToCopy,
-                ChatUtilsConfig.COPY_HEX_COLORS.value())).replaceAll(matchResult ->
-                matchResult.group().replace("§", "&"));
+
+        String toCopy = ChatUtilsConfig.COPY_COLORS.value()
+                ? PlainTextComponentSerializer.plainText().serialize(component)
+                : textToLegacy(component, ChatUtilsConfig.COPY_HEX_COLORS.value());
+
         MinecraftClient.getInstance().keyboard.setClipboard(toCopy);
         SystemToast.show(client.getToastManager(),
                 SystemToast.Type.PERIODIC_NOTIFICATION,
@@ -31,5 +34,13 @@ public class CopyToClipboardListener implements CopyToClipboardCallback {
         }
         client.player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_PLING.value(), 2f, 1.5f);
         timestamp = System.currentTimeMillis();
+    }
+
+    private static String textToLegacy(Component component, boolean useHexCodes) {
+        var builder = LegacyComponentSerializer.builder()
+                .character(LegacyComponentSerializer.AMPERSAND_CHAR)
+                .flattener(FabricClientAudiences.of().flattener());
+        if (useHexCodes) builder.hexColors();
+        return builder.build().serialize(component);
     }
 }
