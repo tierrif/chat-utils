@@ -1,4 +1,6 @@
 {
+  "category.chat-utils": "Chat Utils",
+  "key.chat-utils.hold": "Key to hold when copying",
   "chat-utils.config_title": "Chat Utils Configuration Screen",
   "chat-utils.configs.copyToClipboardMessage.label": "Copy To Clipboard Tooltip Message",
   "chat-utils.configs.copyToClipboardMessage.description": "Message shown in the tooltip when copying messages.",

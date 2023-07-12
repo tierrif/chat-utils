@@ -1,10 +1,12 @@
 package io.github.hotlava03.chatutils.mixin;
 
+import io.github.hotlava03.chatutils.ChatUtilsMod;
 import io.github.hotlava03.chatutils.events.CopyToClipboardCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.gui.screen.ChatScreen;
+import net.minecraft.client.util.InputUtil;
 import org.apache.logging.log4j.LogManager;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -44,6 +46,14 @@ public abstract class ChatClickMixin {
     private void onChatClick(double mouseX, double mouseY, CallbackInfoReturnable<Boolean> cir) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (!(client.currentScreen instanceof ChatScreen)) return;
+
+        var holdKey = ChatUtilsMod.getInstance().getHoldKey();
+        if (!holdKey.isDefault()) {
+            var key = (KeybindingAccessor) holdKey;
+            if (!InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), key.getBoundKey().getCode())) {
+                return;
+            }
+        }
 
         int lineSelected = getMessageLineIndex(toChatLineX(mouseX), toChatLineY(mouseY));
 
