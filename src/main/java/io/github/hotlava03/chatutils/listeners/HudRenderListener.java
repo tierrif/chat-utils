@@ -27,7 +27,6 @@ public class HudRenderListener implements HudRenderCallback {
     @Override
     public void onHudRender(DrawContext drawContext, float tickDelta) {
         var client = MinecraftClient.getInstance();
-        var hud = client.inGameHud.getChatHud();
         if (client.currentScreen instanceof ChatScreen) {
             int width = client.getWindow().getScaledWidth();
             int height = client.getWindow().getScaledHeight();
@@ -42,22 +41,10 @@ public class HudRenderListener implements HudRenderCallback {
                     drawContext.drawText(client.textRenderer, clipboardString, width - strWidth - 5,
                             height - 32 - 5, 0x00FF00, true);
 
-                    ChatHudLine line = ChatHudUtils.getMessageAt(x, y);
-                    var style = hud.getTextStyleAt(x, y);
-                    System.out.println(style);
-                    if (line != null && ChatUtilsConfig.TOOLTIP_ENABLED.value()
-                            && (style == null || style.getHoverEvent() == null)) {
-                        drawTooltip(drawContext, client, line, (int) x, (int) y);
-                    }
+                    drawTooltip(drawContext, client, (int) x, (int) y);
                 }
             } else {
-                ChatHudLine line = ChatHudUtils.getMessageAt(x, y);
-                var style = hud.getTextStyleAt(x, y);
-                System.out.println(style);
-                if (line != null && ChatUtilsConfig.TOOLTIP_ENABLED.value()
-                        && (style == null || style.getHoverEvent() == null)) {
-                    drawTooltip(drawContext, client, line, (int) x, (int) y);
-                }
+                drawTooltip(drawContext, client, (int) x, (int) y);
             }
 
             var version = FabricLoader.getInstance().getModContainer("chat-utils")
@@ -71,20 +58,25 @@ public class HudRenderListener implements HudRenderCallback {
         }
     }
 
-    private void drawTooltip(DrawContext drawContext, MinecraftClient client, ChatHudLine line, int x, int y) {
-        List<Text> tooltip;
-        if (ChatUtilsConfig.PREVIEW_CONTENT.value()) {
-            tooltip = new ArrayList<>();
-            tooltip.add(toText(LegacyComponentSerializer.legacyAmpersand()
-                    .deserialize(ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE.value())));
-            tooltip.add(Text.of(""));
-            tooltip.addAll(Arrays.stream(StringUtils.wrap(line.content().copy()
-                    .setStyle(Style.EMPTY).getString(), 25).split("\n")).map(Text::of).toList());
-        } else {
-            tooltip = Collections.singletonList(toText(LegacyComponentSerializer.legacyAmpersand()
-                    .deserialize(ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE.value())));
+    private void drawTooltip(DrawContext drawContext, MinecraftClient client, int x, int y) {
+        ChatHudLine line = ChatHudUtils.getMessageAt(x, y);
+        var style = client.inGameHud.getChatHud().getTextStyleAt(x, y);
+        if (line != null && ChatUtilsConfig.TOOLTIP_ENABLED.value()
+                && (style == null || style.getHoverEvent() == null)) {
+            List<Text> tooltip;
+            if (ChatUtilsConfig.PREVIEW_CONTENT.value()) {
+                tooltip = new ArrayList<>();
+                tooltip.add(toText(LegacyComponentSerializer.legacyAmpersand()
+                        .deserialize(ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE.value())));
+                tooltip.add(Text.of(""));
+                tooltip.addAll(Arrays.stream(StringUtils.wrap(line.content().copy()
+                        .setStyle(Style.EMPTY).getString(), 25).split("\n")).map(Text::of).toList());
+            } else {
+                tooltip = Collections.singletonList(toText(LegacyComponentSerializer.legacyAmpersand()
+                        .deserialize(ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE.value())));
+            }
+            drawContext.drawTooltip(client.textRenderer, tooltip, x, y);
         }
-        drawContext.drawTooltip(client.textRenderer, tooltip, x, y);
     }
 
     private double getMouseX(MinecraftClient client) {
