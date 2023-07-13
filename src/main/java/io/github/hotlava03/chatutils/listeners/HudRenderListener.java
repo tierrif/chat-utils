@@ -27,6 +27,7 @@ public class HudRenderListener implements HudRenderCallback {
     @Override
     public void onHudRender(DrawContext drawContext, float tickDelta) {
         var client = MinecraftClient.getInstance();
+        var hud = client.inGameHud.getChatHud();
         if (client.currentScreen instanceof ChatScreen) {
             int width = client.getWindow().getScaledWidth();
             int height = client.getWindow().getScaledHeight();
@@ -42,13 +43,19 @@ public class HudRenderListener implements HudRenderCallback {
                             height - 32 - 5, 0x00FF00, true);
 
                     ChatHudLine line = ChatHudUtils.getMessageAt(x, y);
-                    if (line != null && ChatUtilsConfig.TOOLTIP_ENABLED.value()) {
+                    var style = hud.getTextStyleAt(x, y);
+                    System.out.println(style);
+                    if (line != null && ChatUtilsConfig.TOOLTIP_ENABLED.value()
+                            && (style == null || style.getHoverEvent() == null)) {
                         drawTooltip(drawContext, client, line, (int) x, (int) y);
                     }
                 }
             } else {
                 ChatHudLine line = ChatHudUtils.getMessageAt(x, y);
-                if (line != null && ChatUtilsConfig.TOOLTIP_ENABLED.value()) {
+                var style = hud.getTextStyleAt(x, y);
+                System.out.println(style);
+                if (line != null && ChatUtilsConfig.TOOLTIP_ENABLED.value()
+                        && (style == null || style.getHoverEvent() == null)) {
                     drawTooltip(drawContext, client, line, (int) x, (int) y);
                 }
             }
