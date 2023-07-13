@@ -6,7 +6,6 @@
   "client": [
     "ChatClickMixin",
     "ChatHudAccessor",
-    "KeybindingAccessor",
     "ReceiveMessageMixin"
   ],
   "injectors": {

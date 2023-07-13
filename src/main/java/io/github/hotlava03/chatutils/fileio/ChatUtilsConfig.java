@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.hotlava03.chatutils.util.IoUtils;
 import org.apache.logging.log4j.LogManager;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.*;
 import java.util.function.Function;
@@ -12,16 +13,18 @@ import java.util.function.Function;
 public class ChatUtilsConfig {
     private static final Gson gson = new Gson();
     public static final Value<String> COPY_TO_CLIPBOARD_MESSAGE = new Value<>("copyToClipboardMessage",
-            "&9Click to copy to clipboard.");
+            "&7Click to copy to clipboard.");
     public static final Value<Boolean> PREVIEW_CONTENT = new Value<>("previewContent", false);
     public static final Value<Boolean> COPY_COLORS = new Value<>("copyColorsIfAny", false);
     public static final Value<Boolean> COPY_HEX_COLORS = new Value<>("copyHexColors", true);
     public static final Value<Boolean> ANTI_SPAM = new Value<>("antiSpam", true);
     public static final Value<Integer> ANTI_SPAM_RANGE = new Value<>("antiSpamRange", 16);
-    public static final Value<Boolean> TOOLTIP_ENABLED = new Value<>("tooltipEnabled", false);
+    public static final Value<Boolean> TOOLTIP_ENABLED = new Value<>("tooltipEnabled", true);
     public static final Value<Boolean> ENABLED = new Value<>("enabled", true);
     public static final Value<Boolean> ENABLE_CHAT_PERSIST = new Value<>("enableChatPersist", true);
     public static final Value<Boolean> ENABLE_COMMAND_PERSIST = new Value<>("enableCommandPersist", true);
+    public static final Value<Boolean> ENABLE_COPY_KEY = new Value<>("enableCopyKey", true);
+    public static final Value<Integer> COPY_KEY = new Value<>("copyKey", GLFW.GLFW_KEY_LEFT_CONTROL);
 
     public static void loadFromFile() {
         File configFile = new File(IoUtils.getConfigDirectory(), "config.json");
@@ -42,6 +45,8 @@ public class ChatUtilsConfig {
                     ENABLED.read(root.get("enabled"), JsonElement::getAsBoolean);
                     ENABLE_CHAT_PERSIST.read(root.get("enableChatPersist"), JsonElement::getAsBoolean);
                     ENABLE_COMMAND_PERSIST.read(root.get("enableCommandPersist"), JsonElement::getAsBoolean);
+                    ENABLE_COPY_KEY.read(root.get("enableCopyKey"), JsonElement::getAsBoolean);
+                    COPY_KEY.read(root.get("copyKey"), JsonElement::getAsInt);
                 }
             }
         } catch (IOException exception) {
@@ -66,6 +71,8 @@ public class ChatUtilsConfig {
             chatUtils.addProperty(ENABLED.name(), ENABLED.value());
             chatUtils.addProperty(ENABLE_CHAT_PERSIST.name(), ENABLE_CHAT_PERSIST.value());
             chatUtils.addProperty(ENABLE_COMMAND_PERSIST.name(), ENABLE_COMMAND_PERSIST.value());
+            chatUtils.addProperty(ENABLE_COPY_KEY.name(), ENABLE_COPY_KEY.value());
+            chatUtils.addProperty(COPY_KEY.name(), COPY_KEY.value());
             root.add("ChatUtils", chatUtils);
 
             // Write to file.

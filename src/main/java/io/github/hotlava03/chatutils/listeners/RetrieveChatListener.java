@@ -20,7 +20,7 @@ public class RetrieveChatListener implements ClientPlayConnectionEvents.Init {
     public void onPlayInit(ClientPlayNetworkHandler handler, MinecraftClient client) {
         var serverInfo = handler.getServerInfo();
         var address = serverInfo != null ? serverInfo.address : null;
-        if (address == null) return; // Singleplayer not yet supported
+        if (address == null) return; // Single-player not yet supported
 
         var storage = ChatStorage.getInstance();
 

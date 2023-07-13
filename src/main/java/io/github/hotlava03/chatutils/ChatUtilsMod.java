@@ -4,20 +4,39 @@ import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.events.ReceiveMessageCallback;
 import io.github.hotlava03.chatutils.listeners.*;
+import io.github.hotlava03.chatutils.mixin.ChatHudAccessor;
+import io.github.hotlava03.chatutils.util.ChatHudUtils;
+import io.github.hotlava03.chatutils.util.StringUtils;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.loader.api.FabricLoader;
+import net.kyori.adventure.platform.fabric.FabricClientAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.hud.ChatHudLine;
+import net.minecraft.client.gui.screen.ChatScreen;
+import net.minecraft.client.option.ChatVisibility;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.util.TextCollector;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TextContent;
+import net.minecraft.util.math.MathHelper;
+import org.apache.commons.lang3.text.WordUtils;
 import org.apache.logging.log4j.LogManager;
-import org.lwjgl.glfw.GLFW;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class ChatUtilsMod implements ModInitializer {
-    private static ChatUtilsMod instance;
-
-    private KeyBinding holdKey = new KeyBinding(
-            "key.chat-utils.hold", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, "category.chat-utils");
 
     @Override
     public void onInitialize() {
@@ -32,21 +51,10 @@ public class ChatUtilsMod implements ModInitializer {
         ClientSendMessageEvents.CHAT.register(sendMessageListener);
         ClientSendMessageEvents.COMMAND.register(sendMessageListener);
         ReceiveMessageCallback.EVENT.register(new AntiSpamListener());
-        ReceiveMessageCallback.EVENT.register(new InjectChatCopyListener());
         ReceiveMessageCallback.EVENT.register(new ChatPersistListener());
         CopyToClipboardListener.EVENT.register(new CopyToClipboardListener());
-
-        holdKey = KeyBindingHelper.registerKeyBinding(holdKey);
-        instance = this;
+        HudRenderCallback.EVENT.register(new HudRenderListener());
 
         LogManager.getLogger().info("Started!");
-    }
-
-    public KeyBinding getHoldKey() {
-        return holdKey;
-    }
-
-    public static ChatUtilsMod getInstance() {
-        return instance;
     }
 }

@@ -9,7 +9,7 @@
   "chat-utils.configs.copyColorsIfAny.label": "Copy Color Codes",
   "chat-utils.configs.copyColorsIfAny.description": "Whether or not to copy color codes.",
   "chat-utils.configs.copyHexColors.label": "Copy HEX Color Codes",
-  "chat-utils.configs.copyHexColors.description": "If disabled, copied colors will be downsampled to the closest legacy color code. Only works if \"copyColorsIfAny\" is enabled.",
+  "chat-utils.configs.copyHexColors.description": "If disabled, copied colors will be down sampled to the closest legacy color code. Only works if \"copyColorsIfAny\" is enabled.",
   "chat-utils.configs.antiSpam.label": "Anti-Spam",
   "chat-utils.configs.antiSpam.description": "Collapse identical messages.",
   "chat-utils.configs.antiSpamRange.label": "Anti-Spam Range",
@@ -22,5 +22,9 @@
   "chat-utils.configs.enableChatPersist.description": "Saves chat from previous server sessions when logging back in later.",
   "chat-utils.configs.enableCommandPersist.label": "Enable Command History Persistence",
   "chat-utils.configs.enableCommandPersist.description": "Saves commands/sent chat from previous server sessions when logging back in later.",
+  "chat-utils.configs.enableCopyKey.label": "Enable Copy Key",
+  "chat-utils.configs.enableCopyKey.description": "Forces you to hold the key set under \"Copy Key\" to copy a message.",
+  "chat-utils.configs.copyKey.label": "Copy Key",
+  "chat-utils.configs.copyKey.description": "Key to hold upon message copy (none for direct click)",
   "chat-utils.stored_messages": "[CHAT UTILS] &7Restored chat from &f%s"
 }

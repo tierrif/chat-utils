@@ -22,5 +22,9 @@
   "chat-utils.configs.enableChatPersist.description": "Guarda chat de sessões anteriores em servidores ao entrar nos mesmos novamente.",
   "chat-utils.configs.enableCommandPersist.label": "Persistência do histórico de comandos",
   "chat-utils.configs.enableCommandPersist.description": "Guarda comandos/chat enviado(s) de sessões anteriores em servidores ao entrar nos mesmos novamente.",
+  "chat-utils.configs.enableCopyKey.label": "Ativar Tecla de Cópia",
+  "chat-utils.configs.enableCopyKey.description": "Forçar manter premida a tecla mencionada em \"Tecla de Cópia\" para copiar uma mensagem.",
+  "chat-utils.configs.copyKey.label": "Tecla de Cópia",
+  "chat-utils.configs.copyKey.description": "Tecla a premir na cópia de uma mensagem (nenhuma para clique direto)",
   "chat-utils.stored_messages": "[CHAT UTILS] &7Chat restaurado de &f%s"
 }

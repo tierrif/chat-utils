@@ -19,7 +19,7 @@ public class ChatPersistListener implements ReceiveMessageCallback {
         var client = MinecraftClient.getInstance();
         var serverInfo = client.getCurrentServerEntry();
         var address = serverInfo != null ? serverInfo.address : null;
-        if (address == null) return; // Don't store if it's singleplayer.
+        if (address == null) return; // Don't store if it's single-player.
 
         var message = text.getString();
 

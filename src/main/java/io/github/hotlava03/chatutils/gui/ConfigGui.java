@@ -4,7 +4,9 @@ import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
+import org.lwjgl.glfw.GLFW;
 
 public class ConfigGui {
     public static ConfigBuilder getConfigScreen(Screen parent) {
@@ -26,6 +28,9 @@ public class ConfigGui {
         addBooleanEntry(general, builder, ChatUtilsConfig.COPY_HEX_COLORS);
         addBooleanEntry(general, builder, ChatUtilsConfig.ENABLE_CHAT_PERSIST);
         addBooleanEntry(general, builder, ChatUtilsConfig.ENABLE_COMMAND_PERSIST);
+        addBooleanEntry(general, builder, ChatUtilsConfig.ENABLE_COPY_KEY);
+        addKeyCodeEntry(general, builder, ChatUtilsConfig.COPY_KEY);
+
         return builder;
     }
 
@@ -56,6 +61,17 @@ public class ConfigGui {
                 .setDefaultValue(value.defaultValue())
                 .setTooltip(Text.translatable("chat-utils.configs." + value.name() + ".description"))
                 .setSaveConsumer(value::setValue)
+                .build());
+    }
+
+    private static void addKeyCodeEntry(ConfigCategory category, ConfigBuilder builder,
+                                        ChatUtilsConfig.Value<Integer> value) {
+        category.addEntry(builder.entryBuilder()
+                .startKeyCodeField(Text.translatable("chat-utils.configs." + value.name() + ".label"),
+                        InputUtil.fromKeyCode(value.value(), GLFW.glfwGetKeyScancode(value.value())))
+                .setDefaultValue(InputUtil.fromKeyCode(value.defaultValue(), GLFW.glfwGetKeyScancode(value.value())))
+                .setTooltip(Text.translatable("chat-utils.configs." + value.name() + ".description"))
+                .setKeySaveConsumer((key) -> value.setValue(key.getCode()))
                 .build());
     }
 }
