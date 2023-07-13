@@ -1,6 +1,7 @@
 {
   "category.chat-utils": "Chat Utils",
   "key.chat-utils.hold": "Tecla a manter premida para copiar",
+  "chat-utils.hud.keyPressed": "Tecla de cópia pressionada...",
   "chat-utils.config_title": "Definições do Chat Utils",
   "chat-utils.configs.copyToClipboardMessage.label": "Rótulo do Texto de Cópia.",
   "chat-utils.configs.copyToClipboardMessage.description": "Texto mostrado no rótulo ao copiar mensagens.",

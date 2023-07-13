@@ -36,7 +36,7 @@ public class HudRenderListener implements HudRenderCallback {
             if (ChatUtilsConfig.ENABLE_COPY_KEY.value()) {
                 if (InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(),
                         ChatUtilsConfig.COPY_KEY.value())) {
-                    var clipboardString = "Clipboard key pressed...";
+                    var clipboardString = Text.translatable("chat-utils.hud.keyPressed");
                     int strWidth = client.textRenderer.getWidth(clipboardString);
                     drawContext.drawText(client.textRenderer, clipboardString, width - strWidth - 5,
                             height - 32 - 5, 0x00FF00, true);
