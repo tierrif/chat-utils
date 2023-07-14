@@ -30,7 +30,7 @@ public abstract class ChatClickMixin {
 
         var message = ChatHudUtils.getMessageAt(mouseX, mouseY);
         if (message != null) {
-            CopyToClipboardCallback.EVENT.invoker().accept(message.content().asComponent());
+            CopyToClipboardCallback.EVENT.invoker().accept(message.content().asComponent(), message.creationTick());
         }
     }
 }

@@ -7,11 +7,11 @@ import net.kyori.adventure.text.Component;
 public interface CopyToClipboardCallback {
     Event<CopyToClipboardCallback> EVENT = EventFactory.createArrayBacked(
             CopyToClipboardCallback.class,
-            (listeners) -> (component) -> {
+            (listeners) -> (component, creationTicks) -> {
                 for (CopyToClipboardCallback listener : listeners) {
-                    listener.accept(component);
+                    listener.accept(component, creationTicks);
                 }
             });
 
-    void accept(Component component);
+    void accept(Component component, int creationTicks);
 }

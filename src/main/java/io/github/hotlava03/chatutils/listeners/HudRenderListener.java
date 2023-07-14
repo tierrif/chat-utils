@@ -3,6 +3,7 @@ package io.github.hotlava03.chatutils.listeners;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.util.ChatHudUtils;
 import io.github.hotlava03.chatutils.util.StringUtils;
+import io.github.hotlava03.chatutils.util.TooltipAlert;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.kyori.adventure.platform.fabric.FabricClientAudiences;
@@ -13,10 +14,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextContent;
+import net.minecraft.text.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +25,10 @@ public class HudRenderListener implements HudRenderCallback {
     @Override
     public void onHudRender(DrawContext drawContext, float tickDelta) {
         var client = MinecraftClient.getInstance();
+        var alert = TooltipAlert.getInstance();
+
+        alert.tick();
+
         if (client.currentScreen instanceof ChatScreen) {
             int width = client.getWindow().getScaledWidth();
             int height = client.getWindow().getScaledHeight();
@@ -41,10 +43,10 @@ public class HudRenderListener implements HudRenderCallback {
                     drawContext.drawText(client.textRenderer, clipboardString, width - strWidth - 5,
                             height - 32 - 5, 0x00FF00, true);
 
-                    drawTooltip(drawContext, client, (int) x, (int) y);
+                    drawTooltip(drawContext, client, (int) x, (int) y, alert);
                 }
             } else {
-                drawTooltip(drawContext, client, (int) x, (int) y);
+                drawTooltip(drawContext, client, (int) x, (int) y, alert);
             }
 
             var version = FabricLoader.getInstance().getModContainer("chat-utils")
@@ -58,10 +60,17 @@ public class HudRenderListener implements HudRenderCallback {
         }
     }
 
-    private void drawTooltip(DrawContext drawContext, MinecraftClient client, int x, int y) {
+    private void drawTooltip(DrawContext drawContext, MinecraftClient client, int x, int y, TooltipAlert alert) {
         ChatHudLine line = ChatHudUtils.getMessageAt(x, y);
+        if (line == null) return;
+
         var style = client.inGameHud.getChatHud().getTextStyleAt(x, y);
-        if (line != null && ChatUtilsConfig.TOOLTIP_ENABLED.value()
+
+        if (alert.isRunning() && alert.getCreationTicks() == line.creationTick()) {
+            var text = Text.translatable("chat-utils.hud.copiedToClipboard");
+            text.setStyle(text.getStyle().withColor(TextColor.fromRgb(0x00FF00)));
+            drawContext.drawTooltip(client.textRenderer, text, x, y);
+        } else if (ChatUtilsConfig.TOOLTIP_ENABLED.value()
                 && (style == null || style.getHoverEvent() == null)) {
             List<Text> tooltip;
             if (ChatUtilsConfig.PREVIEW_CONTENT.value()) {

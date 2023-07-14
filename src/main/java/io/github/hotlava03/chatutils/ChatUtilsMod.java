@@ -4,6 +4,7 @@ import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.events.ReceiveMessageCallback;
 import io.github.hotlava03.chatutils.listeners.*;
+import io.github.hotlava03.chatutils.util.TooltipAlert;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -28,6 +29,8 @@ public class ChatUtilsMod implements ModInitializer {
         ReceiveMessageCallback.EVENT.register(new ChatPersistListener());
         CopyToClipboardListener.EVENT.register(new CopyToClipboardListener());
         HudRenderCallback.EVENT.register(new HudRenderListener());
+
+        TooltipAlert.init();
 
         LogManager.getLogger().info("Started!");
     }
