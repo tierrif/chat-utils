@@ -21,14 +21,11 @@ public class SendMessageListener implements
         var client = MinecraftClient.getInstance();
         var serverInfo = client.getCurrentServerEntry();
         var address = serverInfo != null ? serverInfo.address : null;
-        if (address == null) return; // Don't store if it's singleplayer.
-
-        // Not needed anymore, these events don't get called with run command click events.
-        // if (message.startsWith("/chatmacros ")) return;
+        if (address == null) return; // Don't store if it's single-player.
 
         var storage = ChatStorage.getInstance();
-        var cmds = storage.getStoredCmdLines(address);
-        if (!cmds.isEmpty() && cmds.get(cmds.size() - 1).equals(message)) return;
+        var commands = storage.getStoredCmdLines(address);
+        if (!commands.isEmpty() && commands.get(commands.size() - 1).equals(message)) return;
         storage.pushCmd(message, address);
         storage.saveAsync();
     }

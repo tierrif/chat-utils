@@ -2,8 +2,7 @@ package io.github.hotlava03.chatutils.listeners;
 
 import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
-import io.github.hotlava03.chatutils.mixin.MessageHistoryAccessor;
-import io.github.hotlava03.chatutils.util.StringUtils;
+import io.github.hotlava03.chatutils.mixin.ChatHudAccessor;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -19,7 +18,7 @@ public class RetrieveChatListener implements ClientPlayConnectionEvents.Init {
     public void onPlayInit(ClientPlayNetworkHandler handler, MinecraftClient client) {
         var serverInfo = handler.getServerInfo();
         var address = serverInfo != null ? serverInfo.address : null;
-        if (address == null) return; // Singleplayer not yet supported
+        if (address == null) return; // Single-player not yet supported
 
         var storage = ChatStorage.getInstance();
 
@@ -30,7 +29,7 @@ public class RetrieveChatListener implements ClientPlayConnectionEvents.Init {
 
         // Command Persist.
         if (ChatUtilsConfig.ENABLE_COMMAND_PERSIST.value()) {
-            handleCommandPersist(storage, address, ((MessageHistoryAccessor) client.inGameHud.getChatHud()).getMessageHistory());
+            handleCommandPersist(storage, address, ((ChatHudAccessor) client.inGameHud.getChatHud()).getMessageHistory());
         }
     }
 
@@ -44,9 +43,7 @@ public class RetrieveChatListener implements ClientPlayConnectionEvents.Init {
         var date = new Date(storage.getTimestamp(address));
 
         chatLines.forEach((line) -> client.inGameHud.getChatHud().addMessage(Text.Serializer.fromJson(line)));
-        client.inGameHud.getChatHud().addMessage(Text.literal(
-                StringUtils.translateAlternateColorCodes(Text.translatable("chat-utils.stored_messages", date).getString())
-        ));
+        client.inGameHud.getChatHud().addMessage(Text.translatable("chat-utils.stored_messages", date));
         storage.setBlockingChatEvents(false);
     }
 

@@ -2,12 +2,10 @@
   "required": true,
   "minVersion": "0.8",
   "package": "io.github.hotlava03.chatutils.mixin",
-  "compatibilityLevel": "JAVA_8",
-  "mixins": [
-  ],
+  "compatibilityLevel": "JAVA_17",
   "client": [
-    "CopyToClipboardMixin",
-    "MessageHistoryAccessor",
+    "ChatClickMixin",
+    "ChatHudAccessor",
     "ReceiveMessageMixin"
   ],
   "injectors": {

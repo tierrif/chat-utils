@@ -1,8 +1,6 @@
 package io.github.hotlava03.chatutils.util;
 
-import net.minecraft.text.CharacterVisitor;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Style;
+import net.minecraft.text.*;
 
 public class OrderedTextAdapter {
     public static String orderedTextToString(OrderedText text) {
