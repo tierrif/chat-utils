@@ -27,6 +27,8 @@
   "chat-utils.configs.enableCopyKey.label": "Enable Copy Key",
   "chat-utils.configs.enableCopyKey.description": "Forces you to hold the key set under \"Copy Key\" to copy a message.",
   "chat-utils.configs.copyKey.label": "Copy Key",
-  "chat-utils.configs.copyKey.description": "Key to hold upon message copy (none for direct click)",
+  "chat-utils.configs.copyKey.description": "Key to hold upon message copy (none for direct click).",
+  "chat-utils.configs.showAlerts.label": "Show copy alerts",
+  "chat-utils.configs.showAlerts.description": "Show copy to clipboard alerts on tooltips.",
   "chat-utils.stored_messages": "[CHAT UTILS] Restored chat from %s"
 }

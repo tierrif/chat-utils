@@ -25,6 +25,7 @@ public class ChatUtilsConfig {
     public static final Value<Boolean> ENABLE_COMMAND_PERSIST = new Value<>("enableCommandPersist", true);
     public static final Value<Boolean> ENABLE_COPY_KEY = new Value<>("enableCopyKey", true);
     public static final Value<Integer> COPY_KEY = new Value<>("copyKey", GLFW.GLFW_KEY_LEFT_CONTROL);
+    public static final Value<Boolean> SHOW_ALERTS = new Value<>("showAlerts", true);
 
     public static void loadFromFile() {
         File configFile = new File(IoUtils.getConfigDirectory(), "config.json");
@@ -47,6 +48,7 @@ public class ChatUtilsConfig {
                     ENABLE_COMMAND_PERSIST.read(root.get("enableCommandPersist"), JsonElement::getAsBoolean);
                     ENABLE_COPY_KEY.read(root.get("enableCopyKey"), JsonElement::getAsBoolean);
                     COPY_KEY.read(root.get("copyKey"), JsonElement::getAsInt);
+                    SHOW_ALERTS.read(root.get("showAlerts"), JsonElement::getAsBoolean);
                 }
             }
         } catch (IOException exception) {
@@ -73,6 +75,7 @@ public class ChatUtilsConfig {
             chatUtils.addProperty(ENABLE_COMMAND_PERSIST.name(), ENABLE_COMMAND_PERSIST.value());
             chatUtils.addProperty(ENABLE_COPY_KEY.name(), ENABLE_COPY_KEY.value());
             chatUtils.addProperty(COPY_KEY.name(), COPY_KEY.value());
+            chatUtils.addProperty(SHOW_ALERTS.name(), SHOW_ALERTS.value());
             root.add("ChatUtils", chatUtils);
 
             // Write to file.

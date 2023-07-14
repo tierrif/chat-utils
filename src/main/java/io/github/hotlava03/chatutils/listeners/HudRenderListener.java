@@ -66,7 +66,8 @@ public class HudRenderListener implements HudRenderCallback {
 
         var style = client.inGameHud.getChatHud().getTextStyleAt(x, y);
 
-        if (alert.isRunning() && alert.getCreationTicks() == line.creationTick()) {
+        if (alert.isRunning() && alert.getCreationTicks() == line.creationTick()
+                && ChatUtilsConfig.SHOW_ALERTS.value()) {
             var text = Text.translatable("chat-utils.hud.copiedToClipboard");
             text.setStyle(text.getStyle().withColor(TextColor.fromRgb(0x00FF00)));
             drawContext.drawTooltip(client.textRenderer, text, x, y);

@@ -28,5 +28,7 @@
   "chat-utils.configs.enableCopyKey.description": "Forçar manter premida a tecla mencionada em \"Tecla de Cópia\" para copiar uma mensagem.",
   "chat-utils.configs.copyKey.label": "Tecla de Cópia",
   "chat-utils.configs.copyKey.description": "Tecla a premir na cópia de uma mensagem (nenhuma para clique direto)",
+  "chat-utils.configs.showAlerts.label": "Mostrar alertas de cópia",
+  "chat-utils.configs.showAlerts.description": "Mostrar alertas de cópia de texto no rótulo das mensagens.",
   "chat-utils.stored_messages": "[CHAT UTILS] Chat restaurado de %s"
 }

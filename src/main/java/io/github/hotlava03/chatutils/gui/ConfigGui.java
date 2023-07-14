@@ -30,6 +30,7 @@ public class ConfigGui {
         addBooleanEntry(general, builder, ChatUtilsConfig.ENABLE_COMMAND_PERSIST);
         addBooleanEntry(general, builder, ChatUtilsConfig.ENABLE_COPY_KEY);
         addKeyCodeEntry(general, builder, ChatUtilsConfig.COPY_KEY);
+        addBooleanEntry(general, builder, ChatUtilsConfig.SHOW_ALERTS);
 
         return builder;
     }
