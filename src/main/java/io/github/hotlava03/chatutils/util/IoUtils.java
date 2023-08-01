@@ -5,9 +5,8 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.MinecraftClient;
 import org.apache.logging.log4j.LogManager;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
@@ -30,8 +29,8 @@ public class IoUtils {
     public static void writeJsonToFile(String name, JsonObject object, Gson gson) throws IOException {
         // Write to temporary file.
         File dir = IoUtils.getConfigDirectory();
-        try (FileWriter fileWriter = new FileWriter(new File(dir, name + "~"))) {
-            gson.toJson(object, fileWriter);
+        try(PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(dir, name + "~")), StandardCharsets.UTF_8)))){
+            gson.toJson(object, writer);
         }
         // Overwrite proper file atomically with temporary file after write has finished.
         Files.move(
