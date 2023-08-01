@@ -5,6 +5,7 @@ import io.github.hotlava03.chatutils.util.IoUtils;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.StreamSupport;
@@ -50,9 +51,8 @@ public class ChatStorage {
 
     public void load() {
         var configFile = new File(IoUtils.getConfigDirectory(), "history.json");
-        try (var fileReader = new FileReader(configFile)) {
-            var element = gson.fromJson(fileReader, JsonElement.class);
-
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8))) {
+            var element = gson.fromJson(reader, JsonElement.class);
             this.object = element != null && element.isJsonObject()
                     ? element.getAsJsonObject()
                     : new JsonObject();
