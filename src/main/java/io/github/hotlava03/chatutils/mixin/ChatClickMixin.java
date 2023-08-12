@@ -3,6 +3,9 @@ package io.github.hotlava03.chatutils.mixin;
 import io.github.hotlava03.chatutils.events.CopyToClipboardCallback;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.util.ChatHudUtils;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.screen.ChatScreen;
@@ -30,7 +33,21 @@ public abstract class ChatClickMixin {
 
         var message = ChatHudUtils.getMessageAt(mouseX, mouseY);
         if (message != null) {
-            CopyToClipboardCallback.EVENT.invoker().accept(message.content().asComponent(), message.creationTick());
+            // asComponent doesn't realise Mojang is insane and parses colours inside `content,`
+            // so we have to take matters into our own hands.
+            // TODO: file a bug report with adventure upstream
+            var component = ((TextComponent) message.content().asComponent()).toBuilder()
+                    .mapChildrenDeep(anyChild -> {
+                        if (anyChild instanceof TextComponent c &&
+                                c.content().indexOf(LegacyComponentSerializer.SECTION_CHAR) != -1) {
+                            return LegacyComponentSerializer.legacySection()
+                                    .deserialize(c.content())
+                                    .style(newStyle -> newStyle.merge(c.style(),
+                                            Style.Merge.Strategy.IF_ABSENT_ON_TARGET));
+                        } else return anyChild;
+                    })
+                    .build();
+            CopyToClipboardCallback.EVENT.invoker().accept(component, message.creationTick());
         }
     }
 }
