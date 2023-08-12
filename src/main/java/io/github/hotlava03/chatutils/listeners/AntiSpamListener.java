@@ -18,7 +18,9 @@ import static io.github.hotlava03.chatutils.util.StringUtils.getDifference;
 public class AntiSpamListener implements ReceiveMessageCallback {
     @Override
     public void accept(Text text, List<ChatHudLine.Visible> lines) {
+        if (!ChatUtilsConfig.ANTI_SPAM.value()) return;
         if (ChatStorage.getInstance().isBlockingChatEvents()) return;
+
         var client = MinecraftClient.getInstance();
         var chat = client.inGameHud.getChatHud();
         var range = ChatUtilsConfig.ANTI_SPAM_RANGE.value();
