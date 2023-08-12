@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.hotlava03.chatutils.util.IoUtils;
+import net.minecraft.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.lwjgl.glfw.GLFW;
 
@@ -24,7 +25,11 @@ public class ChatUtilsConfig {
     public static final Value<Boolean> ENABLE_CHAT_PERSIST = new Value<>("enableChatPersist", true);
     public static final Value<Boolean> ENABLE_COMMAND_PERSIST = new Value<>("enableCommandPersist", true);
     public static final Value<Boolean> ENABLE_COPY_KEY = new Value<>("enableCopyKey", true);
-    public static final Value<Integer> COPY_KEY = new Value<>("copyKey", GLFW.GLFW_KEY_LEFT_CONTROL);
+    public static final Value<Integer> COPY_KEY = new Value<>(
+            "copyKey",
+            Util.OperatingSystem.OSX == Util.getOperatingSystem()
+                    ? GLFW.GLFW_KEY_LEFT_SUPER
+                    : GLFW.GLFW_KEY_LEFT_CONTROL);
     public static final Value<Boolean> SHOW_ALERTS = new Value<>("showAlerts", true);
 
     public static void loadFromFile() {
