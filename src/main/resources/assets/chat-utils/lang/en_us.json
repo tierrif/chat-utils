@@ -14,6 +14,8 @@
   "chat-utils.configs.copyHexColors.description": "If disabled, copied colors will be down sampled to the closest legacy color code. Only works if \"copyColorsIfAny\" is enabled.",
   "chat-utils.configs.antiSpam.label": "Anti-Spam",
   "chat-utils.configs.antiSpam.description": "Collapse identical messages.",
+  "chat-utils.configs.antiSpamIgnoreColors.label": "Anti-Spam Ignore Colors",
+  "chat-utils.configs.antiSpamIgnoreColors.description": "Collapse identical messages regardless of their color.",
   "chat-utils.configs.antiSpamRange.label": "Anti-Spam Range",
   "chat-utils.configs.antiSpamRange.description": "Chat Anti-Spam only triggers when messages are within this range from the latest message.",
   "chat-utils.configs.tooltipEnabled.label": "Enable Copy To Clipboard Tooltip",

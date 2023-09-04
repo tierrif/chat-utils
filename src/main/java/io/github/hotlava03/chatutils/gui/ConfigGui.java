@@ -20,6 +20,7 @@ public class ConfigGui {
         ConfigCategory general = builder.getOrCreateCategory(Text.translatable("chat-utils.config_title"));
         addBooleanEntry(general, builder, ChatUtilsConfig.ANTI_SPAM);
         addIntEntry(general, builder, ChatUtilsConfig.ANTI_SPAM_RANGE, 1, 99);
+        addBooleanEntry(general, builder, ChatUtilsConfig.ANTI_SPAM_IGNORE_COLORS);
         addBooleanEntry(general, builder, ChatUtilsConfig.ENABLED);
         addBooleanEntry(general, builder, ChatUtilsConfig.TOOLTIP_ENABLED);
         addStringEntry(general, builder, ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE);

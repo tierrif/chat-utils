@@ -16,6 +16,8 @@
   "chat-utils.configs.antiSpam.description": "Colapsar mensagens idênticas.",
   "chat-utils.configs.antiSpamRange.label": "Alcance do Anti-Spam",
   "chat-utils.configs.antiSpamRange.description": "O sistema Anti-Spam apenas é chamado quando mensagens estão neste alcance da mensagem mais recente.",
+  "chat-utils.configs.antiSpamIgnoreColors.label": "Anti-Spam Ignorar Cores",
+  "chat-utils.configs.antiSpamIgnoreColors.description": "Colapsar mensagens idênticas independentemente da sua cor.",
   "chat-utils.configs.tooltipEnabled.label": "Mostrar Rótulo de Cópia",
   "chat-utils.configs.tooltipEnabled.description": "Mostrar qualquer tipo de rótulo ao passar o rato em cima de cada mensagem.",
   "chat-utils.configs.enabled.label": "Cópia Ativada",

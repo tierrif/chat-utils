@@ -27,10 +27,11 @@ public class ChatPersistListener implements ReceiveMessageCallback {
         var lines = storage.getStoredChatLines(address);
 
         if (!lines.isEmpty() && !storage.isBlockingChatEvents()) {
-            var last = Text.Serializer.fromJson(lines.get(lines.size() - 1)).getString();
+            var last = Text.Serializer.fromJson(lines.get(lines.size() - 1));
+            if (last == null) return;
             if (message.matches(".+" + ANTI_SPAM_REGEX)) {
-                var lastLine = this.removeAntiSpamIndicator(last);
-                if (StringUtils.getDifference(this.removeAntiSpamIndicator(message), lastLine) <= 0) {
+                var lastLine = this.removeAntiSpamIndicator(last.getString());
+                if (this.removeAntiSpamIndicator(message).equals(lastLine)) {
                     storage.removeChat(address, lines.size() - 1);
                 }
             }

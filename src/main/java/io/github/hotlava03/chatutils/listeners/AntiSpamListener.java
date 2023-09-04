@@ -3,6 +3,8 @@ package io.github.hotlava03.chatutils.listeners;
 import io.github.hotlava03.chatutils.events.ReceiveMessageCallback;
 import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.util.ChatMessages;
@@ -12,10 +14,11 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
 
-import static io.github.hotlava03.chatutils.util.OrderedTextAdapter.orderedTextToString;
-import static io.github.hotlava03.chatutils.util.StringUtils.getDifference;
+import static io.github.hotlava03.chatutils.util.OrderedTextAdapter.*;
 
 public class AntiSpamListener implements ReceiveMessageCallback {
+    private static final String ANTISPAM_REGEX = ".+(§8)? ?\\[(§c)?x(\\d+)(§8)?]$";
+
     @Override
     public void accept(Text text, List<ChatHudLine.Visible> lines) {
         if (!ChatUtilsConfig.ANTI_SPAM.value()) return;
@@ -35,53 +38,50 @@ public class AntiSpamListener implements ReceiveMessageCallback {
         var lineMatchCount = 0;
 
         for (int i = history.size() - 1; i >= 0; i--) {
-            var previous = orderedTextToString(history.get(i).content());
+            String previousString = ChatUtilsConfig.ANTI_SPAM_IGNORE_COLORS.value()
+                    ? orderedTextToString(history.get(i).content())
+                    : LegacyComponentSerializer.legacySection().serialize(
+                            Component.textOfChildren(orderedTextToMutable(history.get(i).content())));
 
             if (lineMatchCount <= splitLines.size() - 1) {
-                String next = orderedTextToString(splitLines.get(lineMatchCount));
+                String nextString = ChatUtilsConfig.ANTI_SPAM_IGNORE_COLORS.value()
+                        ? orderedTextToString(splitLines.get(lineMatchCount))
+                        : LegacyComponentSerializer.legacySection().serialize(
+                        Component.textOfChildren(orderedTextToMutable(splitLines.get(lineMatchCount))));
 
                 if (lineMatchCount < splitLines.size() - 1) {
-                    if (getDifference(previous, next) <= 0) lineMatchCount++;
-                    else lineMatchCount = 0;
+                    if ((ChatUtilsConfig.ANTI_SPAM_IGNORE_COLORS.value() && previousString.equals(nextString))) {
+                        lineMatchCount++;
+                    } else {
+                        lineMatchCount = 0;
+                    }
 
                     continue;
                 }
 
-                if (!previous.startsWith(next)) {
+                if (!previousString.startsWith(nextString)) {
                     lineMatchCount = 0;
                     continue;
                 }
 
                 if (i > 0 && lineMatchCount == splitLines.size() - 1) {
-                    var appended = (previous + orderedTextToString(history.get(i - 1).content()))
-                            .substring(next.length());
+                    if (hasAntispamIndicator(previousString)) {
+                        int previousCounter = getAntispamCountFromMessage(previousString);
 
-                    if (appended.startsWith(" [x") && appended.endsWith("]")) {
-                        var previousCounter = appended.substring(3, appended.length() - 1);
-
-                        try {
-                            spamCounter += Integer.parseInt(previousCounter);
-                            lineMatchCount++;
-                            continue;
-                        } catch (NumberFormatException ignored) {}
+                        spamCounter += previousCounter;
+                        lineMatchCount++;
                     }
                 }
 
-                if (previous.length() == next.length()) spamCounter++;
+                if (previousString.length() == nextString.length()) spamCounter++;
                 else {
-                    var appended = previous.substring(next.length());
-                    if (!appended.startsWith(" [x") || !appended.endsWith("]")) {
+                    if (!hasAntispamIndicator(previousString)) {
                         lineMatchCount = 0;
                         continue;
                     }
 
-                    var previousCounter = appended.substring(3, appended.length() - 1);
-                    try {
-                        spamCounter += Integer.parseInt(previousCounter);
-                    } catch (NumberFormatException ex) {
-                        lineMatchCount = 0;
-                        continue;
-                    }
+                    int previousCounter = getAntispamCountFromMessage(previousString);
+                    spamCounter += previousCounter;
                 }
             }
 
@@ -92,5 +92,13 @@ public class AntiSpamListener implements ReceiveMessageCallback {
         }
 
         if (spamCounter > 1) ((MutableText) text).append(" §8[§cx" + spamCounter + "§8]");
+    }
+
+    private boolean hasAntispamIndicator(String message) {
+        return message.matches(ANTISPAM_REGEX);
+    }
+
+    private int getAntispamCountFromMessage(String message) {
+        return Integer.parseInt(message.replaceAll(ANTISPAM_REGEX, "$3"));
     }
 }
