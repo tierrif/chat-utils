@@ -14,6 +14,8 @@
   "chat-utils.configs.copyHexColors.description": "無効にすると、コピーされた色は最も近い従来のカラーコードにダウンサンプルされます。\"copyColorsIfAny\"が有効な場合のみ動作します。",
   "chat-utils.configs.antiSpam.label": "アンチスパム",
   "chat-utils.configs.antiSpam.description": "同じメッセージを折りたたむ。",
+  "chat-utils.configs.antiSpamIgnoreColors.label": "スパム対策は色を無視",
+  "chat-utils.configs.antiSpamIgnoreColors.description": "同じメッセージを色に関係なく折りたたむことができます。",
   "chat-utils.configs.antiSpamRange.label": "スパム対策の範囲",
   "chat-utils.configs.antiSpamRange.description": "チャットアンチスパムは、最新のメッセージからこの範囲内にメッセージがある場合にのみ作動します。",
   "chat-utils.configs.tooltipEnabled.label": "クリップボードツールチップへのコピーを有効にする",
