@@ -3,7 +3,10 @@ package io.github.hotlava03.chatutils.mixin;
 import io.github.hotlava03.chatutils.events.CopyToClipboardCallback;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.util.ChatHudUtils;
+import net.kyori.adventure.text.BuildableComponent;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minecraft.client.MinecraftClient;
@@ -11,9 +14,12 @@ import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.util.InputUtil;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.function.Function;
 
 @Mixin(ChatHud.class)
 public abstract class ChatClickMixin {
@@ -36,18 +42,32 @@ public abstract class ChatClickMixin {
             // asComponent doesn't realise Mojang is insane and parses colours inside `content,`
             // so we have to take matters into our own hands.
             // TODO: file a bug report with adventure upstream
-            var component = ((TextComponent) message.content().asComponent()).toBuilder()
-                    .mapChildrenDeep(anyChild -> {
-                        if (anyChild instanceof TextComponent c &&
-                                c.content().indexOf(LegacyComponentSerializer.SECTION_CHAR) != -1) {
-                            return LegacyComponentSerializer.legacySection()
-                                    .deserialize(c.content())
-                                    .style(newStyle -> newStyle.merge(c.style(),
-                                            Style.Merge.Strategy.IF_ABSENT_ON_TARGET));
-                        } else return anyChild;
-                    })
-                    .build();
+            var component = mapComponentChildren(message.content().asComponent());
             CopyToClipboardCallback.EVENT.invoker().accept(component, message.creationTick());
         }
+    }
+
+    @Unique
+    private Component mapComponentChildren(Component component) {
+        Function<BuildableComponent<?, ?>, ? extends BuildableComponent<?, ?>> func = anyChild -> {
+            if (anyChild instanceof TextComponent c &&
+                    c.content().indexOf(LegacyComponentSerializer.SECTION_CHAR) != -1) {
+                return LegacyComponentSerializer.legacySection()
+                        .deserialize(c.content())
+                        .style(newStyle -> newStyle.merge(c.style(),
+                                Style.Merge.Strategy.IF_ABSENT_ON_TARGET));
+            } else return anyChild;
+        };
+
+        Component mapped;
+        if (component instanceof TextComponent c) {
+            mapped = c.toBuilder().mapChildrenDeep(func).build();
+        } else if (component instanceof TranslatableComponent c) {
+            mapped = c.toBuilder().mapChildrenDeep(func).build();
+        } else {
+            mapped = null;
+        }
+
+        return mapped;
     }
 }
