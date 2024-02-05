@@ -53,7 +53,7 @@ public class HudRenderListener implements HudRenderCallback {
                     .orElseThrow().getMetadata().getVersion().getFriendlyString();
             var chatUtilsString = "ChatUtils " + version;
             int strWidth = client.textRenderer.getWidth(chatUtilsString);
-            var text = MutableText.of(TextContent.EMPTY);
+            var text = MutableText.of(PlainTextContent.EMPTY);
             text.append(chatUtilsString);
             drawContext.drawText(client.textRenderer, text, width - strWidth - 5,
                     height - 20 - 5, 0xCCCCCC, true);

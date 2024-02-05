@@ -29,7 +29,8 @@ public class RetrieveChatListener implements ClientPlayConnectionEvents.Init {
 
         // Command Persist.
         if (ChatUtilsConfig.ENABLE_COMMAND_PERSIST.value()) {
-            handleCommandPersist(storage, address, ((ChatHudAccessor) client.inGameHud.getChatHud()).getMessageHistory());
+            handleCommandPersist(storage, address, ((ChatHudAccessor)
+                    client.inGameHud.getChatHud()).getMessageHistory());
         }
     }
 
@@ -42,7 +43,7 @@ public class RetrieveChatListener implements ClientPlayConnectionEvents.Init {
         }
         var date = new Date(storage.getTimestamp(address));
 
-        chatLines.forEach((line) -> client.inGameHud.getChatHud().addMessage(Text.Serializer.fromJson(line)));
+        chatLines.forEach((line) -> client.inGameHud.getChatHud().addMessage(Text.Serialization.fromJson(line)));
         client.inGameHud.getChatHud().addMessage(Text.translatable("chat-utils.stored_messages", date));
         storage.setBlockingChatEvents(false);
     }

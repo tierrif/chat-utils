@@ -35,7 +35,7 @@ public class OrderedTextAdapter {
         @Override
         public boolean accept(int index, Style style, int codePoint) {
             sb.appendCodePoint(codePoint);
-            MutableText text = MutableText.of(new LiteralTextContent(new String(Character.toChars(codePoint))));
+            MutableText text = MutableText.of(new PlainTextContent.Literal(new String(Character.toChars(codePoint))));
             text.setStyle(style);
             textList.add(text);
             return true;

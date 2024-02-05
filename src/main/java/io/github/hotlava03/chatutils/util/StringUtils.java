@@ -57,7 +57,9 @@ public class StringUtils {
 
             while (offset < inputLineLength) {
                 int spaceToWrapAt = -1;
-                Matcher matcher = patternToWrapOn.matcher(str.substring(offset, Math.min((int)Math.min(2147483647L, (long)(offset + wrapLength) + 1L), inputLineLength)));
+                Matcher matcher = patternToWrapOn.matcher(str.substring(offset,
+                        Math.min((int) Math.min(2147483647L, (long) (offset + wrapLength) + 1L), inputLineLength)));
+
                 if (matcher.find()) {
                     if (matcher.start() == 0) {
                         offset += matcher.end();
@@ -71,7 +73,7 @@ public class StringUtils {
                     break;
                 }
 
-                while(matcher.find()) {
+                while (matcher.find()) {
                     spaceToWrapAt = matcher.start() + offset;
                 }
 

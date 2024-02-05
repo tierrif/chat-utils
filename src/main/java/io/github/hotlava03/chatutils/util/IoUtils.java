@@ -29,9 +29,11 @@ public class IoUtils {
     public static void writeJsonToFile(String name, JsonObject object, Gson gson) throws IOException {
         // Write to temporary file.
         File dir = IoUtils.getConfigDirectory();
-        try(PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(dir, name + "~")), StandardCharsets.UTF_8)))){
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream(new File(dir, name + "~")), StandardCharsets.UTF_8)))) {
             gson.toJson(object, writer);
         }
+
         // Overwrite proper file atomically with temporary file after write has finished.
         Files.move(
                 dir.toPath().resolve(name + "~"),
