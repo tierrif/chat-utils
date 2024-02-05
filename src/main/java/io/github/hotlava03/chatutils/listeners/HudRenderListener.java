@@ -79,8 +79,10 @@ public class HudRenderListener implements HudRenderCallback {
                 tooltip.add(toText(LegacyComponentSerializer.legacyAmpersand()
                         .deserialize(ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE.value())));
                 tooltip.add(Text.of(""));
-                tooltip.addAll(Arrays.stream(StringUtils.wrap(line.content().copy()
-                        .setStyle(Style.EMPTY).getString(), 25).split("\n")).map(Text::of).toList());
+                tooltip.addAll(Arrays.stream(
+                        StringUtils.wrap(line.content().copy().setStyle(Style.EMPTY).getString(), 25)
+                                .replace("\r", "")
+                                .split("\n")).map(Text::of).toList());
             } else {
                 tooltip = Collections.singletonList(toText(LegacyComponentSerializer.legacyAmpersand()
                         .deserialize(ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE.value())));
