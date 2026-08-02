@@ -1,27 +1,87 @@
 package io.github.hotlava03.chatutils.util;
 
-import net.kyori.adventure.platform.fabric.FabricClientAudiences;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
+
+import net.minecraft.network.chat.Style;
+
+import net.kyori.adventure.platform.modcommon.MinecraftClientAudiences;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static org.apache.commons.lang3.StringUtils.getLevenshteinDistance;
-
 public class StringUtils {
+    public static Component asAdventure(net.minecraft.network.chat.Component text) {
+        var builder = Component.text();
+        text.visit((style, content) -> {
+            builder.append(Component.text(content, asAdventureStyle(style)));
+            return Optional.empty();
+        }, Style.EMPTY);
+        return builder.build();
+    }
+
+    private static net.kyori.adventure.text.format.Style asAdventureStyle(Style style) {
+        var builder = net.kyori.adventure.text.format.Style.style();
+
+        var color = style.getColor();
+        if (color != null) builder.color(TextColor.color(color.getValue()));
+        if (style.isBold()) builder.decorate(TextDecoration.BOLD);
+        if (style.isItalic()) builder.decorate(TextDecoration.ITALIC);
+        if (style.isUnderlined()) builder.decorate(TextDecoration.UNDERLINED);
+        if (style.isStrikethrough()) builder.decorate(TextDecoration.STRIKETHROUGH);
+        if (style.isObfuscated()) builder.decorate(TextDecoration.OBFUSCATED);
+
+        return builder.build();
+    }
+
+    public static Component unpackLegacyCodes(Component component) {
+        var children = component.children();
+        if (!children.isEmpty()) {
+            component = component.children(children.stream()
+                    .map(StringUtils::unpackLegacyCodes)
+                    .toList());
+        }
+
+        if (!(component instanceof TextComponent text)
+                || text.content().indexOf(LegacyComponentSerializer.SECTION_CHAR) == -1
+        ) {
+            return component;
+        }
+
+        // The parsed runs replace the content, so they have to come ahead of the component's own
+        // children. Its style stays as the fallback for whatever the codes leave unset.
+        var parsed = LegacyComponentSerializer.legacySection().deserialize(text.content());
+
+        return parsed
+                .applyFallbackStyle(text.style())
+                .children(Stream.concat(
+                        parsed.children().stream(), text.children().stream()).toList());
+    }
+
     public static String componentToLegacy(Component component, boolean useHexCodes) {
         var builder = LegacyComponentSerializer.builder()
                 .character(LegacyComponentSerializer.AMPERSAND_CHAR)
-                .flattener(FabricClientAudiences.of().flattener());
+                .flattener(MinecraftClientAudiences.of().flattener());
         if (useHexCodes) builder.hexColors();
         return builder.build().serialize(component);
     }
 
+    public static String componentToLegacySection(Component component) {
+        return LegacyComponentSerializer.builder()
+                .character(LegacyComponentSerializer.SECTION_CHAR)
+                .flattener(MinecraftClientAudiences.of().flattener())
+                .build()
+                .serialize(component);
+    }
+
     public static String componentToPlainText(Component component) {
         return PlainTextComponentSerializer.builder()
-                .flattener(FabricClientAudiences.of().flattener())
+                .flattener(MinecraftClientAudiences.of().flattener())
                 .build()
                 .serialize(component);
     }
@@ -103,6 +163,7 @@ public class StringUtils {
             }
 
             wrappedLine.append(str, offset, str.length());
+
             return wrappedLine.toString();
         }
     }

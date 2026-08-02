@@ -1,14 +1,16 @@
 package io.github.hotlava03.chatutils.fileio;
 
-import com.google.gson.*;
-import io.github.hotlava03.chatutils.util.IoUtils;
-import org.apache.logging.log4j.LogManager;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.StreamSupport;
+
+import com.google.gson.*;
+
+import org.apache.logging.log4j.LogManager;
+
+import io.github.hotlava03.chatutils.util.IoUtils;
 
 public class ChatStorage {
     public static final int MAX_ENTRIES = 100;
@@ -26,7 +28,10 @@ public class ChatStorage {
     }
 
     public void pushChat(String chatLine, String server) {
-        if (chatLine.startsWith("[CHAT UTILS] ") || this.blockingChatEvents) return;
+        if (this.blockingChatEvents) {
+            return;
+        }
+
         this.push("chat", chatLine, server);
         object.getAsJsonObject(server).add("timestamp", new JsonPrimitive(System.currentTimeMillis()));
     }
@@ -78,7 +83,15 @@ public class ChatStorage {
     }
 
     public long getTimestamp(String server) {
-        return object.getAsJsonObject(server).get("timestamp").getAsLong();
+        if (!object.has(server) || !object.get(server).isJsonObject()) {
+            return 0L;
+        }
+
+        var timestamp = object.getAsJsonObject(server).get("timestamp");
+
+        return timestamp != null && timestamp.isJsonPrimitive()
+                ? timestamp.getAsLong()
+                : 0L;
     }
 
     public boolean isBlockingChatEvents() {
@@ -110,7 +123,7 @@ public class ChatStorage {
         if (!(serverObj.has(type) && serverObj.get(type).isJsonArray())) serverObj.add(type, new JsonArray());
         var arr = serverObj.getAsJsonArray(type);
 
-        return StreamSupport.stream(arr.spliterator(), true)
+        return StreamSupport.stream(arr.spliterator(), false)
                 .map(JsonElement::getAsString)
                 .toList();
     }

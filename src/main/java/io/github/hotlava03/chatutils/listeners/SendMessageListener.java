@@ -1,31 +1,45 @@
 package io.github.hotlava03.chatutils.listeners;
 
-import io.github.hotlava03.chatutils.fileio.ChatStorage;
+import org.jetbrains.annotations.NotNull;
+
+import net.minecraft.client.Minecraft;
+
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
-import net.minecraft.client.MinecraftClient;
+
+import io.github.hotlava03.chatutils.fileio.ChatStorage;
+import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 
 public class SendMessageListener implements
         ClientSendMessageEvents.Chat,
         ClientSendMessageEvents.Command {
     @Override
-    public void onSendChatMessage(String message) {
+    public void onSendChatMessage(@NotNull String message) {
         handleMessage(message);
     }
 
     @Override
-    public void onSendCommandMessage(String command) {
+    public void onSendCommandMessage(@NotNull String command) {
         handleMessage("/" + command);
     }
 
     private void handleMessage(String message) {
-        var client = MinecraftClient.getInstance();
-        var serverInfo = client.getCurrentServerEntry();
-        var address = serverInfo != null ? serverInfo.address : null;
-        if (address == null) return; // Don't store if it's single-player.
+        if (!ChatUtilsConfig.ENABLE_COMMAND_PERSIST.value()) {
+            return;
+        }
+
+        var client = Minecraft.getInstance();
+        var serverInfo = client.getCurrentServer();
+        var address = serverInfo != null ? serverInfo.ip : null;
+        if (address == null) {
+            return; // Don't store if it's single-player.
+        }
 
         var storage = ChatStorage.getInstance();
         var commands = storage.getStoredCmdLines(address);
-        if (!commands.isEmpty() && commands.get(commands.size() - 1).equals(message)) return;
+        if (!commands.isEmpty() && commands.getLast().equals(message)) {
+            return;
+        }
+
         storage.pushCmd(message, address);
         storage.saveAsync();
     }

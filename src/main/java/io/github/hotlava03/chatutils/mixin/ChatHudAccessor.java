@@ -1,31 +1,31 @@
 package io.github.hotlava03.chatutils.mixin;
 
-import net.minecraft.client.gui.hud.ChatHud;
-import net.minecraft.client.gui.hud.ChatHudLine;
-import net.minecraft.util.collection.ArrayListDeque;
+import java.util.List;
+
+import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.client.multiplayer.chat.GuiMessage;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-import java.util.List;
-
-@Mixin(ChatHud.class)
+@Mixin(ChatComponent.class)
 public interface ChatHudAccessor {
-    @Accessor
-    ArrayListDeque<String> getMessageHistory();
+    @Accessor("trimmedMessages")
+    List<GuiMessage.Line> getTrimmedMessages();
 
-    @Accessor
-    List<ChatHudLine.Visible> getVisibleMessages();
+    @Accessor("allMessages")
+    List<GuiMessage> getAllMessages();
 
-    @Accessor
-    List<ChatHudLine> getMessages();
+    @Accessor("chatScrollbarPos")
+    int getChatScrollbarPos();
 
-    @Invoker("getMessageLineIndex")
-    int invokeGetMessageLineIndex(double chatLineX, double chatLineY);
+    @Invoker("getScale")
+    double invokeGetScale();
 
-    @Invoker("toChatLineX")
-    double invokeToChatLineX(double x);
+    @Invoker("getWidth")
+    int invokeGetWidth();
 
-    @Invoker("toChatLineY")
-    double invokeToChatLineY(double y);
+    @Invoker("getLineHeight")
+    int invokeGetLineHeight();
 }

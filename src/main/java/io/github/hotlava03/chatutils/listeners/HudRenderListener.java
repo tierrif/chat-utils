@@ -1,105 +1,112 @@
 package io.github.hotlava03.chatutils.listeners;
 
-import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
-import io.github.hotlava03.chatutils.util.ChatHudUtils;
-import io.github.hotlava03.chatutils.util.StringUtils;
-import io.github.hotlava03.chatutils.util.TooltipAlert;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.loader.api.FabricLoader;
-import net.kyori.adventure.platform.fabric.FabricClientAudiences;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.hud.ChatHudLine;
-import net.minecraft.client.gui.screen.ChatScreen;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class HudRenderListener implements HudRenderCallback {
+import org.jetbrains.annotations.NotNull;
+
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.multiplayer.chat.GuiMessage;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
+
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
+import net.fabricmc.loader.api.FabricLoader;
+
+import net.kyori.adventure.platform.modcommon.MinecraftClientAudiences;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+
+import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
+import io.github.hotlava03.chatutils.util.ChatHudUtils;
+import io.github.hotlava03.chatutils.util.KeyUtils;
+import io.github.hotlava03.chatutils.util.StringUtils;
+import io.github.hotlava03.chatutils.util.TooltipAlert;
+
+public class HudRenderListener implements HudElement {
     @Override
-    public void onHudRender(DrawContext drawContext, float tickDelta) {
-        var client = MinecraftClient.getInstance();
+    public void extractRenderState(
+            @NotNull GuiGraphicsExtractor graphics,
+            @NotNull DeltaTracker deltaTracker
+    ) {
+        var client = Minecraft.getInstance();
         var alert = TooltipAlert.getInstance();
 
         alert.tick();
 
-        if (client.currentScreen instanceof ChatScreen) {
-            int width = client.getWindow().getScaledWidth();
-            int height = client.getWindow().getScaledHeight();
-            double x = getMouseX(client);
-            double y = getMouseY(client);
+        if (client.gui.screen() instanceof ChatScreen) {
+            int width = graphics.guiWidth();
+            int height = graphics.guiHeight();
+            double x = client.mouseHandler.getScaledXPos(client.getWindow());
+            double y = client.mouseHandler.getScaledYPos(client.getWindow());
 
             if (ChatUtilsConfig.ENABLE_COPY_KEY.value()) {
-                if (InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(),
-                        ChatUtilsConfig.COPY_KEY.value())) {
-                    var clipboardString = Text.translatable("chat-utils.hud.keyPressed");
-                    int strWidth = client.textRenderer.getWidth(clipboardString);
-                    drawContext.drawText(client.textRenderer, clipboardString, width - strWidth - 5,
-                            height - 32 - 5, 0x00FF00, true);
+                if (KeyUtils.isKeyDown(ChatUtilsConfig.COPY_KEY.value())) {
+                    var clipboardString = Component.translatable("chat-utils.hud.keyPressed");
+                    int strWidth = client.font.width(clipboardString);
+                    graphics.text(client.font, clipboardString, width - strWidth - 5,
+                            height - 32 - 5, 0xFF00FF00, true);
 
-                    drawTooltip(drawContext, client, (int) x, (int) y, alert);
+                    drawTooltip(graphics, client, (int) x, (int) y, alert);
                 }
             } else {
-                drawTooltip(drawContext, client, (int) x, (int) y, alert);
+                drawTooltip(graphics, client, (int) x, (int) y, alert);
             }
 
             var version = FabricLoader.getInstance().getModContainer("chat-utils")
                     .orElseThrow().getMetadata().getVersion().getFriendlyString();
             var chatUtilsString = "ChatUtils " + version;
-            int strWidth = client.textRenderer.getWidth(chatUtilsString);
-            var text = MutableText.of(PlainTextContent.EMPTY);
-            text.append(chatUtilsString);
-            drawContext.drawText(client.textRenderer, text, width - strWidth - 5,
-                    height - 20 - 5, 0xCCCCCC, true);
+            int strWidth = client.font.width(chatUtilsString);
+            graphics.text(client.font, chatUtilsString, width - strWidth - 5,
+                    height - 20 - 5, 0xFFCCCCCC, true);
         }
     }
 
-    private void drawTooltip(DrawContext drawContext, MinecraftClient client, int x, int y, TooltipAlert alert) {
-        ChatHudLine line = ChatHudUtils.getMessageAt(x, y);
+    private void drawTooltip(
+            GuiGraphicsExtractor graphics,
+            Minecraft client,
+            int x,
+            int y,
+            TooltipAlert alert
+    ) {
+        GuiMessage line = ChatHudUtils.getMessageAt(x, y);
         if (line == null) return;
 
-        var style = client.inGameHud.getChatHud().getTextStyleAt(x, y);
-
-        if (alert.isRunning() && alert.getCreationTicks() == line.creationTick()
-                && ChatUtilsConfig.SHOW_ALERTS.value()) {
-            var text = Text.translatable("chat-utils.hud.copiedToClipboard");
+        if (alert.isRunning() && alert.getCreationTicks() == line.addedTime()
+                && ChatUtilsConfig.SHOW_ALERTS.value()
+        ) {
+            var text = Component.translatable("chat-utils.hud.copiedToClipboard");
             text.setStyle(text.getStyle().withColor(TextColor.fromRgb(0x00FF00)));
-            drawContext.drawTooltip(client.textRenderer, text, x, y);
-        } else if (ChatUtilsConfig.TOOLTIP_ENABLED.value()
-                && (style == null || style.getHoverEvent() == null)) {
-            List<Text> tooltip;
+
+            graphics.setTooltipForNextFrame(client.font, text, x, y);
+        } else if (ChatUtilsConfig.TOOLTIP_ENABLED.value()) {
+            List<Component> tooltip;
             if (ChatUtilsConfig.PREVIEW_CONTENT.value()) {
                 tooltip = new ArrayList<>();
                 tooltip.add(toText(LegacyComponentSerializer.legacyAmpersand()
                         .deserialize(ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE.value())));
-                tooltip.add(Text.of(""));
-                tooltip.addAll(Arrays.stream(
-                        StringUtils.wrap(line.content().copy().setStyle(Style.EMPTY).getString(), 25)
-                                .replace("\r", "")
-                                .split("\n")).map(Text::of).toList());
+                tooltip.add(Component.empty());
+
+                var preview = StringUtils.componentToPlainText(StringUtils.unpackLegacyCodes(
+                        StringUtils.asAdventure(line.content())));
+
+                tooltip.addAll(Arrays.stream(StringUtils.wrap(preview, 25)
+                        .replace("\r", "")
+                        .split("\n")).map(Component::literal).toList());
             } else {
                 tooltip = Collections.singletonList(toText(LegacyComponentSerializer.legacyAmpersand()
                         .deserialize(ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE.value())));
             }
-            drawContext.drawTooltip(client.textRenderer, tooltip, x, y);
+
+            graphics.setComponentTooltipForNextFrame(client.font, tooltip, x, y);
         }
     }
 
-    private double getMouseX(MinecraftClient client) {
-        return client.mouse.getX() * client.getWindow().getScaledWidth() / (double) client.getWindow().getWidth();
-    }
-
-    private double getMouseY(MinecraftClient client) {
-        return client.mouse.getY() * client.getWindow().getScaledWidth() / (double) client.getWindow().getWidth();
-    }
-
-    private Text toText(Component component) {
-        return FabricClientAudiences.of().toNative(component);
+    private Component toText(net.kyori.adventure.text.Component component) {
+        return MinecraftClientAudiences.of().asNative(component);
     }
 }
