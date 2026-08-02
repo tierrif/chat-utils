@@ -1,11 +1,12 @@
 package io.github.hotlava03.chatutils.events;
 
+import java.util.List;
+
+import net.minecraft.client.multiplayer.chat.GuiMessage;
+import net.minecraft.network.chat.Component;
+
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.client.gui.hud.ChatHudLine;
-import net.minecraft.text.Text;
-
-import java.util.List;
 
 public interface ReceiveMessageCallback {
     Event<ReceiveMessageCallback> EVENT = EventFactory.createArrayBacked(
@@ -16,5 +17,5 @@ public interface ReceiveMessageCallback {
                 }
             });
 
-    void accept(Text text, List<ChatHudLine.Visible> lines);
+    void accept(Component text, List<GuiMessage.Line> lines);
 }

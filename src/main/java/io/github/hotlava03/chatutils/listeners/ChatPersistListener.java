@@ -1,23 +1,25 @@
 package io.github.hotlava03.chatutils.listeners;
 
-import io.github.hotlava03.chatutils.events.ReceiveMessageCallback;
-import io.github.hotlava03.chatutils.fileio.ChatStorage;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.ChatHudLine;
-import net.minecraft.text.Text;
-
 import java.util.List;
 import java.util.regex.Pattern;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.chat.GuiMessage;
+import net.minecraft.network.chat.Component;
+
+import io.github.hotlava03.chatutils.events.ReceiveMessageCallback;
+import io.github.hotlava03.chatutils.fileio.ChatStorage;
+import io.github.hotlava03.chatutils.util.ComponentJson;
 
 public class ChatPersistListener implements ReceiveMessageCallback {
     private static final String ANTI_SPAM_REGEX = " §8\\[§cx\\d§8]$";
     private static final Pattern ANTI_SPAM_PATTERN = Pattern.compile(ANTI_SPAM_REGEX);
 
     @Override
-    public void accept(Text text, List<ChatHudLine.Visible> visibleLines) {
-        var client = MinecraftClient.getInstance();
-        var serverInfo = client.getCurrentServerEntry();
-        var address = serverInfo != null ? serverInfo.address : null;
+    public void accept(Component text, List<GuiMessage.Line> visibleLines) {
+        var client = Minecraft.getInstance();
+        var serverInfo = client.getCurrentServer();
+        var address = serverInfo != null ? serverInfo.ip : null;
         if (address == null) return; // Don't store if it's single-player.
 
         var message = text.getString();
@@ -26,7 +28,7 @@ public class ChatPersistListener implements ReceiveMessageCallback {
         var lines = storage.getStoredChatLines(address);
 
         if (!lines.isEmpty() && !storage.isBlockingChatEvents()) {
-            var last = Text.Serialization.fromJson(lines.get(lines.size() - 1));
+            var last = ComponentJson.fromJson(lines.get(lines.size() - 1));
             if (last == null) return;
             if (message.matches(".+" + ANTI_SPAM_REGEX)) {
                 var lastLine = this.removeAntiSpamIndicator(last.getString());
@@ -36,7 +38,10 @@ public class ChatPersistListener implements ReceiveMessageCallback {
             }
         }
 
-        storage.pushChat(Text.Serialization.toJsonString(text), address);
+        var json = ComponentJson.toJson(text);
+        if (json == null) return;
+
+        storage.pushChat(json, address);
         storage.saveAsync();
     }
 

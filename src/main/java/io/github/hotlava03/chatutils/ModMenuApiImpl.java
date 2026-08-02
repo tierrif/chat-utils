@@ -2,6 +2,7 @@ package io.github.hotlava03.chatutils;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+
 import io.github.hotlava03.chatutils.gui.ConfigGui;
 
 public class ModMenuApiImpl implements ModMenuApi {

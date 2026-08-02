@@ -2,6 +2,7 @@ package io.github.hotlava03.chatutils.events;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+
 import net.kyori.adventure.text.Component;
 
 public interface CopyToClipboardCallback {

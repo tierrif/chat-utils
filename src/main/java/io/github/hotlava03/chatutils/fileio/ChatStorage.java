@@ -1,14 +1,16 @@
 package io.github.hotlava03.chatutils.fileio;
 
-import com.google.gson.*;
-import io.github.hotlava03.chatutils.util.IoUtils;
-import org.apache.logging.log4j.LogManager;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.StreamSupport;
+
+import com.google.gson.*;
+
+import org.apache.logging.log4j.LogManager;
+
+import io.github.hotlava03.chatutils.util.IoUtils;
 
 public class ChatStorage {
     public static final int MAX_ENTRIES = 100;

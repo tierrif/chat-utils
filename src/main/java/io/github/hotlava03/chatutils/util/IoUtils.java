@@ -1,18 +1,20 @@
 package io.github.hotlava03.chatutils.util;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import net.minecraft.client.MinecraftClient;
-import org.apache.logging.log4j.LogManager;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
+import net.minecraft.client.Minecraft;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import org.apache.logging.log4j.LogManager;
+
 public class IoUtils {
     public static File getConfigDirectory() {
-        File configDir = new File(MinecraftClient.getInstance().runDirectory, "config/chatutils");
+        File configDir = new File(Minecraft.getInstance().gameDirectory, "config/chatutils");
         synchronized (IoUtils.class) { // Synchronise this in case multiple threads try this.
             if (!configDir.isDirectory() && configDir.exists())
                 LogManager.getLogger().warn("[chat-utils] A file was found in place of the config folder!");

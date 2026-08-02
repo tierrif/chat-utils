@@ -1,11 +1,14 @@
 package io.github.hotlava03.chatutils.mixin;
 
-import io.github.hotlava03.chatutils.events.ReceiveMessageCallback;
-import net.minecraft.client.gui.hud.ChatHud;
-import net.minecraft.client.gui.hud.ChatHudLine;
-import net.minecraft.client.gui.hud.MessageIndicator;
-import net.minecraft.network.message.MessageSignatureData;
-import net.minecraft.text.*;
+import java.util.List;
+
+import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.client.multiplayer.chat.GuiMessage;
+import net.minecraft.client.multiplayer.chat.GuiMessageSource;
+import net.minecraft.client.multiplayer.chat.GuiMessageTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MessageSignature;
+
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,16 +16,20 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
+import io.github.hotlava03.chatutils.events.ReceiveMessageCallback;
 
-@Mixin(ChatHud.class)
+@Mixin(ChatComponent.class)
 public class ReceiveMessageMixin {
-    @Shadow @Final private List<ChatHudLine.Visible> visibleMessages;
+    @Shadow @Final private List<GuiMessage.Line> trimmedMessages;
 
     @Inject(
-            method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V",
+            method = "addMessage(Lnet/minecraft/network/chat/Component;"
+                    + "Lnet/minecraft/network/chat/MessageSignature;"
+                    + "Lnet/minecraft/client/multiplayer/chat/GuiMessageSource;"
+                    + "Lnet/minecraft/client/multiplayer/chat/GuiMessageTag;)V",
             at = @At("HEAD"))
-    public void addMessage(Text message, MessageSignatureData signature, MessageIndicator indicator, CallbackInfo ci) {
-        ReceiveMessageCallback.EVENT.invoker().accept(message, visibleMessages);
+    public void addMessage(Component message, MessageSignature signature, GuiMessageSource source,
+                           GuiMessageTag tag, CallbackInfo ci) {
+        ReceiveMessageCallback.EVENT.invoker().accept(message, trimmedMessages);
     }
 }

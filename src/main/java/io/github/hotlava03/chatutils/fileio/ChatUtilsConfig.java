@@ -1,15 +1,17 @@
 package io.github.hotlava03.chatutils.fileio;
 
+import java.io.*;
+import java.util.function.Function;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.github.hotlava03.chatutils.util.IoUtils;
-import net.minecraft.util.Util;
+
 import org.apache.logging.log4j.LogManager;
+
 import org.lwjgl.glfw.GLFW;
 
-import java.io.*;
-import java.util.function.Function;
+import io.github.hotlava03.chatutils.util.IoUtils;
 
 public class ChatUtilsConfig {
     private static final Gson gson = new Gson();
@@ -28,9 +30,14 @@ public class ChatUtilsConfig {
     public static final Value<Boolean> ENABLE_COPY_KEY = new Value<>("enableCopyKey", true);
     public static final Value<Integer> COPY_KEY = new Value<>(
             "copyKey",
-            Util.OperatingSystem.OSX == Util.getOperatingSystem()
+            isMacOs()
                     ? GLFW.GLFW_KEY_LEFT_SUPER
                     : GLFW.GLFW_KEY_LEFT_CONTROL);
+
+    private static boolean isMacOs() {
+        return System.getProperty("os.name", "").toLowerCase(java.util.Locale.ROOT).contains("mac");
+    }
+
     public static final Value<Boolean> SHOW_ALERTS = new Value<>("showAlerts", true);
 
     public static void loadFromFile() {
@@ -86,7 +93,7 @@ public class ChatUtilsConfig {
             chatUtils.addProperty(SHOW_ALERTS.name(), SHOW_ALERTS.value());
             root.add("ChatUtils", chatUtils);
 
-            // Write to file.
+            // Write to the file.
             IoUtils.writeJsonToFile("config.json", root, gson);
             LogManager.getLogger().info("[chat-utils] Saved settings.");
         } catch (IOException e) {
@@ -124,7 +131,7 @@ public class ChatUtilsConfig {
             try {
                 setValue(elementToValue.apply(element));
             } catch (Exception exception) {
-                LogManager.getLogger().warn("[chat-utils] Failed to read " + name + " from JSON config (type mismatch)");
+                LogManager.getLogger().warn("[chat-utils] Failed to read {} from JSON config (type mismatch)", name);
             }
         }
     }

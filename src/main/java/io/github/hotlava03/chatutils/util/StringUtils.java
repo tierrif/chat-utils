@@ -1,27 +1,25 @@
 package io.github.hotlava03.chatutils.util;
 
-import net.kyori.adventure.platform.fabric.FabricClientAudiences;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.apache.commons.lang3.StringUtils.getLevenshteinDistance;
+import net.kyori.adventure.platform.modcommon.MinecraftClientAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 public class StringUtils {
     public static String componentToLegacy(Component component, boolean useHexCodes) {
         var builder = LegacyComponentSerializer.builder()
                 .character(LegacyComponentSerializer.AMPERSAND_CHAR)
-                .flattener(FabricClientAudiences.of().flattener());
+                .flattener(MinecraftClientAudiences.of().flattener());
         if (useHexCodes) builder.hexColors();
         return builder.build().serialize(component);
     }
 
     public static String componentToPlainText(Component component) {
         return PlainTextComponentSerializer.builder()
-                .flattener(FabricClientAudiences.of().flattener())
+                .flattener(MinecraftClientAudiences.of().flattener())
                 .build()
                 .serialize(component);
     }
