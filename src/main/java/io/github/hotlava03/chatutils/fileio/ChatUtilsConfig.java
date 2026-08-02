@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.lwjgl.glfw.GLFW;
 
 import io.github.hotlava03.chatutils.util.IoUtils;
+import io.github.hotlava03.chatutils.util.KeyUtils;
 
 public class ChatUtilsConfig {
     private static final Gson gson = new Gson();
@@ -61,7 +62,16 @@ public class ChatUtilsConfig {
                     ENABLE_CHAT_PERSIST.read(root.get("enableChatPersist"), JsonElement::getAsBoolean);
                     ENABLE_COMMAND_PERSIST.read(root.get("enableCommandPersist"), JsonElement::getAsBoolean);
                     ENABLE_COPY_KEY.read(root.get("enableCopyKey"), JsonElement::getAsBoolean);
-                    COPY_KEY.read(root.get("copyKey"), JsonElement::getAsInt);
+                    COPY_KEY.read(root.get("copyKey"), copyKey -> {
+                        int key = copyKey.getAsInt();
+                        // A key GLFW doesn't know about would make every isKeyDown call log an error.
+                        if (!KeyUtils.isValidKey(key)) {
+                            LogManager.getLogger().warn(
+                                    "[chat-utils] Ignoring invalid copyKey {} in config, using the default.", key);
+                            return COPY_KEY.defaultValue();
+                        }
+                        return key;
+                    });
                     SHOW_ALERTS.read(root.get("showAlerts"), JsonElement::getAsBoolean);
                 }
             }

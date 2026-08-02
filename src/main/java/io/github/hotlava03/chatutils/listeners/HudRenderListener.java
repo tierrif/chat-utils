@@ -15,8 +15,6 @@ import net.minecraft.client.multiplayer.chat.GuiMessage;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 
-import com.mojang.blaze3d.platform.InputConstants;
-
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -25,6 +23,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.util.ChatHudUtils;
+import io.github.hotlava03.chatutils.util.KeyUtils;
 import io.github.hotlava03.chatutils.util.StringUtils;
 import io.github.hotlava03.chatutils.util.TooltipAlert;
 
@@ -46,7 +45,7 @@ public class HudRenderListener implements HudElement {
             double y = client.mouseHandler.getScaledYPos(client.getWindow());
 
             if (ChatUtilsConfig.ENABLE_COPY_KEY.value()) {
-                if (InputConstants.isKeyDown(client.getWindow(), ChatUtilsConfig.COPY_KEY.value())) {
+                if (KeyUtils.isKeyDown(ChatUtilsConfig.COPY_KEY.value())) {
                     var clipboardString = Component.translatable("chat-utils.hud.keyPressed");
                     int strWidth = client.font.width(clipboardString);
                     graphics.text(client.font, clipboardString, width - strWidth - 5,

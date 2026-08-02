@@ -5,10 +5,13 @@ import net.minecraft.network.chat.Component;
 
 import com.mojang.blaze3d.platform.InputConstants;
 
+import org.apache.logging.log4j.LogManager;
+
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
+import io.github.hotlava03.chatutils.util.KeyUtils;
 
 public class ConfigGui {
     public static ConfigBuilder getConfigScreen(Screen parent) {
@@ -75,7 +78,15 @@ public class ConfigGui {
                         InputConstants.Type.KEYSYM.getOrCreate(value.value()))
                 .setDefaultValue(InputConstants.Type.KEYSYM.getOrCreate(value.defaultValue()))
                 .setTooltip(Component.translatable("chat-utils.configs." + value.name() + ".description"))
-                .setKeySaveConsumer((key) -> value.setValue(key.getValue()))
+                .setKeySaveConsumer((key) -> {
+                    if (key.getType() != InputConstants.Type.KEYSYM || !KeyUtils.isValidKey(key.getValue())) {
+                        LogManager.getLogger().warn("[chat-utils] Ignoring unsupported copy key binding {}, "
+                                + "keeping the current one.", key.getName());
+                        return;
+                    }
+
+                    value.setValue(key.getValue());
+                })
                 .build());
     }
 }
