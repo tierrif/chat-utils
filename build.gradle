@@ -62,6 +62,9 @@ dependencies {
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 	compileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+	// Dev-client only: lets the Cloth config screen be reached in-game without making Mod Menu a
+	// published runtime dependency.
+	localRuntime "com.terraformersmc:modmenu:${project.modmenu_version}"
 
 	implementation include("net.kyori:adventure-text-serializer-legacy:${project.adventure_version}")
 	implementation include("net.kyori:adventure-platform-fabric:${project.adventure_platform_version}")

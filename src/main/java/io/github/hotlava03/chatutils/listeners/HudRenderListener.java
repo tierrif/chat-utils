@@ -13,7 +13,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.multiplayer.chat.GuiMessage;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 
 import com.mojang.blaze3d.platform.InputConstants;
@@ -79,9 +78,11 @@ public class HudRenderListener implements HudElement {
         if (line == null) return;
 
         if (alert.isRunning() && alert.getCreationTicks() == line.addedTime()
-                && ChatUtilsConfig.SHOW_ALERTS.value()) {
+                && ChatUtilsConfig.SHOW_ALERTS.value()
+        ) {
             var text = Component.translatable("chat-utils.hud.copiedToClipboard");
             text.setStyle(text.getStyle().withColor(TextColor.fromRgb(0x00FF00)));
+
             graphics.setTooltipForNextFrame(client.font, text, x, y);
         } else if (ChatUtilsConfig.TOOLTIP_ENABLED.value()) {
             List<Component> tooltip;
@@ -90,14 +91,18 @@ public class HudRenderListener implements HudElement {
                 tooltip.add(toText(LegacyComponentSerializer.legacyAmpersand()
                         .deserialize(ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE.value())));
                 tooltip.add(Component.empty());
-                tooltip.addAll(Arrays.stream(
-                        StringUtils.wrap(line.content().copy().setStyle(Style.EMPTY).getString(), 25)
-                                .replace("\r", "")
-                                .split("\n")).map(Component::literal).toList());
+
+                var preview = StringUtils.componentToPlainText(StringUtils.unpackLegacyCodes(
+                        StringUtils.asAdventure(line.content())));
+
+                tooltip.addAll(Arrays.stream(StringUtils.wrap(preview, 25)
+                        .replace("\r", "")
+                        .split("\n")).map(Component::literal).toList());
             } else {
                 tooltip = Collections.singletonList(toText(LegacyComponentSerializer.legacyAmpersand()
                         .deserialize(ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE.value())));
             }
+
             graphics.setComponentTooltipForNextFrame(client.font, tooltip, x, y);
         }
     }
