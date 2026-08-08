@@ -30,7 +30,7 @@
   "chat-utils.filters.pattern.hint": "Text to filter out",
   "chat-utils.filters.regex": "Regex",
   "chat-utils.filters.regex.description": "Treat the text as a regular expression instead of plain text.",
-  "chat-utils.filters.caseSensitive": "Case",
+  "chat-utils.filters.caseSensitive": "Case Sensitive",
   "chat-utils.filters.caseSensitive.description": "Require upper and lower case to match as typed.",
   "chat-utils.filters.exactMatch": "Exact",
   "chat-utils.filters.exactMatch.description": "Only filter when the whole message matches, instead of anywhere within it.",

@@ -38,14 +38,6 @@ public class ChatFilter {
         return firstMatch(text) != null;
     }
 
-    /**
-     * The filter that hides this message, or null if none does.
-     *
-     * <p>Messages are tested both as they arrived and with a trailing anti-spam counter removed, so a
-     * filter written for the message itself still catches the collapsed "&sect;8[&sect;cx3&sect;8]"
-     * form — ours on replayed history, or a server's own repeat counter. Testing both rather than
-     * only the stripped form keeps a filter that deliberately targets the counter working.
-     */
     public static ChatFilter firstMatch(net.minecraft.network.chat.Component text) {
         if (!ChatUtilsConfig.CHAT_FILTER.value()) return null;
 

@@ -143,12 +143,16 @@ public class ChatFiltersScreen extends Screen {
             }
 
             private Checkbox checkbox(String name, boolean value, Consumer<Boolean> setter) {
-                return Checkbox.builder(Component.translatable("chat-utils.filters." + name),
+                var component = Checkbox.builder(Component.translatable("chat-utils.filters." + name),
                                 ChatFiltersScreen.this.font)
                         .selected(value)
-                        .onValueChange((checkbox, selected) -> setter.accept(selected))
-                        .tooltip(Tooltip.create(Component.translatable("chat-utils.filters." + name + ".description")))
+                        .onValueChange((_, selected) -> setter.accept(selected))
                         .build();
+
+                component.setTooltip(
+                        Tooltip.create(Component.translatable("chat-utils.filters." + name + ".description")));
+
+                return component;
             }
 
             @Override
