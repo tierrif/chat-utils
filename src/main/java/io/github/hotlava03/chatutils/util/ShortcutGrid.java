@@ -12,26 +12,59 @@ public final class ShortcutGrid {
     public static final int GAP = 3;
     public static final int MARGIN = 4;
 
-    private static final int CELL_WIDTH = WIDTH + GAP;
-    private static final int CELL_HEIGHT = HEIGHT + GAP;
-
     private static final int BOTTOM_RESERVED = 44;
 
     private ShortcutGrid() {
     }
 
+    private static int usableWidth(int screenWidth) {
+        return Math.max(1, screenWidth - 2 * MARGIN + GAP);
+    }
+
+    private static int usableHeight(int screenHeight) {
+        return Math.max(1, screenHeight - MARGIN - BOTTOM_RESERVED + GAP);
+    }
+
     public static int columns(int screenWidth) {
-        return Math.max(1, (screenWidth - 2 * MARGIN + GAP) / CELL_WIDTH);
+        return fit(usableWidth(screenWidth), WIDTH + GAP);
     }
 
     public static int rows(int screenHeight) {
-        return Math.max(1, (screenHeight - MARGIN - BOTTOM_RESERVED + GAP) / CELL_HEIGHT);
+        return fit(usableHeight(screenHeight), HEIGHT + GAP);
     }
 
-    private static int originX(int screenWidth) {
-        int gridWidth = columns(screenWidth) * CELL_WIDTH - GAP;
+    private static int fit(int usable, int nominalCell) {
+        return Math.max(1, (int) Math.round((double) usable / nominalCell));
+    }
 
-        return Math.max(MARGIN, (screenWidth - gridWidth) / 2);
+    public static int xOfColumn(int column, int screenWidth) {
+        int columns = columns(screenWidth);
+
+        return MARGIN + edge(Mth.clamp(column, 0, columns - 1), columns, usableWidth(screenWidth));
+    }
+
+    public static int yOfRow(int row, int screenHeight) {
+        int rows = rows(screenHeight);
+
+        return MARGIN + edge(Mth.clamp(row, 0, rows - 1), rows, usableHeight(screenHeight));
+    }
+
+    public static int widthOfColumn(int column, int screenWidth) {
+        return span(column, columns(screenWidth), usableWidth(screenWidth));
+    }
+
+    public static int heightOfRow(int row, int screenHeight) {
+        return span(row, rows(screenHeight), usableHeight(screenHeight));
+    }
+
+    private static int edge(int index, int count, int usable) {
+        return (int) Math.round((double) Mth.clamp(index, 0, count) * usable / count);
+    }
+
+    private static int span(int index, int count, int usable) {
+        int clamped = Mth.clamp(index, 0, count - 1);
+
+        return Math.max(1, edge(clamped + 1, count, usable) - edge(clamped, count, usable) - GAP);
     }
 
     public static int columnAt(int column, boolean anchorRight, int screenWidth) {
@@ -41,24 +74,20 @@ public final class ShortcutGrid {
         return anchorRight ? columns - 1 - clamped : clamped;
     }
 
-    public static int xOfColumn(int column, int screenWidth) {
-        return originX(screenWidth) + column * CELL_WIDTH;
-    }
-
-    public static int xAt(int column, boolean anchorRight, int screenWidth) {
-        return xOfColumn(columnAt(column, anchorRight, screenWidth), screenWidth);
-    }
-
-    public static int yAt(int row) {
-        return MARGIN + row * CELL_HEIGHT;
-    }
-
     public static int xOf(ChatShortcut shortcut, int screenWidth) {
-        return xAt(shortcut.gridX(), shortcut.anchorRight(), screenWidth);
+        return xOfColumn(columnAt(shortcut.gridX(), shortcut.anchorRight(), screenWidth), screenWidth);
+    }
+
+    public static int widthOf(ChatShortcut shortcut, int screenWidth) {
+        return widthOfColumn(columnAt(shortcut.gridX(), shortcut.anchorRight(), screenWidth), screenWidth);
     }
 
     public static int yOf(ChatShortcut shortcut, int screenHeight) {
-        return yAt(Mth.clamp(shortcut.gridY(), 0, rows(screenHeight) - 1));
+        return yOfRow(shortcut.gridY(), screenHeight);
+    }
+
+    public static int heightOf(ChatShortcut shortcut, int screenHeight) {
+        return heightOfRow(shortcut.gridY(), screenHeight);
     }
 
     public static boolean isAddCell(int column, int row) {
@@ -69,8 +98,8 @@ public final class ShortcutGrid {
         int columns = columns(screenWidth);
         int rows = rows(screenHeight);
 
-        int column = Mth.clamp(Math.round((x - originX(screenWidth)) / (float) CELL_WIDTH), 0, columns - 1);
-        int row = Mth.clamp(Math.round((y - MARGIN) / (float) CELL_HEIGHT), 0, rows - 1);
+        int column = nearest(x, columns, usableWidth(screenWidth));
+        int row = nearest(y, rows, usableHeight(screenHeight));
 
         // Dropping onto the add button bumps the shortcut clear of it instead of hiding under it.
         if (isAddCell(column, row)) {
@@ -81,10 +110,14 @@ public final class ShortcutGrid {
             }
         }
 
-        boolean anchorRight = x + WIDTH / 2 > screenWidth / 2;
+        boolean anchorRight = column >= (columns + 1) / 2;
         shortcut.setAnchorRight(anchorRight);
         shortcut.setGridX(anchorRight ? columns - 1 - column : column);
         shortcut.setGridY(row);
+    }
+
+    private static int nearest(int position, int count, int usable) {
+        return Mth.clamp((int) Math.round((double) (position - MARGIN) * count / usable), 0, count - 1);
     }
 
     public static void placeFree(ChatShortcut shortcut, List<ChatShortcut> existing, boolean anchorRight,

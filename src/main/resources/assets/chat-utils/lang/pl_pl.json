@@ -56,7 +56,7 @@
   "chat-utils.macros.shortcuts.editHint": "Kliknij aby edytować, przeciągnij aby przenieść",
   "chat-utils.macros.remove": "Usuń",
   "chat-utils.macros.label": "Nazwa",
-  "chat-utils.macros.label.hint": "Pokazywana na przycisku",
+  "chat-utils.macros.label.hint": "Nazwa",
   "chat-utils.macros.message": "Wiadomość",
   "chat-utils.macros.message.hint": "Wiadomość do wysłania lub /komenda do wykonania",
   "chat-utils.macros.key": "Przycisk: %s",

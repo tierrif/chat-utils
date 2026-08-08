@@ -19,8 +19,9 @@ import io.github.hotlava03.chatutils.gui.ShortcutEditScreen;
 import io.github.hotlava03.chatutils.gui.ShortcutGridOverlay;
 import io.github.hotlava03.chatutils.mixin.ChatScreenAccessor;
 import io.github.hotlava03.chatutils.util.ShortcutGrid;
+import io.github.hotlava03.chatutils.events.ChatScreenCloseCallback;
 
-public class ShortcutOverlayListener implements ChatScreenInitCallback {
+public class ShortcutOverlayListener implements ChatScreenInitCallback, ChatScreenCloseCallback {
     private static final int INPUT_STRIP_INSET = 2;
     private static final int INPUT_STRIP_BOTTOM_OFFSET = 14;
 
@@ -68,8 +69,8 @@ public class ShortcutOverlayListener implements ChatScreenInitCallback {
     private Button addShortcutButton(ChatScreen screen) {
         return Button.builder(Component.translatable("chat-utils.macros.shortcuts.add"),
                         button -> createShortcut(screen))
-                .bounds(ShortcutGrid.xOfColumn(0, screen.width), ShortcutGrid.yAt(0),
-                        ShortcutGrid.WIDTH, ShortcutGrid.HEIGHT)
+                .bounds(ShortcutGrid.xOfColumn(0, screen.width), ShortcutGrid.yOfRow(0, screen.height),
+                        ShortcutGrid.widthOfColumn(0, screen.width), ShortcutGrid.heightOfRow(0, screen.height))
                 .build();
     }
 
@@ -107,6 +108,11 @@ public class ShortcutOverlayListener implements ChatScreenInitCallback {
             store(shortcuts);
             return;
         }
+    }
+
+    @Override
+    public void onClose(ChatScreen screen) {
+        editing = false;
     }
 
     private void store(List<ChatShortcut> shortcuts) {

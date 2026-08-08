@@ -33,8 +33,8 @@ public class ShortcutButton extends AbstractWidget {
         super(
                 ShortcutGrid.xOf(shortcut, screen.width),
                 ShortcutGrid.yOf(shortcut, screen.height),
-                ShortcutGrid.WIDTH,
-                ShortcutGrid.HEIGHT,
+                ShortcutGrid.widthOf(shortcut, screen.width),
+                ShortcutGrid.heightOf(shortcut, screen.height),
                 Component.literal(shortcut.displayLabel())
         );
         this.shortcut = shortcut;
@@ -100,6 +100,9 @@ public class ShortcutButton extends AbstractWidget {
         ShortcutGrid.snapTo(this.shortcut, getX(), getY(), this.screen.width, this.screen.height);
         setPosition(ShortcutGrid.xOf(this.shortcut, this.screen.width),
                 ShortcutGrid.yOf(this.shortcut, this.screen.height));
+        // Cells are not all exactly the same size, so the landing cell decides the final size too.
+        setSize(ShortcutGrid.widthOf(this.shortcut, this.screen.width),
+                ShortcutGrid.heightOf(this.shortcut, this.screen.height));
         ChatUtilsConfig.saveToFile();
     }
 

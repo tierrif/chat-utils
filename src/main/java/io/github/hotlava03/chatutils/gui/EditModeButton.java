@@ -43,10 +43,13 @@ public class EditModeButton extends AbstractWidget {
         // Both measurements carry a trailing pixel of advance/leading that is not part of the
         // glyph, so centring on them directly leaves the icon sitting low and to the right.
         var font = Minecraft.getInstance().font;
+        int nudge = 1; // Hack to manually position the gear, which doesn't center well.
         graphics.text(font, GEAR,
-                getX() + (this.width - (font.width(GEAR) - 1)) / 2,
+                getX() + (this.width - (font.width(GEAR) - 1)) / 2 + nudge,
                 getY() + (this.height - (font.lineHeight - 1)) / 2,
-                color);
+                color,
+                false
+        );
     }
 
     @Override

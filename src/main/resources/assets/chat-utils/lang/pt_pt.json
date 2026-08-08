@@ -58,7 +58,7 @@
   "chat-utils.macros.shortcuts.editHint": "Clique para editar, arraste para mover",
   "chat-utils.macros.remove": "Remover",
   "chat-utils.macros.label": "Nome",
-  "chat-utils.macros.label.hint": "Mostrado no botão",
+  "chat-utils.macros.label.hint": "Nome",
   "chat-utils.macros.message": "Mensagem",
   "chat-utils.macros.message.hint": "Mensagem a enviar, ou /comando a executar",
   "chat-utils.macros.key": "Tecla: %s",

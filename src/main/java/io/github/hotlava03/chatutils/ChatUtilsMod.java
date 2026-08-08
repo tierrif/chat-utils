@@ -1,5 +1,6 @@
 package io.github.hotlava03.chatutils;
 
+import io.github.hotlava03.chatutils.events.ChatScreenCloseCallback;
 import net.minecraft.resources.Identifier;
 
 import net.fabricmc.api.ModInitializer;
@@ -40,6 +41,7 @@ public class ChatUtilsMod implements ModInitializer {
         ReceiveMessageCallback.EVENT.register(new ChatPersistListener());
         CopyToClipboardListener.EVENT.register(new CopyToClipboardListener());
         ChatScreenInitCallback.EVENT.register(new ShortcutOverlayListener());
+        ChatScreenCloseCallback.EVENT.register(new ShortcutOverlayListener());
         ClientTickEvents.END_CLIENT_TICK.register(new MacroKeyListener());
 
         // The tooltip/alert overlay has to sit on top of the chat it annotates.

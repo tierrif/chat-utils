@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import io.github.hotlava03.chatutils.events.ChatScreenInitCallback;
+import io.github.hotlava03.chatutils.events.ChatScreenCloseCallback;
 
 @Mixin(ChatScreen.class)
 public abstract class ChatScreenMixin extends Screen {
@@ -20,5 +21,10 @@ public abstract class ChatScreenMixin extends Screen {
     @Inject(method = "init", at = @At("TAIL"))
     private void onInit(CallbackInfo ci) {
         ChatScreenInitCallback.EVENT.invoker().onInit((ChatScreen) (Object) this, this::addRenderableWidget);
+    }
+
+    @Inject(method = "onClose", at = @At("TAIL"))
+    private void onClose(CallbackInfo ci) {
+        ChatScreenCloseCallback.EVENT.invoker().onClose((ChatScreen) (Object) this);
     }
 }

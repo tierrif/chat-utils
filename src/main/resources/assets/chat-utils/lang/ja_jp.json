@@ -58,7 +58,7 @@
   "chat-utils.macros.shortcuts.editHint": "クリックで編集、ドラッグで移動",
   "chat-utils.macros.remove": "削除",
   "chat-utils.macros.label": "名前",
-  "chat-utils.macros.label.hint": "ボタンに表示されます",
+  "chat-utils.macros.label.hint": "名前",
   "chat-utils.macros.message": "メッセージ",
   "chat-utils.macros.message.hint": "送信するメッセージ、または /コマンド",
   "chat-utils.macros.key": "キー: %s",

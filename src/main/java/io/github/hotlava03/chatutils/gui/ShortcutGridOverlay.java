@@ -23,6 +23,7 @@ public class ShortcutGridOverlay extends AbstractWidget {
 
         for (int column = 0; column < columns; column++) {
             int x = ShortcutGrid.xOfColumn(column, this.width);
+            int cellWidth = ShortcutGrid.widthOfColumn(column, this.width);
 
             for (int row = 0; row < rows; row++) {
                 // The add button owns that cell; nothing can be dropped into it.
@@ -30,8 +31,8 @@ public class ShortcutGridOverlay extends AbstractWidget {
                     continue;
                 }
 
-                int y = ShortcutGrid.yAt(row);
-                graphics.fill(x, y, x + ShortcutGrid.WIDTH, y + ShortcutGrid.HEIGHT, CELL_COLOR);
+                int y = ShortcutGrid.yOfRow(row, this.height);
+                graphics.fill(x, y, x + cellWidth, y + ShortcutGrid.heightOfRow(row, this.height), CELL_COLOR);
             }
         }
     }
