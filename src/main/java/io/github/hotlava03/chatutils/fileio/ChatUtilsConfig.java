@@ -29,6 +29,11 @@ public class ChatUtilsConfig {
     public static final Value<Boolean> ANTI_SPAM_IGNORE_COLORS = new Value<>("antiSpamIgnoreColors", false);
     public static final Value<Boolean> CHAT_FILTER = new Value<>("chatFilter", true);
     public static final Value<List<ChatFilter>> CHAT_FILTERS = new Value<>("chatFilters", List.of(), List.of());
+    public static final Value<Boolean> MACROS_ENABLED = new Value<>("macrosEnabled", true);
+    public static final Value<List<ChatMacro>> MACROS = new Value<>("macros", List.of(), List.of());
+    public static final Value<Boolean> SHORTCUTS_ENABLED = new Value<>("shortcutsEnabled", true);
+    public static final Value<List<ChatShortcut>> SHORTCUTS = new Value<>("shortcuts", List.of(), List.of());
+    public static final Value<Boolean> SHORTCUTS_NEW_TOP_RIGHT = new Value<>("shortcutsNewTopRight", true);
     public static final Value<Boolean> TOOLTIP_ENABLED = new Value<>("tooltipEnabled", true);
     public static final Value<Boolean> ENABLED = new Value<>("enabled", true);
     public static final Value<Boolean> ENABLE_CHAT_PERSIST = new Value<>("enableChatPersist", true);
@@ -64,6 +69,11 @@ public class ChatUtilsConfig {
                     ANTI_SPAM_IGNORE_COLORS.read(root.get("antiSpamIgnoreColors"), JsonElement::getAsBoolean);
                     CHAT_FILTER.read(root.get("chatFilter"), JsonElement::getAsBoolean);
                     CHAT_FILTERS.read(root.get("chatFilters"), ChatUtilsConfig::readChatFilters);
+                    MACROS_ENABLED.read(root.get("macrosEnabled"), JsonElement::getAsBoolean);
+                    MACROS.read(root.get("macros"), ChatUtilsConfig::readMacros);
+                    SHORTCUTS_ENABLED.read(root.get("shortcutsEnabled"), JsonElement::getAsBoolean);
+                    SHORTCUTS.read(root.get("shortcuts"), ChatUtilsConfig::readShortcuts);
+                    SHORTCUTS_NEW_TOP_RIGHT.read(root.get("shortcutsNewTopRight"), JsonElement::getAsBoolean);
                     TOOLTIP_ENABLED.read(root.get("tooltipEnabled"), JsonElement::getAsBoolean);
                     ENABLED.read(root.get("enabled"), JsonElement::getAsBoolean);
                     ENABLE_CHAT_PERSIST.read(root.get("enableChatPersist"), JsonElement::getAsBoolean);
@@ -103,6 +113,11 @@ public class ChatUtilsConfig {
             chatUtils.addProperty(ANTI_SPAM_IGNORE_COLORS.name(), ANTI_SPAM_IGNORE_COLORS.value());
             chatUtils.addProperty(CHAT_FILTER.name(), CHAT_FILTER.value());
             chatUtils.add(CHAT_FILTERS.name(), writeChatFilters(CHAT_FILTERS.value()));
+            chatUtils.addProperty(MACROS_ENABLED.name(), MACROS_ENABLED.value());
+            chatUtils.add(MACROS.name(), writeMacros(MACROS.value()));
+            chatUtils.addProperty(SHORTCUTS_ENABLED.name(), SHORTCUTS_ENABLED.value());
+            chatUtils.add(SHORTCUTS.name(), writeShortcuts(SHORTCUTS.value()));
+            chatUtils.addProperty(SHORTCUTS_NEW_TOP_RIGHT.name(), SHORTCUTS_NEW_TOP_RIGHT.value());
             chatUtils.addProperty(TOOLTIP_ENABLED.name(), TOOLTIP_ENABLED.value());
             chatUtils.addProperty(ENABLED.name(), ENABLED.value());
             chatUtils.addProperty(ENABLE_CHAT_PERSIST.name(), ENABLE_CHAT_PERSIST.value());
@@ -135,6 +150,42 @@ public class ChatUtilsConfig {
     private static JsonArray writeChatFilters(List<ChatFilter> filters) {
         var array = new JsonArray();
         filters.forEach(filter -> array.add(filter.toJson()));
+        return array;
+    }
+
+    private static List<ChatMacro> readMacros(JsonElement element) {
+        if (element == null || !element.isJsonArray()) return MACROS.value();
+
+        var macros = new ArrayList<ChatMacro>();
+        for (JsonElement entry : element.getAsJsonArray()) {
+            var macro = ChatMacro.fromJson(entry);
+            if (macro != null) macros.add(macro);
+        }
+
+        return ChatMacro.dropBlank(macros);
+    }
+
+    private static JsonArray writeMacros(List<ChatMacro> macros) {
+        var array = new JsonArray();
+        macros.forEach(macro -> array.add(macro.toJson()));
+        return array;
+    }
+
+    private static List<ChatShortcut> readShortcuts(JsonElement element) {
+        if (element == null || !element.isJsonArray()) return SHORTCUTS.value();
+
+        var shortcuts = new ArrayList<ChatShortcut>();
+        for (JsonElement entry : element.getAsJsonArray()) {
+            var shortcut = ChatShortcut.fromJson(entry);
+            if (shortcut != null) shortcuts.add(shortcut);
+        }
+
+        return ChatShortcut.dropBlank(shortcuts);
+    }
+
+    private static JsonArray writeShortcuts(List<ChatShortcut> shortcuts) {
+        var array = new JsonArray();
+        shortcuts.forEach(shortcut -> array.add(shortcut.toJson()));
         return array;
     }
 

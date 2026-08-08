@@ -3,6 +3,7 @@ package io.github.hotlava03.chatutils;
 import net.minecraft.resources.Identifier;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -11,6 +12,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 
 import org.apache.logging.log4j.LogManager;
 
+import io.github.hotlava03.chatutils.events.ChatScreenInitCallback;
 import io.github.hotlava03.chatutils.events.ReceiveMessageCallback;
 import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
@@ -37,6 +39,8 @@ public class ChatUtilsMod implements ModInitializer {
         ReceiveMessageCallback.EVENT.register(new AntiSpamListener());
         ReceiveMessageCallback.EVENT.register(new ChatPersistListener());
         CopyToClipboardListener.EVENT.register(new CopyToClipboardListener());
+        ChatScreenInitCallback.EVENT.register(new ShortcutOverlayListener());
+        ClientTickEvents.END_CLIENT_TICK.register(new MacroKeyListener());
 
         // The tooltip/alert overlay has to sit on top of the chat it annotates.
         HudElementRegistry.attachElementAfter(

@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Style;
 
 import net.kyori.adventure.platform.modcommon.MinecraftClientAudiences;
@@ -19,6 +20,7 @@ import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 
 public class StringUtils {
     public static final String FORMATTING_CODE = "§[0-9a-fk-orxA-FK-ORX]";
+    private static final String ELLIPSIS = "...";
 
     public static Component asAdventure(net.minecraft.network.chat.Component text) {
         var builder = Component.text();
@@ -94,6 +96,18 @@ public class StringUtils {
                 .flattener(MinecraftClientAudiences.of().flattener())
                 .build()
                 .serialize(component);
+    }
+
+    public static String ellipsis(Font font, String text, int maxWidth) {
+        if (font.width(text) <= maxWidth) {
+            return text;
+        }
+
+        int room = maxWidth - font.width(ELLIPSIS);
+
+        return room > 0
+                ? font.plainSubstrByWidth(text, room) + ELLIPSIS
+                : font.plainSubstrByWidth(text, maxWidth);
     }
 
     public static String stripFormatting(String message) {

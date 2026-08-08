@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import io.github.hotlava03.chatutils.events.CopyToClipboardCallback;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
+import io.github.hotlava03.chatutils.listeners.ShortcutOverlayListener;
 import io.github.hotlava03.chatutils.util.ChatHudUtils;
 import io.github.hotlava03.chatutils.util.KeyUtils;
 import io.github.hotlava03.chatutils.util.StringUtils;
@@ -25,6 +26,12 @@ public abstract class ChatClickMixin {
             if (!KeyUtils.isKeyDown(ChatUtilsConfig.COPY_KEY.value())) {
                 return;
             }
+        }
+
+        // A shortcut sitting over a chat line owns the click; copying the line underneath too
+        // would be a second, unasked-for action.
+        if (ShortcutOverlayListener.isOverOverlay(event.x(), event.y())) {
+            return;
         }
 
         var message = ChatHudUtils.getMessageAt(event.x(), event.y());

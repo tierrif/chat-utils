@@ -13,6 +13,7 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 
 import io.github.hotlava03.chatutils.fileio.ChatFilter;
+import io.github.hotlava03.chatutils.fileio.ChatMacro;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.util.KeyUtils;
 
@@ -31,6 +32,10 @@ public class ConfigGui {
         addBooleanEntry(general, builder, ChatUtilsConfig.ANTI_SPAM_IGNORE_COLORS);
         addBooleanEntry(general, builder, ChatUtilsConfig.CHAT_FILTER);
         addChatFilterEntry(general, ChatUtilsConfig.CHAT_FILTERS);
+        addBooleanEntry(general, builder, ChatUtilsConfig.MACROS_ENABLED);
+        addBooleanEntry(general, builder, ChatUtilsConfig.SHORTCUTS_ENABLED);
+        addBooleanEntry(general, builder, ChatUtilsConfig.SHORTCUTS_NEW_TOP_RIGHT);
+        addMacroEntry(general);
         addBooleanEntry(general, builder, ChatUtilsConfig.ENABLED);
         addBooleanEntry(general, builder, ChatUtilsConfig.TOOLTIP_ENABLED);
         addStringEntry(general, builder, ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE);
@@ -82,6 +87,15 @@ public class ConfigGui {
                 description(value.name()),
                 value.value(),
                 filters -> value.setValue(ChatFilter.dropBlank(filters))));
+    }
+
+    private static void addMacroEntry(ConfigCategory category) {
+        var value = ChatUtilsConfig.MACROS;
+        category.addEntry(new MacroListEntry(
+                label(value.name()),
+                description(value.name()),
+                value.value(),
+                macros -> value.setValue(ChatMacro.dropBlank(macros))));
     }
 
     private static Component label(String name) {

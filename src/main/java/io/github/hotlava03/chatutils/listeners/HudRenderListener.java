@@ -73,6 +73,9 @@ public class HudRenderListener implements HudElement {
             int y,
             TooltipAlert alert
     ) {
+        // A shortcut brings its own tooltip; two at once would sit on top of each other.
+        if (ShortcutOverlayListener.isOverOverlay(x, y)) return;
+
         GuiMessage line = ChatHudUtils.getMessageAt(x, y);
         if (line == null) return;
 
