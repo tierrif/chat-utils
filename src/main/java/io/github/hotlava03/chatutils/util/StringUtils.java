@@ -15,7 +15,11 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
+import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
+
 public class StringUtils {
+    public static final String FORMATTING_CODE = "§[0-9a-fk-orxA-FK-ORX]";
+
     public static Component asAdventure(net.minecraft.network.chat.Component text) {
         var builder = Component.text();
         text.visit((style, content) -> {
@@ -79,11 +83,25 @@ public class StringUtils {
                 .serialize(component);
     }
 
+    public static String forClipboard(Component component) {
+        return ChatUtilsConfig.COPY_COLORS.value()
+                ? componentToLegacy(component, ChatUtilsConfig.COPY_HEX_COLORS.value())
+                : componentToPlainText(component);
+    }
+
     public static String componentToPlainText(Component component) {
         return PlainTextComponentSerializer.builder()
                 .flattener(MinecraftClientAudiences.of().flattener())
                 .build()
                 .serialize(component);
+    }
+
+    public static String stripFormatting(String message) {
+        return message.replaceAll(FORMATTING_CODE, "");
+    }
+
+    public static String plainText(net.minecraft.network.chat.Component text) {
+        return stripFormatting(componentToPlainText(asAdventure(text)));
     }
 
     public static String wrap(String str, int wrapLength) {

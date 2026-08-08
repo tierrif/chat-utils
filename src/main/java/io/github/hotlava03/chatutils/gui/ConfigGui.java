@@ -1,5 +1,7 @@
 package io.github.hotlava03.chatutils.gui;
 
+import java.util.List;
+
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -10,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 
+import io.github.hotlava03.chatutils.fileio.ChatFilter;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.util.KeyUtils;
 
@@ -26,6 +29,8 @@ public class ConfigGui {
         addBooleanEntry(general, builder, ChatUtilsConfig.ANTI_SPAM);
         addIntEntry(general, builder, ChatUtilsConfig.ANTI_SPAM_RANGE, 1, 99);
         addBooleanEntry(general, builder, ChatUtilsConfig.ANTI_SPAM_IGNORE_COLORS);
+        addBooleanEntry(general, builder, ChatUtilsConfig.CHAT_FILTER);
+        addChatFilterEntry(general, ChatUtilsConfig.CHAT_FILTERS);
         addBooleanEntry(general, builder, ChatUtilsConfig.ENABLED);
         addBooleanEntry(general, builder, ChatUtilsConfig.TOOLTIP_ENABLED);
         addStringEntry(general, builder, ChatUtilsConfig.COPY_TO_CLIPBOARD_MESSAGE);
@@ -44,9 +49,9 @@ public class ConfigGui {
     private static void addStringEntry(ConfigCategory category, ConfigBuilder builder,
                                        ChatUtilsConfig.Value<String> value) {
         category.addEntry(builder.entryBuilder()
-                .startStrField(Component.translatable("chat-utils.configs." + value.name() + ".label"), value.value())
+                .startStrField(label(value.name()), value.value())
                 .setDefaultValue(value.defaultValue())
-                .setTooltip(Component.translatable("chat-utils.configs." + value.name() + ".description"))
+                .setTooltip(description(value.name()))
                 .setSaveConsumer(value::setValue)
                 .build());
     }
@@ -54,9 +59,9 @@ public class ConfigGui {
     private static void addBooleanEntry(ConfigCategory category, ConfigBuilder builder,
                                         ChatUtilsConfig.Value<Boolean> value) {
         category.addEntry(builder.entryBuilder()
-                .startBooleanToggle(Component.translatable("chat-utils.configs." + value.name() + ".label"), value.value())
+                .startBooleanToggle(label(value.name()), value.value())
                 .setDefaultValue(value.defaultValue())
-                .setTooltip(Component.translatable("chat-utils.configs." + value.name() + ".description"))
+                .setTooltip(description(value.name()))
                 .setSaveConsumer(value::setValue)
                 .build());
     }
@@ -64,20 +69,36 @@ public class ConfigGui {
     private static void addIntEntry(ConfigCategory category, ConfigBuilder builder,
                                         ChatUtilsConfig.Value<Integer> value, int min, int max) {
         category.addEntry(builder.entryBuilder()
-                .startIntSlider(Component.translatable("chat-utils.configs." + value.name() + ".label"), value.value(), min, max)
+                .startIntSlider(label(value.name()), value.value(), min, max)
                 .setDefaultValue(value.defaultValue())
-                .setTooltip(Component.translatable("chat-utils.configs." + value.name() + ".description"))
+                .setTooltip(description(value.name()))
                 .setSaveConsumer(value::setValue)
                 .build());
+    }
+
+    private static void addChatFilterEntry(ConfigCategory category, ChatUtilsConfig.Value<List<ChatFilter>> value) {
+        category.addEntry(new ChatFilterListEntry(
+                label(value.name()),
+                description(value.name()),
+                value.value(),
+                filters -> value.setValue(ChatFilter.dropBlank(filters))));
+    }
+
+    private static Component label(String name) {
+        return Component.translatable("chat-utils.configs." + name + ".label");
+    }
+
+    private static Component description(String name) {
+        return Component.translatable("chat-utils.configs." + name + ".description");
     }
 
     private static void addKeyCodeEntry(ConfigCategory category, ConfigBuilder builder,
                                         ChatUtilsConfig.Value<Integer> value) {
         category.addEntry(builder.entryBuilder()
-                .startKeyCodeField(Component.translatable("chat-utils.configs." + value.name() + ".label"),
+                .startKeyCodeField(label(value.name()),
                         InputConstants.Type.KEYSYM.getOrCreate(value.value()))
                 .setDefaultValue(InputConstants.Type.KEYSYM.getOrCreate(value.defaultValue()))
-                .setTooltip(Component.translatable("chat-utils.configs." + value.name() + ".description"))
+                .setTooltip(description(value.name()))
                 .setKeySaveConsumer((key) -> {
                     if (key.getType() != InputConstants.Type.KEYSYM || !KeyUtils.isValidKey(key.getValue())) {
                         LogManager.getLogger().warn("[chat-utils] Ignoring unsupported copy key binding {}, "

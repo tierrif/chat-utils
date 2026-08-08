@@ -1,9 +1,12 @@
 package io.github.hotlava03.chatutils.fileio;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -24,6 +27,8 @@ public class ChatUtilsConfig {
     public static final Value<Boolean> ANTI_SPAM = new Value<>("antiSpam", true);
     public static final Value<Integer> ANTI_SPAM_RANGE = new Value<>("antiSpamRange", 16);
     public static final Value<Boolean> ANTI_SPAM_IGNORE_COLORS = new Value<>("antiSpamIgnoreColors", false);
+    public static final Value<Boolean> CHAT_FILTER = new Value<>("chatFilter", true);
+    public static final Value<List<ChatFilter>> CHAT_FILTERS = new Value<>("chatFilters", List.of(), List.of());
     public static final Value<Boolean> TOOLTIP_ENABLED = new Value<>("tooltipEnabled", true);
     public static final Value<Boolean> ENABLED = new Value<>("enabled", true);
     public static final Value<Boolean> ENABLE_CHAT_PERSIST = new Value<>("enableChatPersist", true);
@@ -57,6 +62,8 @@ public class ChatUtilsConfig {
                     ANTI_SPAM.read(root.get("antiSpam"), JsonElement::getAsBoolean);
                     ANTI_SPAM_RANGE.read(root.get("antiSpamRange"), JsonElement::getAsInt);
                     ANTI_SPAM_IGNORE_COLORS.read(root.get("antiSpamIgnoreColors"), JsonElement::getAsBoolean);
+                    CHAT_FILTER.read(root.get("chatFilter"), JsonElement::getAsBoolean);
+                    CHAT_FILTERS.read(root.get("chatFilters"), ChatUtilsConfig::readChatFilters);
                     TOOLTIP_ENABLED.read(root.get("tooltipEnabled"), JsonElement::getAsBoolean);
                     ENABLED.read(root.get("enabled"), JsonElement::getAsBoolean);
                     ENABLE_CHAT_PERSIST.read(root.get("enableChatPersist"), JsonElement::getAsBoolean);
@@ -94,6 +101,8 @@ public class ChatUtilsConfig {
             chatUtils.addProperty(ANTI_SPAM.name(), ANTI_SPAM.value());
             chatUtils.addProperty(ANTI_SPAM_RANGE.name(), ANTI_SPAM_RANGE.value());
             chatUtils.addProperty(ANTI_SPAM_IGNORE_COLORS.name(), ANTI_SPAM_IGNORE_COLORS.value());
+            chatUtils.addProperty(CHAT_FILTER.name(), CHAT_FILTER.value());
+            chatUtils.add(CHAT_FILTERS.name(), writeChatFilters(CHAT_FILTERS.value()));
             chatUtils.addProperty(TOOLTIP_ENABLED.name(), TOOLTIP_ENABLED.value());
             chatUtils.addProperty(ENABLED.name(), ENABLED.value());
             chatUtils.addProperty(ENABLE_CHAT_PERSIST.name(), ENABLE_CHAT_PERSIST.value());
@@ -111,14 +120,36 @@ public class ChatUtilsConfig {
         }
     }
 
+    private static List<ChatFilter> readChatFilters(JsonElement element) {
+        if (element == null || !element.isJsonArray()) return CHAT_FILTERS.value();
+
+        var filters = new ArrayList<ChatFilter>();
+        for (JsonElement entry : element.getAsJsonArray()) {
+            var filter = ChatFilter.fromJson(entry);
+            if (filter != null) filters.add(filter);
+        }
+
+        return ChatFilter.dropBlank(filters);
+    }
+
+    private static JsonArray writeChatFilters(List<ChatFilter> filters) {
+        var array = new JsonArray();
+        filters.forEach(filter -> array.add(filter.toJson()));
+        return array;
+    }
+
     public static class Value<T> {
         private final String name;
         private T value;
         private final T defaultValue;
         public Value(String name, T value) {
+            this(name, value, value);
+        }
+
+        public Value(String name, T value, T defaultValue) {
             this.name = name;
             this.value = value;
-            this.defaultValue = value;
+            this.defaultValue = defaultValue;
         }
 
         public String name() {

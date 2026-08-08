@@ -7,9 +7,7 @@ import net.minecraft.network.chat.Component;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 
 public final class AntiSpamCounter {
-    private static final String CODE = "§[0-9a-fk-orxA-FK-ORX]";
-
-    private static final String CODES = "(?:" + CODE + ")*";
+    private static final String CODES = "(?:" + StringUtils.FORMATTING_CODE + ")*";
 
     private static final Pattern PATTERN = Pattern.compile(
             "^(.+?)" + CODES + " ?" + CODES + "\\[" + CODES + "x(\\d{1,9})" + CODES + "]$");
@@ -36,17 +34,12 @@ public final class AntiSpamCounter {
     }
 
     public static String key(Component text) {
-        var adventure = StringUtils.asAdventure(text);
         if (!ChatUtilsConfig.ANTI_SPAM_IGNORE_COLORS.value()) {
-            return StringUtils.componentToLegacySection(adventure);
+            return StringUtils.componentToLegacySection(StringUtils.asAdventure(text));
         }
 
         // Style-based colours are gone once the component is flattened to plain text, but servers
         // routinely embed § codes in the text content itself, and those survive.
-        return stripFormatting(StringUtils.componentToPlainText(adventure));
-    }
-
-    public static String stripFormatting(String message) {
-        return message.replaceAll(CODE, "");
+        return StringUtils.plainText(text);
     }
 }

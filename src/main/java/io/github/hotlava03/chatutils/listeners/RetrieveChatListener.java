@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 
+import io.github.hotlava03.chatutils.fileio.ChatFilter;
 import io.github.hotlava03.chatutils.fileio.ChatStorage;
 import io.github.hotlava03.chatutils.fileio.ChatUtilsConfig;
 import io.github.hotlava03.chatutils.util.ComponentJson;
@@ -47,7 +48,7 @@ public class RetrieveChatListener implements ClientPlayConnectionEvents.Init {
         var chat = client.gui.hud.getChat();
         chatLines.forEach((line) -> {
             Component component = ComponentJson.fromJson(line);
-            if (component != null) chat.addClientSystemMessage(component);
+            if (component != null && !ChatFilter.matchesAny(component)) chat.addClientSystemMessage(component);
         });
         chat.addClientSystemMessage(Component.translatable("chat-utils.stored_messages", date));
         storage.setBlockingChatEvents(false);

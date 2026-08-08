@@ -3,6 +3,7 @@ package io.github.hotlava03.chatutils;
 import net.minecraft.resources.Identifier;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
@@ -30,6 +31,9 @@ public class ChatUtilsMod implements ModInitializer {
         var sendMessageListener = new SendMessageListener();
         ClientSendMessageEvents.CHAT.register(sendMessageListener);
         ClientSendMessageEvents.COMMAND.register(sendMessageListener);
+        var chatFilterListener = new ChatFilterListener();
+        ClientReceiveMessageEvents.ALLOW_CHAT.register(chatFilterListener);
+        ClientReceiveMessageEvents.ALLOW_GAME.register(chatFilterListener);
         ReceiveMessageCallback.EVENT.register(new AntiSpamListener());
         ReceiveMessageCallback.EVENT.register(new ChatPersistListener());
         CopyToClipboardListener.EVENT.register(new CopyToClipboardListener());
